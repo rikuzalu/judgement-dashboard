@@ -53,10 +53,26 @@ animation:auroraShift 8s ease-in-out infinite alternate;
 mask-image:linear-gradient(to bottom,rgba(0,0,0,0.7) 0%,transparent 100%)}
 @keyframes auroraShift{0%{background-position:0% 0}100%{background-position:100% 0}}
 
-/* === Scanline overlay === */
+/* === Scanline overlay (enhanced) === */
 .scn{position:fixed;inset:0;z-index:2;pointer-events:none;
-background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,180,255,0.004) 2px,rgba(0,180,255,0.004) 4px);
+background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,180,255,0.006) 2px,rgba(0,180,255,0.006) 4px);
 mix-blend-mode:overlay}
+
+/* === CSS Particle system === */
+.ptcl{position:fixed;border-radius:50%;pointer-events:none;z-index:1;background:var(--n);opacity:0}
+@keyframes ptclFloat{
+0%{transform:translateY(0) scale(1);opacity:0}
+10%{opacity:.4}
+90%{opacity:.2}
+100%{transform:translateY(-100vh) scale(0.3);opacity:0}
+}
+
+/* === Neon pulse rings (behind header hex) === */
+.hex::after{content:'';position:absolute;inset:-14px;border-radius:50%;border:1px solid var(--n);opacity:0;animation:hexPulse 3s ease-out infinite}
+@keyframes hexPulse{0%{transform:scale(0.8);opacity:.4}100%{transform:scale(1.6);opacity:0}}
+
+/* === Enhanced number glow === */
+.ev,.mn{text-shadow:0 0 20px currentColor,0 0 40px currentColor,0 0 80px color-mix(in srgb,currentColor,transparent 60%)}
 
 /* === Top neon bar === */
 .hb{position:fixed;top:0;left:0;right:0;height:1px;z-index:99;
@@ -160,7 +176,7 @@ background-size:250% 250%;animation:holoShim 7s ease infinite;pointer-events:non
 .ering .bg{stroke:rgba(0,180,255,.06)}.ering .fg{stroke:url(#rG);stroke-linecap:round;stroke-dasharray:283;stroke-dashoffset:283.0;filter:drop-shadow(0 0 10px var(--ng))}
 .ering::before{content:'';position:absolute;inset:-6px;border-radius:50%;border:1px solid transparent;border-top-color:var(--n);animation:rRot 3s linear infinite;opacity:.18}
 @keyframes rRot{to{transform:rotate(360deg)}}
-.ering .rp{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Orbitron';font-size:1.2em;font-weight:800;color:var(--n);text-shadow:0 0 20px var(--ng)}
+.ering .rp{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Orbitron';font-size:1.2em;font-weight:800;color:var(--n);text-shadow:0 0 20px var(--ng),0 0 40px var(--ng),0 0 80px rgba(0,180,255,.15)}
 .ei{flex:1}.ei .en{font-family:'Orbitron';font-size:.7em;font-weight:700;color:var(--n);letter-spacing:2px;margin-bottom:5px;text-shadow:0 0 15px var(--ng)}
 .ei .ed{font-size:.88em;color:var(--t2);line-height:1.5;margin-bottom:8px}
 .ei .ex{font-family:'Share Tech Mono';font-size:.58em;color:var(--g);letter-spacing:1px;padding:4px 10px;background:rgba(255,184,0,.04);border:1px solid rgba(255,184,0,.1);border-radius:6px;display:inline-block}
@@ -238,12 +254,15 @@ canvas.chart-cv{width:100%;height:200px;display:block;min-width:200px}
 .pc:hover{transform:translateY(-2px)}
 .pc .pv{font-family:'Orbitron';font-size:1.5em;font-weight:700}
 .pc .pl{font-family:'Share Tech Mono';font-size:.46em;letter-spacing:2px;color:var(--t2);margin-top:4px}
-.ag{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;border:1px solid rgba(0,180,255,.04);background:rgba(0,0,0,.1);transition:all .3s;position:relative}
-.ag:hover{border-color:rgba(0,180,255,.08);transform:translateY(-2px)}
-.agi{font-size:1.4em;color:var(--ac);filter:drop-shadow(0 0 8px var(--ac));text-shadow:0 0 12px var(--ac)}.agn{font-family:'Orbitron';font-size:.62em;font-weight:700;color:var(--ac);letter-spacing:2px;text-shadow:0 0 10px var(--ac)}
-.agd{font-family:'Rajdhani';font-size:.48em;color:var(--t2);letter-spacing:.5px;font-weight:500;line-height:1.3}
-.agp{width:5px;height:5px;border-radius:50%;background:var(--ac);box-shadow:0 0 8px var(--ac);animation:pls 2s ease-in-out infinite;opacity:.6}
-.agrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ag{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 10px 14px;border-radius:14px;border:1px solid rgba(0,180,255,.06);background:rgba(0,0,0,.15);transition:all .4s;position:relative;overflow:hidden;text-align:center;min-height:120px;justify-content:center}
+.ag::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,var(--ac),transparent 70%);opacity:.03;transition:opacity .4s}
+.ag:hover{border-color:var(--ac);transform:translateY(-4px) scale(1.02);box-shadow:0 12px 40px rgba(0,0,0,.5),0 0 20px color-mix(in srgb,var(--ac),transparent 85%)}
+.ag:hover::before{opacity:.08}
+.agi{font-size:1.8em;color:var(--ac);filter:drop-shadow(0 0 10px var(--ac));text-shadow:0 0 16px var(--ac);line-height:1}
+.agn{font-family:'Orbitron';font-size:.58em;font-weight:700;color:var(--ac);letter-spacing:2px;text-shadow:0 0 10px var(--ac);white-space:nowrap}
+.agd{font-family:'Rajdhani';font-size:.44em;color:var(--t2);letter-spacing:.3px;font-weight:500;line-height:1.3;max-width:160px}
+.agp{position:absolute;top:8px;right:8px;width:5px;height:5px;border-radius:50%;background:var(--ac);box-shadow:0 0 8px var(--ac);animation:pls 2s ease-in-out infinite;opacity:.6}
+.agrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 
 /* === STRAT === */
 .strat{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:16px}
@@ -465,7 +484,7 @@ colgroup col:nth-child(7),td:nth-child(7),th:nth-child(7),colgroup col:nth-child
 <a href="https://sentry.io/organizations/judgement/" target="_blank">SENTRY</a>
 <a href="https://supabase.com/dashboard/project/lzjzwzdbxcgohrxeucrj" target="_blank">SUPABASE</a>
 </nav>
-<div class="hr"><div class="live"><span class="ld"></span>SYSTEM ONLINE</div><div class="clk" id="clk">2026-03-14 14:24:10</div></div>
+<div class="hr"><div class="live"><span class="ld"></span>SYSTEM ONLINE</div><div class="clk" id="clk">2026-03-14 14:34:16</div></div>
 </header>
 
 <!-- ◉ EXECUTIVE OVERVIEW ◉ -->
@@ -474,7 +493,7 @@ colgroup col:nth-child(7),td:nth-child(7),th:nth-child(7),colgroup col:nth-child
 <div class="ec glass" style="--cc:var(--n);--cg:var(--ng)"><div class="eb"></div><div class="eph"><div class="ering"><svg width="96" height="96" viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="45"/><circle class="fg" cx="50" cy="50" r="45"/></svg><div class="rp">0.0%</div></div><div class="ei"><div class="en">PHASE 2.1 — TOTP認証</div><div class="ed">MFA実装: 0/6項目達成<br>TOTP設定・検証・Middleware実装済</div><div class="ex">NEXT › E2Eテスト通過 → 本番デプロイ</div></div></div></div>
 <div class="ec es glass" style="--cc:var(--n);--cg:var(--ng)"><div class="eb"></div><div class="ev en1">1</div><div class="el">OPERATING DAYS</div><div class="eu">1046.0 tasks/day</div></div>
 <div class="ec es glass" style="--cc:var(--m);--cg:var(--mg)"><div class="eb"></div><div class="ev en2">96.0<span style="font-size:.3em;opacity:.4">%</span></div><div class="el">SUCCESS RATE</div><div class="eu">1046/1090</div></div>
-<div class="ec es glass" style="--cc:var(--g);--cg:var(--gg)"><div class="eb"></div><div class="ev en3">2</div><div class="el">LAST HOUR</div><div class="eu">28.6/h avg</div></div>
+<div class="ec es glass" style="--cc:var(--g);--cg:var(--gg)"><div class="eb"></div><div class="ev en3">2</div><div class="el">LAST HOUR</div><div class="eu">28.3/h avg</div></div>
 </section>
 
 <!-- ⬡ OPERATIONAL METRICS ⬡ -->
@@ -487,7 +506,7 @@ colgroup col:nth-child(7),td:nth-child(7),th:nth-child(7),colgroup col:nth-child
 <div class="mc glass" data-t="err"><div class="mtop"></div><div class="ms">ALERT</div><div class="mn">0</div><div class="ml">ERRORS</div><div class="wb"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="mbot"></div></div>
 <div class="mc glass" data-t="rate"><div class="mtop"></div><div class="ms">RATE</div><div class="mn">96.0<span style="font-size:.28em;opacity:.3">%</span></div><div class="ml">SUCCESS</div><div class="wb"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="mbot"></div></div>
 <div class="mc glass" data-t="dur"><div class="mtop"></div><div class="ms">AVG</div><div class="mn" style="font-size:1.5em">24m</div><div class="ml">DURATION</div><div class="wb"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="mbot"></div></div>
-<div class="mc glass" data-t="thru"><div class="mtop"></div><div class="ms">24H</div><div class="mn" style="font-size:1.5em">28.6<span style="font-size:.28em;opacity:.3">/h</span></div><div class="ml">THROUGHPUT</div><div class="wb"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="mbot"></div></div>
+<div class="mc glass" data-t="thru"><div class="mtop"></div><div class="ms">24H</div><div class="mn" style="font-size:1.5em">28.3<span style="font-size:.28em;opacity:.3">/h</span></div><div class="ml">THROUGHPUT</div><div class="wb"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="mbot"></div></div>
 </section>
 
 <!-- ⊕ NEURAL ACTIVITY GRID ⊕ -->
@@ -531,17 +550,22 @@ colgroup col:nth-child(7),td:nth-child(7),th:nth-child(7),colgroup col:nth-child
 <div class="pc" style="border-color:rgba(139,92,246,.08)"><div class="pv" style="color:var(--vi);font-size:1.1em">22m</div><div class="pl">MEDIAN</div></div>
 <div class="pc" style="border-color:rgba(255,45,85,.08)"><div class="pv" style="color:var(--r);font-size:1.1em">1h11m</div><div class="pl">MAX</div></div>
 </div></div>
-<div class="pn glass"><div class="pn-top"></div><div class="pt">◈ AUTONOMOUS AGENT PANTHEON ◈</div><div class="agrid"><div class="ag" style="--ac:#00B4FF"><span class="agi">◈</span><span class="agn">ARCHON</span><span class="agd">設計宇宙を統べる創造の支配者</span><span class="agp"></span></div><div class="ag" style="--ac:#00E8FF"><span class="agi">⬡</span><span class="agn">STYX</span><span class="agd">無限のデータ流を飲み干す冥河の番人</span><span class="agp"></span></div><div class="ag" style="--ac:#7B2FFF"><span class="agi">◉</span><span class="agn">ORACLE</span><span class="agd">確率の霧を貫く予言演算の神眼</span><span class="agp"></span></div><div class="ag" style="--ac:#00D9A3"><span class="agi">⬢</span><span class="agn">AEGIS</span><span class="agd">腐敗を焼き尽くす不壊の盾の守護神</span><span class="agp"></span></div><div class="ag" style="--ac:#FF6B35"><span class="agi">✦</span><span class="agn">NEXUS</span><span class="agd">無限増殖を司る接続点の覇者</span><span class="agp"></span></div><div class="ag" style="--ac:#FFB800"><span class="agi">◆</span><span class="agn">HERALD</span><span class="agd">すべての門を開かせる黄金の舌を持つ使者</span><span class="agp"></span></div><div class="ag" style="--ac:#FF4757"><span class="agi">▣</span><span class="agn">KRONOS</span><span class="agd">価値と時間の方程式を書き換える経済の原理</span><span class="agp"></span></div><div class="ag" style="--ac:#A8B2C8"><span class="agi">◎</span><span class="agn">SENTINEL</span><span class="agd">眠らぬ鉄の意志で稼働し続ける永久機関の守り手</span><span class="agp"></span></div><div class="ag" style="--ac:#9B59B6"><span class="agi">⊕</span><span class="agn">VOID</span><span class="agd">未知の深淵を独り歩む知識の漂泊者</span><span class="agp"></span></div></div></div>
+</div>
+
+<!-- ◈ AUTONOMOUS AGENT PANTHEON ◈ -->
+<div class="sdiv"><span class="sp"></span><span class="st" data-text="◈ AUTONOMOUS AGENT PANTHEON ◈">◈ AUTONOMOUS AGENT PANTHEON ◈</span></div>
+<div class="pn glass" style="padding:28px"><div class="pn-top"></div>
+<div class="agrid"><div class="ag" style="--ac:#00B4FF"><span class="agi">◈</span><span class="agn">ARCHON</span><span class="agd">設計宇宙を統べる創造の支配者</span><span class="agp"></span></div><div class="ag" style="--ac:#00E8FF"><span class="agi">⬡</span><span class="agn">STYX</span><span class="agd">無限のデータ流を飲み干す冥河の番人</span><span class="agp"></span></div><div class="ag" style="--ac:#7B2FFF"><span class="agi">◉</span><span class="agn">ORACLE</span><span class="agd">確率の霧を貫く予言演算の神眼</span><span class="agp"></span></div><div class="ag" style="--ac:#00D9A3"><span class="agi">⬢</span><span class="agn">AEGIS</span><span class="agd">腐敗を焼き尽くす不壊の盾の守護神</span><span class="agp"></span></div><div class="ag" style="--ac:#FF6B35"><span class="agi">✦</span><span class="agn">NEXUS</span><span class="agd">無限増殖を司る接続点の覇者</span><span class="agp"></span></div><div class="ag" style="--ac:#FFB800"><span class="agi">◆</span><span class="agn">HERALD</span><span class="agd">すべての門を開かせる黄金の舌を持つ使者</span><span class="agp"></span></div><div class="ag" style="--ac:#FF4757"><span class="agi">▣</span><span class="agn">KRONOS</span><span class="agd">価値と時間の方程式を書き換える経済の原理</span><span class="agp"></span></div><div class="ag" style="--ac:#A8B2C8"><span class="agi">◎</span><span class="agn">SENTINEL</span><span class="agd">眠らぬ鉄の意志で稼働し続ける永久機関の守り手</span><span class="agp"></span></div><div class="ag" style="--ac:#9B59B6"><span class="agi">⊕</span><span class="agn">VOID</span><span class="agd">未知の深淵を独り歩む知識の漂泊者</span><span class="agp"></span></div></div>
 </div>
 
 <!-- ▲ STRATEGIC COMMAND ▲ -->
 <div class="sdiv"><span class="sp"></span><span class="st" data-text="▲ STRATEGIC COMMAND ▲">▲ STRATEGIC COMMAND ▲</span></div>
 <div class="strat">
 <div class="pn glass"><div class="pn-top"></div><div class="pt">KPI</div>
-<div class="ki"><span class="kn">COMPLETED</span><span><span class="kv">1046</span><span class="kc ku">+687 24h</span></span></div>
+<div class="ki"><span class="kn">COMPLETED</span><span><span class="kv">1046</span><span class="kc ku">+679 24h</span></span></div>
 <div class="ki"><span class="kn">SUCCESS RATE</span><span><span class="kv">96.0%</span></span></div>
 <div class="ki"><span class="kn">AVG DURATION</span><span><span class="kv">24m</span></span></div>
-<div class="ki"><span class="kn">THROUGHPUT</span><span><span class="kv">28.6/h</span></span></div>
+<div class="ki"><span class="kn">THROUGHPUT</span><span><span class="kv">28.3/h</span></span></div>
 <div class="ki"><span class="kn">PRODUCTIVITY</span><span><span class="kv">1046.0/day</span></span></div>
 <div class="ki"><span class="kn">UPTIME</span><span><span class="kv">1d</span></span></div>
 </div>
@@ -14291,7 +14315,7 @@ Flask等で軽量ダッシュボードを立てる（Grafana的なもの）
 <tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">Alert Rules 3個設定: エラー率&gt;1%、P75レイテンシ&gt;3秒、5xxエラー≥10件（手順: 10_operations/sentry_alert_rules_execution_guide.md参照・約30分・別タスク）</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#314</span><span>CANCELLED</span><span>MEDIUM</span><span></span><span>—</span><span>—</span></div></div></td></tr></tbody></table></div>
 
 <div class="kb"><div><kbd>&#8984;</kbd><kbd>K</kbd> Search</div><div><kbd>1</kbd>-<kbd>5</kbd> Filter</div><div><kbd>Esc</kbd> Clear</div><div><kbd>Click</kbd> Expand</div></div>
-<footer class="ftr"><div>◈ JUDGEMENT // COSMIC COMMAND CENTER v9.0 ═══ AUTHORIZED ACCESS ONLY ◈</div><div>GENERATED 2026-03-14 14:24:10 — <a href="https://github.com/rikuzalu/human-decision-os" target="_blank">GITHUB</a> — CLASSIFICATION: CONFIDENTIAL</div></footer>
+<footer class="ftr"><div>◈ JUDGEMENT // COSMIC COMMAND CENTER v9.0 ═══ AUTHORIZED ACCESS ONLY ◈</div><div>GENERATED 2026-03-14 14:34:16 — <a href="https://github.com/rikuzalu/human-decision-os" target="_blank">GITHUB</a> — CLASSIFICATION: CONFIDENTIAL</div></footer>
 </div>
 
 <script>
@@ -14624,6 +14648,22 @@ obs.observe(el);
 /* ================================================================
    Auto refresh every 30 seconds (JS-based, not meta tag)
    ================================================================ */
+/* ================================================================
+   CSS Particle system (DOM + CSS animation)
+   ================================================================ */
+(function(){
+const n=window.innerWidth<768?10:22;
+for(let i=0;i<n;i++){
+const p=document.createElement('div');p.className='ptcl';
+const s=Math.random()*3+1;
+p.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}vw;top:${Math.random()*100+100}vh;`+
+`animation:ptclFloat ${Math.random()*20+15}s linear ${Math.random()*15}s infinite;`+
+`background:${['var(--n)','var(--n2)','var(--vi)','var(--m)','#fff'][Math.floor(Math.random()*5)]};`+
+`box-shadow:0 0 ${s*3}px currentColor`;
+document.body.appendChild(p);
+}
+})();
+
 setTimeout(function(){location.reload()},30000);
 </script>
 </body></html>
