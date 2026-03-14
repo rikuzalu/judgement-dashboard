@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JUDGEMENT Careers | 人間の判断を、テクノロジーで再定義する</title>
+<meta name="description" content="JUDGEMENTは、AI時代の判断インフラを創る会社です。一緒に未来を作る仲間を募集しています。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg1:#060918;--bg2:#0A0E27;--bg3:#0d1130;
+  --n:#00B4FF;--n2:#00E8FF;--ng:rgba(0,180,255,0.35);
+  --success:#00D9A3;--warn:#FFB800;--err:#FF4757;
+  --purple:#8B5CF6;--pink:#FF6B9D;
+  --t1:#e0e6f0;--t2:rgba(180,195,225,0.85);--t3:rgba(120,140,180,0.6);
+  --glass:rgba(8,14,40,0.6);--glass2:rgba(10,18,50,0.8);
+  --border:rgba(0,180,255,0.12);--border2:rgba(0,180,255,0.25);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans JP','Rajdhani',sans-serif;background:var(--bg1);color:var(--t1);overflow-x:hidden;line-height:1.7}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(0,180,255,0.15);border-radius:3px}
+
+canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    repeating-linear-gradient(90deg,rgba(0,180,255,0.02) 0px,transparent 1px,transparent 100px),
+    repeating-linear-gradient(0deg,rgba(0,180,255,0.02) 0px,transparent 1px,transparent 100px);
+  opacity:0.4}
+.top-bar{position:fixed;top:0;left:0;right:0;height:2px;z-index:100;
+  background:linear-gradient(90deg,transparent,var(--n) 30%,#fff 50%,var(--n2) 70%,transparent);
+  box-shadow:0 0 30px var(--ng),0 0 60px rgba(0,180,255,0.1)}
+
+/* NAV */
+nav{position:fixed;top:2px;left:0;right:0;z-index:99;padding:16px 40px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(6,9,24,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:all 0.3s}
+nav.scrolled{background:rgba(6,9,24,0.95);box-shadow:0 4px 30px rgba(0,0,0,0.3)}
+.logo{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;text-decoration:none;
+  background:linear-gradient(135deg,var(--n),var(--n2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:3px}
+.logo span{font-size:0.6rem;display:block;color:var(--t3);letter-spacing:4px;font-weight:400;-webkit-text-fill-color:var(--t3)}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{color:var(--t2);text-decoration:none;font-size:0.85rem;font-weight:500;letter-spacing:0.5px;
+  transition:color 0.3s;font-family:'Rajdhani',sans-serif}
+.nav-links a:hover{color:var(--n)}
+.nav-cta{padding:8px 24px;background:linear-gradient(135deg,var(--n),var(--n2));color:#060918;
+  border:none;border-radius:6px;font-weight:700;font-size:0.85rem;cursor:pointer;
+  font-family:'Rajdhani',sans-serif;letter-spacing:1px;text-decoration:none;
+  box-shadow:0 0 20px rgba(0,180,255,0.3);transition:all 0.3s}
+.nav-cta:hover{box-shadow:0 0 40px rgba(0,180,255,0.5);transform:translateY(-1px)}
+.nav-toggle{display:none;background:none;border:none;cursor:pointer;padding:4px;flex-direction:column;gap:5px}
+.nav-toggle span{display:block;width:24px;height:2px;background:var(--t1);transition:all 0.3s}
+
+/* COMMON */
+section{position:relative;z-index:10;padding:100px 20px}
+.container{max-width:1200px;margin:0 auto}
+.section-label{font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--n);letter-spacing:5px;
+  text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.section-label::before{content:'';width:30px;height:1px;background:var(--n)}
+.section-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;
+  margin-bottom:20px;line-height:1.3}
+.section-title .accent{background:linear-gradient(135deg,var(--n),var(--n2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.section-desc{color:var(--t2);font-size:1.05rem;max-width:700px;line-height:1.8}
+.fade-in{opacity:0;transform:translateY(40px);transition:opacity 0.8s ease,transform 0.8s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+.fade-in-delay-1{transition-delay:0.15s}
+.fade-in-delay-2{transition-delay:0.3s}
+.fade-in-delay-3{transition-delay:0.45s}
+.fade-in-delay-4{transition-delay:0.6s}
+.fade-in-delay-5{transition-delay:0.75s}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding-top:120px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:45%;left:50%;width:1000px;height:1000px;
+  background:radial-gradient(circle,rgba(139,92,246,0.06) 0%,rgba(0,180,255,0.04) 40%,transparent 70%);
+  transform:translate(-50%,-50%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:200px;
+  background:linear-gradient(to top,var(--bg1),transparent);pointer-events:none}
+.hero-content{position:relative;z-index:2;max-width:900px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;
+  background:rgba(0,180,255,0.06);border:1px solid var(--border2);border-radius:30px;
+  font-size:0.8rem;color:var(--n);margin-bottom:36px;font-family:'Rajdhani',sans-serif;letter-spacing:2px}
+.hero-badge .dot{width:6px;height:6px;background:var(--success);border-radius:50%;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.hero h1{font-family:'Rajdhani','Noto Sans JP',sans-serif;font-size:clamp(2.2rem,6vw,4.2rem);font-weight:700;
+  line-height:1.2;margin-bottom:24px;letter-spacing:0.02em}
+.hero h1 .highlight{background:linear-gradient(135deg,var(--n),var(--n2),var(--purple));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200% 200%;
+  animation:gradientShift 4s ease-in-out infinite}
+@keyframes gradientShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hero-sub{font-size:clamp(1rem,2.5vw,1.2rem);color:var(--t2);line-height:1.9;margin-bottom:48px;max-width:640px;margin-left:auto;margin-right:auto}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;padding:18px 48px;
+  background:linear-gradient(135deg,var(--n),var(--n2));color:#060918;font-weight:700;
+  font-size:1.1rem;border:none;border-radius:8px;cursor:pointer;text-decoration:none;
+  font-family:'Rajdhani',sans-serif;letter-spacing:1px;
+  box-shadow:0 0 30px rgba(0,180,255,0.4),0 4px 15px rgba(0,0,0,0.3);
+  transition:all 0.3s;position:relative;overflow:hidden}
+.btn-primary::after{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:linear-gradient(45deg,transparent,rgba(255,255,255,0.1),transparent);
+  transform:rotate(45deg);transition:all 0.5s}
+.btn-primary:hover::after{left:100%}
+.btn-primary:hover{box-shadow:0 0 50px rgba(0,180,255,0.6),0 8px 25px rgba(0,0,0,0.4);transform:translateY(-2px)}
+.btn-outline{display:inline-flex;align-items:center;gap:8px;padding:16px 36px;
+  background:transparent;color:var(--t1);font-weight:600;font-size:1rem;
+  border:1px solid var(--border2);border-radius:8px;cursor:pointer;text-decoration:none;
+  font-family:'Rajdhani',sans-serif;letter-spacing:1px;transition:all 0.3s;backdrop-filter:blur(10px)}
+.btn-outline:hover{border-color:var(--n);color:var(--n);transform:translateY(-2px);box-shadow:0 0 20px rgba(0,180,255,0.2)}
+.scroll-indicator{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.5rem;animation:scrollBounce 2s infinite;z-index:2}
+.scroll-indicator .line{width:1px;height:40px;background:linear-gradient(to bottom,var(--n),transparent)}
+@keyframes scrollBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+/* MISSION */
+.mission-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:60px;align-items:start}
+.mission-statement{padding:40px;background:var(--glass);border:1px solid var(--border);border-radius:16px;
+  backdrop-filter:blur(20px);position:relative;overflow:hidden}
+.mission-statement::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--n),var(--n2),transparent)}
+.mission-statement blockquote{font-family:'Rajdhani','Noto Sans JP',sans-serif;font-size:1.5rem;font-weight:600;
+  line-height:1.6;color:var(--t1);border-left:3px solid var(--n);padding-left:24px;margin-bottom:20px}
+.mission-statement p{color:var(--t2);font-size:0.95rem;line-height:1.8}
+.culture-cards{display:grid;gap:16px}
+.culture-card{display:flex;align-items:flex-start;gap:16px;padding:24px;
+  background:var(--glass);border:1px solid var(--border);border-radius:12px;
+  backdrop-filter:blur(10px);transition:all 0.3s}
+.culture-card:hover{border-color:var(--border2);transform:translateX(4px);box-shadow:0 0 20px rgba(0,180,255,0.08)}
+.culture-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,180,255,0.08);border:1px solid var(--border);flex-shrink:0;font-size:1.2rem}
+.culture-card h4{font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;color:var(--n);
+  letter-spacing:1px;margin-bottom:4px}
+.culture-card p{font-size:0.88rem;color:var(--t2);line-height:1.6}
+
+/* WHAT WE DO */
+.wwd-section{background:linear-gradient(180deg,transparent 0%,rgba(0,180,255,0.02) 50%,transparent 100%)}
+.wwd-visual{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:60px}
+.wwd-card{padding:40px 32px;background:var(--glass);border:1px solid var(--border);border-radius:16px;
+  backdrop-filter:blur(20px);text-align:center;position:relative;overflow:hidden;transition:all 0.4s}
+.wwd-card:hover{border-color:var(--border2);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.3)}
+.wwd-card::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:60%;height:2px;
+  background:linear-gradient(90deg,transparent,var(--n),transparent);opacity:0;transition:opacity 0.4s}
+.wwd-card:hover::before{opacity:1}
+.wwd-icon{font-size:2.5rem;margin-bottom:20px;display:block}
+.wwd-card h3{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;color:var(--t1);
+  letter-spacing:2px;margin-bottom:12px}
+.wwd-card .tag{font-family:'Orbitron',sans-serif;font-size:0.65rem;color:var(--n2);letter-spacing:3px;
+  margin-bottom:16px;display:block}
+.wwd-card p{color:var(--t2);font-size:0.9rem;line-height:1.8}
+.wwd-connector{display:flex;align-items:center;justify-content:center;margin-top:32px;gap:16px}
+.wwd-connector .line{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent)}
+.wwd-connector .text{font-family:'Orbitron',sans-serif;font-size:0.65rem;color:var(--n);letter-spacing:4px;white-space:nowrap}
+
+/* TECH STACK */
+.tech-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:60px}
+.tech-category{padding:32px;background:var(--glass);border:1px solid var(--border);border-radius:16px;
+  backdrop-filter:blur(10px);transition:all 0.3s}
+.tech-category:hover{border-color:var(--border2)}
+.tech-category h3{font-family:'Orbitron',sans-serif;font-size:0.75rem;letter-spacing:3px;color:var(--n);
+  margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.tech-tag{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;margin:4px;
+  background:rgba(0,180,255,0.06);border:1px solid var(--border);border-radius:6px;
+  font-size:0.85rem;color:var(--t2);font-family:'Rajdhani',sans-serif;font-weight:500;letter-spacing:0.5px;
+  transition:all 0.3s}
+.tech-tag:hover{border-color:var(--n);color:var(--n);background:rgba(0,180,255,0.1)}
+.tech-tag .dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.dot-blue{background:var(--n)}
+.dot-cyan{background:var(--n2)}
+.dot-green{background:var(--success)}
+.dot-purple{background:var(--purple)}
+.dot-yellow{background:var(--warn)}
+
+/* POSITIONS */
+.positions-section{background:linear-gradient(180deg,transparent 0%,rgba(139,92,246,0.02) 50%,transparent 100%)}
+.positions-grid{display:grid;gap:20px;margin-top:60px}
+.position-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;
+  backdrop-filter:blur(20px);overflow:hidden;transition:all 0.4s;cursor:pointer}
+.position-card:hover{border-color:var(--border2);box-shadow:0 8px 32px rgba(0,0,0,0.3)}
+.position-header{display:flex;align-items:center;justify-content:space-between;padding:28px 32px;
+  transition:background 0.3s}
+.position-header:hover{background:rgba(0,180,255,0.03)}
+.position-info{display:flex;align-items:center;gap:20px}
+.position-icon{width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;flex-shrink:0}
+.pos-icon-eng{background:rgba(0,180,255,0.1);border:1px solid rgba(0,180,255,0.2)}
+.pos-icon-ai{background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2)}
+.pos-icon-biz{background:rgba(0,217,163,0.1);border:1px solid rgba(0,217,163,0.2)}
+.pos-icon-pm{background:rgba(255,184,0,0.1);border:1px solid rgba(255,184,0,0.2)}
+.pos-icon-design{background:rgba(255,107,157,0.1);border:1px solid rgba(255,107,157,0.2)}
+.position-title{font-family:'Rajdhani',sans-serif;font-size:1.25rem;font-weight:700;color:var(--t1);letter-spacing:0.5px}
+.position-tags{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
+.position-tags span{font-size:0.72rem;padding:3px 10px;border-radius:4px;font-family:'Rajdhani',sans-serif;
+  letter-spacing:0.5px;font-weight:500}
+.tag-remote{background:rgba(0,217,163,0.1);color:var(--success);border:1px solid rgba(0,217,163,0.15)}
+.tag-full{background:rgba(0,180,255,0.1);color:var(--n);border:1px solid rgba(0,180,255,0.15)}
+.tag-flex{background:rgba(139,92,246,0.1);color:var(--purple);border:1px solid rgba(139,92,246,0.15)}
+.position-arrow{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;color:var(--t3);
+  transition:all 0.3s;flex-shrink:0}
+.position-card:hover .position-arrow{border-color:var(--n);color:var(--n);background:rgba(0,180,255,0.05)}
+.position-detail{max-height:0;overflow:hidden;transition:max-height 0.5s ease,padding 0.3s ease;padding:0 32px}
+.position-detail.open{max-height:800px;padding:0 32px 32px}
+.position-detail-inner{padding-top:20px;border-top:1px solid var(--border)}
+.detail-section{margin-bottom:20px}
+.detail-section h5{font-family:'Rajdhani',sans-serif;font-size:0.9rem;font-weight:700;color:var(--n);
+  letter-spacing:1px;margin-bottom:8px}
+.detail-section p{font-size:0.92rem;color:var(--t2);line-height:1.8;margin-bottom:8px}
+.detail-section ul{list-style:none;padding:0}
+.detail-section ul li{padding:4px 0;font-size:0.9rem;color:var(--t2);padding-left:20px;position:relative}
+.detail-section ul li::before{content:'';position:absolute;left:0;top:12px;width:6px;height:6px;
+  border-radius:50%;background:var(--n);opacity:0.6}
+.apply-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;margin-top:8px;
+  background:linear-gradient(135deg,var(--n),var(--n2));color:#060918;font-weight:700;
+  font-size:0.9rem;border:none;border-radius:8px;cursor:pointer;text-decoration:none;
+  font-family:'Rajdhani',sans-serif;letter-spacing:1px;transition:all 0.3s;
+  box-shadow:0 0 20px rgba(0,180,255,0.3)}
+.apply-btn:hover{box-shadow:0 0 40px rgba(0,180,255,0.5);transform:translateY(-1px)}
+
+/* BENEFITS */
+.benefits-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-top:60px}
+.benefit-card{padding:32px 24px;background:var(--glass);border:1px solid var(--border);border-radius:16px;
+  backdrop-filter:blur(10px);text-align:center;transition:all 0.3s;position:relative;overflow:hidden}
+.benefit-card:hover{border-color:var(--border2);transform:translateY(-4px);box-shadow:0 8px 30px rgba(0,0,0,0.2)}
+.benefit-card::before{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:60%;height:2px;
+  background:linear-gradient(90deg,transparent,var(--n2),transparent);opacity:0;transition:opacity 0.4s}
+.benefit-card:hover::before{opacity:1}
+.benefit-icon{font-size:2rem;margin-bottom:16px;display:block}
+.benefit-card h4{font-family:'Rajdhani',sans-serif;font-size:1.05rem;font-weight:700;color:var(--t1);
+  margin-bottom:8px;letter-spacing:0.5px}
+.benefit-card p{font-size:0.85rem;color:var(--t3);line-height:1.6}
+
+/* CTA SECTION */
+.cta-section{text-align:center;padding:120px 20px}
+.cta-box{max-width:700px;margin:0 auto;padding:60px 48px;background:var(--glass);border:1px solid var(--border);
+  border-radius:24px;backdrop-filter:blur(20px);position:relative;overflow:hidden}
+.cta-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--n),var(--n2),var(--purple),transparent)}
+.cta-box::after{content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 0%,rgba(0,180,255,0.06),transparent 70%);pointer-events:none}
+.cta-section h2{font-family:'Rajdhani','Noto Sans JP',sans-serif;font-size:clamp(1.6rem,4vw,2.4rem);
+  font-weight:700;margin-bottom:16px;color:var(--t1)}
+.cta-section h2 .accent{background:linear-gradient(135deg,var(--n),var(--n2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.cta-section p{color:var(--t2);font-size:1rem;margin-bottom:36px;line-height:1.8}
+.cta-email-form{display:flex;gap:12px;max-width:480px;margin:0 auto 20px;flex-wrap:wrap;justify-content:center}
+.cta-email-form input{flex:1;min-width:240px;padding:14px 20px;background:rgba(0,180,255,0.05);
+  border:1px solid var(--border2);border-radius:8px;color:var(--t1);font-size:0.95rem;
+  font-family:'Noto Sans JP',sans-serif;outline:none;transition:all 0.3s}
+.cta-email-form input:focus{border-color:var(--n);box-shadow:0 0 20px rgba(0,180,255,0.15)}
+.cta-email-form input::placeholder{color:var(--t3)}
+.cta-email-form button{padding:14px 32px;background:linear-gradient(135deg,var(--n),var(--n2));color:#060918;
+  font-weight:700;font-size:0.95rem;border:none;border-radius:8px;cursor:pointer;
+  font-family:'Rajdhani',sans-serif;letter-spacing:1px;transition:all 0.3s;white-space:nowrap;
+  box-shadow:0 0 20px rgba(0,180,255,0.3)}
+.cta-email-form button:hover{box-shadow:0 0 40px rgba(0,180,255,0.5);transform:translateY(-1px)}
+.cta-or{color:var(--t3);font-size:0.85rem;margin-bottom:16px}
+.cta-mailto{color:var(--n);text-decoration:none;font-family:'Rajdhani',sans-serif;font-size:1rem;
+  letter-spacing:1px;transition:color 0.3s;border-bottom:1px solid transparent}
+.cta-mailto:hover{color:var(--n2);border-bottom-color:var(--n2)}
+
+/* FOOTER */
+footer{position:relative;z-index:10;padding:40px 20px;text-align:center;
+  border-top:1px solid var(--border);background:rgba(6,9,24,0.5);backdrop-filter:blur(10px)}
+footer p{color:var(--t3);font-size:0.8rem;font-family:'Rajdhani',sans-serif;letter-spacing:1px}
+footer a{color:var(--n);text-decoration:none}
+
+/* MOBILE */
+@media(max-width:900px){
+  .mission-grid{grid-template-columns:1fr}
+  .wwd-visual{grid-template-columns:1fr}
+  .tech-grid{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  nav{padding:12px 20px}
+  .nav-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;gap:0;
+    background:rgba(6,9,24,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(20px)}
+  .nav-links.open{display:flex}
+  .nav-links a{padding:16px 24px;border-bottom:1px solid var(--border)}
+  .nav-cta{margin:12px 24px;text-align:center;display:block}
+  .nav-toggle{display:flex}
+  .hero h1{font-size:clamp(1.8rem,8vw,2.8rem)}
+  .hero-sub{font-size:1rem}
+  .position-header{padding:20px;flex-wrap:wrap;gap:12px}
+  .position-info{flex:1;min-width:200px}
+  .position-detail.open{padding:0 20px 24px}
+  .cta-box{padding:40px 24px}
+  .cta-email-form{flex-direction:column}
+  .cta-email-form input{min-width:100%}
+  .benefits-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .benefit-card{padding:24px 16px}
+}
+@media(max-width:480px){
+  .benefits-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div class="grid-bg"></div>
+<div class="top-bar"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="hp.html" class="logo">JUDGEMENT<span>CAREERS</span></a>
+  <div class="nav-links" id="navLinks">
+    <a href="#mission">MISSION</a>
+    <a href="#whatwedo">PRODUCT</a>
+    <a href="#tech">TECH</a>
+    <a href="#positions">POSITIONS</a>
+    <a href="#benefits">BENEFITS</a>
+    <a href="#apply" class="nav-cta">APPLY NOW</a>
+  </div>
+  <button class="nav-toggle" id="navToggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-content fade-in">
+    <div class="hero-badge"><span class="dot"></span>WE'RE HIRING</div>
+    <h1>人間の判断を、<br><span class="highlight">テクノロジーで再定義する。</span></h1>
+    <p class="hero-sub">
+      JUDGEMENTは、AI時代の判断インフラを創る会社です。<br>
+      人間の「判断」をデータ化し、世界で最も信頼されるインフラを共に創る仲間を求めています。
+    </p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+      <a href="#positions" class="btn-primary">募集ポジションを見る<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></a>
+      <a href="#mission" class="btn-outline">ミッションを知る</a>
+    </div>
+  </div>
+  <div class="scroll-indicator"><div class="line"></div></div>
+</section>
+
+<!-- MISSION / CULTURE -->
+<section id="mission">
+  <div class="container">
+    <div class="section-label fade-in">MISSION / CULTURE</div>
+    <h2 class="section-title fade-in">AIと人間が<span class="accent">共創する</span>組織</h2>
+    <p class="section-desc fade-in">テクノロジーの力で人間の意思決定を支える。それがJUDGEMENTの存在意義です。</p>
+    <div class="mission-grid">
+      <div class="mission-statement fade-in">
+        <blockquote>人間の判断データを、<br>世界で最も信頼される<br>インフラにする。</blockquote>
+        <p>私たちは、AIが急速に進化する時代において「人間の判断」の価値を信じています。<br>判断の質を定量化し、検証可能なデータとして扱える世界を実現する。それが私たちのミッションです。</p>
+      </div>
+      <div class="culture-cards">
+        <div class="culture-card fade-in fade-in-delay-1">
+          <div class="culture-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--n)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <div>
+            <h4>AI-FIRST</h4>
+            <p>AIと人間が協働する組織。AIを道具ではなく、チームメイトとして迎え入れる。</p>
+          </div>
+        </div>
+        <div class="culture-card fade-in fade-in-delay-2">
+          <div class="culture-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--n2)" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <div>
+            <h4>SPEED</h4>
+            <p>意思決定の速さが競争優位。考えすぎるより、まず動く。検証して修正する。</p>
+          </div>
+        </div>
+        <div class="culture-card fade-in fade-in-delay-3">
+          <div class="culture-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div>
+            <h4>QUALITY</h4>
+            <p>品質に妥協しない。判断データの正確性は、私たちの信頼の源泉。</p>
+          </div>
+        </div>
+        <div class="culture-card fade-in fade-in-delay-4">
+          <div class="culture-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div>
+            <h4>AUTONOMY</h4>
+            <p>裁量と責任を持つ。各メンバーがオーナーシップを持ち、自律的に動く。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT WE DO -->
+<section class="wwd-section" id="whatwedo">
+  <div class="container">
+    <div class="section-label fade-in">WHAT WE DO</div>
+    <h2 class="section-title fade-in">人間の判断データ <span class="accent">x</span> AI品質管理</h2>
+    <p class="section-desc fade-in">JUDGEMENTは3つのレイヤーで構成される判断インフラを構築しています。</p>
+    <div class="wwd-visual">
+      <div class="wwd-card fade-in fade-in-delay-1">
+        <span class="wwd-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--n)" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </span>
+        <span class="tag">LAYER 01</span>
+        <h3>DECISION OPS</h3>
+        <p>人間の判断プロセスを効率化するオペレーション基盤。リアルタイムで判断データを収集・管理。</p>
+      </div>
+      <div class="wwd-card fade-in fade-in-delay-2">
+        <span class="wwd-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--n2)" stroke-width="1.5"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        </span>
+        <span class="tag">LAYER 02</span>
+        <h3>DATASET</h3>
+        <p>高品質な判断データセットの生成・管理。AIの学習データに信頼と品質を担保する。</p>
+      </div>
+      <div class="wwd-card fade-in fade-in-delay-3">
+        <span class="wwd-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="1.5"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+        </span>
+        <span class="tag">LAYER 03</span>
+        <h3>API</h3>
+        <p>判断データと品質スコアをAPIとして提供。外部サービスとシームレスに連携。</p>
+      </div>
+    </div>
+    <div class="wwd-connector fade-in">
+      <div class="line"></div>
+      <span class="text">INTEGRATED DECISION INFRASTRUCTURE</span>
+      <div class="line"></div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section id="tech">
+  <div class="container">
+    <div class="section-label fade-in">TECH STACK</div>
+    <h2 class="section-title fade-in">最新技術で<span class="accent">判断インフラ</span>を構築</h2>
+    <p class="section-desc fade-in">高い生産性と品質を両立するモダンな技術スタックを採用しています。</p>
+    <div class="tech-grid">
+      <div class="tech-category fade-in fade-in-delay-1">
+        <h3>FRONTEND / BACKEND</h3>
+        <span class="tech-tag"><span class="dot dot-blue"></span>Next.js 15</span>
+        <span class="tech-tag"><span class="dot dot-blue"></span>TypeScript</span>
+        <span class="tech-tag"><span class="dot dot-cyan"></span>React</span>
+        <span class="tech-tag"><span class="dot dot-green"></span>Prisma</span>
+        <span class="tech-tag"><span class="dot dot-green"></span>NextAuth</span>
+        <span class="tech-tag"><span class="dot dot-cyan"></span>Tailwind CSS</span>
+      </div>
+      <div class="tech-category fade-in fade-in-delay-2">
+        <h3>INFRASTRUCTURE</h3>
+        <span class="tech-tag"><span class="dot dot-blue"></span>Supabase</span>
+        <span class="tech-tag"><span class="dot dot-blue"></span>PostgreSQL</span>
+        <span class="tech-tag"><span class="dot dot-cyan"></span>Vercel</span>
+        <span class="tech-tag"><span class="dot dot-purple"></span>Sentry</span>
+        <span class="tech-tag"><span class="dot dot-green"></span>GitHub Actions</span>
+        <span class="tech-tag"><span class="dot dot-yellow"></span>CI/CD Pipeline</span>
+      </div>
+      <div class="tech-category fade-in fade-in-delay-3">
+        <h3>AI / ML</h3>
+        <span class="tech-tag"><span class="dot dot-purple"></span>Trust Score</span>
+        <span class="tech-tag"><span class="dot dot-purple"></span>Anomaly Detection</span>
+        <span class="tech-tag"><span class="dot dot-cyan"></span>Preference Model</span>
+        <span class="tech-tag"><span class="dot dot-green"></span>Consensus Engine</span>
+        <span class="tech-tag"><span class="dot dot-yellow"></span>Fraud Detection</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POSITIONS -->
+<section class="positions-section" id="positions">
+  <div class="container">
+    <div class="section-label fade-in">OPEN POSITIONS</div>
+    <h2 class="section-title fade-in">一緒に<span class="accent">未来を創る</span>仲間を探しています</h2>
+    <p class="section-desc fade-in">全ポジション、フルリモート・フレックスタイム対応。国内外どこからでも参加できます。</p>
+    <div class="positions-grid">
+
+      <!-- フルスタックエンジニア -->
+      <div class="position-card fade-in fade-in-delay-1" onclick="togglePosition(this)">
+        <div class="position-header">
+          <div class="position-info">
+            <div class="position-icon pos-icon-eng">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--n)" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+            <div>
+              <div class="position-title">フルスタックエンジニア</div>
+              <div class="position-tags">
+                <span class="tag-remote">REMOTE</span>
+                <span class="tag-full">FULL-TIME</span>
+                <span class="tag-flex">FLEX</span>
+              </div>
+            </div>
+          </div>
+          <div class="position-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <div class="position-detail">
+          <div class="position-detail-inner">
+            <div class="detail-section">
+              <h5>ROLE</h5>
+              <p>Next.js + Supabaseを中心としたプロダクト開発の全工程を担当。機能設計からAPI実装、フロントエンド開発、パフォーマンス最適化まで。</p>
+            </div>
+            <div class="detail-section">
+              <h5>REQUIRED SKILLS</h5>
+              <ul>
+                <li>TypeScript / React の実務経験 2年以上</li>
+                <li>Next.js（App Router）を用いた開発経験</li>
+                <li>RDBの設計・運用経験（PostgreSQL推奨）</li>
+                <li>Git / CI/CD パイプラインの運用経験</li>
+              </ul>
+            </div>
+            <div class="detail-section">
+              <h5>NICE TO HAVE</h5>
+              <ul>
+                <li>Prisma / Supabase の使用経験</li>
+                <li>Playwright / Jest によるテスト自動化経験</li>
+                <li>認証基盤（NextAuth / OAuth）の実装経験</li>
+                <li>スタートアップでの開発経験</li>
+              </ul>
+            </div>
+            <a href="#apply" class="apply-btn">応募する<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- AIエンジニア -->
+      <div class="position-card fade-in fade-in-delay-2" onclick="togglePosition(this)">
+        <div class="position-header">
+          <div class="position-info">
+            <div class="position-icon pos-icon-ai">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93"/><path d="M8 6a4 4 0 0 1 8 0"/><path d="M5 18a7 7 0 0 1 14 0"/><circle cx="12" cy="13" r="1"/></svg>
+            </div>
+            <div>
+              <div class="position-title">AIエンジニア</div>
+              <div class="position-tags">
+                <span class="tag-remote">REMOTE</span>
+                <span class="tag-full">FULL-TIME</span>
+                <span class="tag-flex">FLEX</span>
+              </div>
+            </div>
+          </div>
+          <div class="position-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <div class="position-detail">
+          <div class="position-detail-inner">
+            <div class="detail-section">
+              <h5>ROLE</h5>
+              <p>Trust Score算出アルゴリズム、異常検知モデル、合意形成エンジンの設計・開発。人間の判断品質を定量化するコアテクノロジーを担当。</p>
+            </div>
+            <div class="detail-section">
+              <h5>REQUIRED SKILLS</h5>
+              <ul>
+                <li>Python / 機械学習フレームワークの実務経験 2年以上</li>
+                <li>統計学・確率論の基礎知識</li>
+                <li>異常検知・分類モデルの構築経験</li>
+                <li>データ分析・前処理の実務経験</li>
+              </ul>
+            </div>
+            <div class="detail-section">
+              <h5>NICE TO HAVE</h5>
+              <ul>
+                <li>NLPまたはレコメンドシステムの開発経験</li>
+                <li>LLM / プロンプトエンジニアリングの知見</li>
+                <li>A/Bテスト設計・因果推論の経験</li>
+                <li>TypeScriptでのバックエンド開発経験</li>
+              </ul>
+            </div>
+            <a href="#apply" class="apply-btn">応募する<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- BizDev / 営業 -->
+      <div class="position-card fade-in fade-in-delay-3" onclick="togglePosition(this)">
+        <div class="position-header">
+          <div class="position-info">
+            <div class="position-icon pos-icon-biz">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <div>
+              <div class="position-title">BizDev / 営業</div>
+              <div class="position-tags">
+                <span class="tag-remote">REMOTE</span>
+                <span class="tag-full">FULL-TIME</span>
+                <span class="tag-flex">FLEX</span>
+              </div>
+            </div>
+          </div>
+          <div class="position-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <div class="position-detail">
+          <div class="position-detail-inner">
+            <div class="detail-section">
+              <h5>ROLE</h5>
+              <p>法人顧客の獲得・リレーション構築。AI開発企業へのPoC提案、データセット販売、API導入の営業活動を主導。</p>
+            </div>
+            <div class="detail-section">
+              <h5>REQUIRED SKILLS</h5>
+              <ul>
+                <li>法人向けSaaS / IT商材の営業経験 2年以上</li>
+                <li>新規開拓・提案営業の実績</li>
+                <li>顧客課題のヒアリング・ソリューション提案力</li>
+                <li>ビジネスレベルの日本語コミュニケーション</li>
+              </ul>
+            </div>
+            <div class="detail-section">
+              <h5>NICE TO HAVE</h5>
+              <ul>
+                <li>AI / データ関連事業の営業経験</li>
+                <li>スタートアップでの事業開発経験</li>
+                <li>英語でのビジネスコミュニケーション能力</li>
+                <li>CRM運用・セールスプロセス設計の経験</li>
+              </ul>
+            </div>
+            <a href="#apply" class="apply-btn">応募する<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- プロダクトマネージャー -->
+      <div class="position-card fade-in fade-in-delay-4" onclick="togglePosition(this)">
+        <div class="position-header">
+          <div class="position-info">
+            <div class="position-icon pos-icon-pm">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--warn)" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            </div>
+            <div>
+              <div class="position-title">プロダクトマネージャー</div>
+              <div class="position-tags">
+                <span class="tag-remote">REMOTE</span>
+                <span class="tag-full">FULL-TIME</span>
+                <span class="tag-flex">FLEX</span>
+              </div>
+            </div>
+          </div>
+          <div class="position-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <div class="position-detail">
+          <div class="position-detail-inner">
+            <div class="detail-section">
+              <h5>ROLE</h5>
+              <p>MVP設計からプロダクトロードマップの策定、ユーザーリサーチ、優先度判断まで。エンジニア・デザイナーと連携してプロダクトを前進させる。</p>
+            </div>
+            <div class="detail-section">
+              <h5>REQUIRED SKILLS</h5>
+              <ul>
+                <li>Webプロダクトの企画・設計経験 2年以上</li>
+                <li>ユーザーリサーチ・インタビューの実施経験</li>
+                <li>KPI設定・データドリブンな意思決定能力</li>
+                <li>アジャイル / スクラムの実務経験</li>
+              </ul>
+            </div>
+            <div class="detail-section">
+              <h5>NICE TO HAVE</h5>
+              <ul>
+                <li>AI / データプロダクトの PM 経験</li>
+                <li>B2B SaaS のプロダクトマネジメント経験</li>
+                <li>SQL / 基本的なデータ分析スキル</li>
+                <li>0→1 フェーズのプロダクト立ち上げ経験</li>
+              </ul>
+            </div>
+            <a href="#apply" class="apply-btn">応募する<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- デザイナー -->
+      <div class="position-card fade-in fade-in-delay-5" onclick="togglePosition(this)">
+        <div class="position-header">
+          <div class="position-info">
+            <div class="position-icon pos-icon-design">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2"><circle cx="13.5" cy="6.5" r="2.5"/><path d="M17.5 10.5c2 0 3.5 1.5 3.5 3.5 0 2-1.5 3.5-3.5 3.5"/><circle cx="6.5" cy="13.5" r="2.5"/><path d="M3 6.5C3 4.5 4.5 3 6.5 3S10 4.5 10 6.5"/><circle cx="13.5" cy="17.5" r="2.5"/><path d="M10 17.5c0 2 1.5 3.5 3.5 3.5S17 19.5 17 17.5"/></svg>
+            </div>
+            <div>
+              <div class="position-title">デザイナー（UI/UX）</div>
+              <div class="position-tags">
+                <span class="tag-remote">REMOTE</span>
+                <span class="tag-full">FULL-TIME / PART-TIME</span>
+                <span class="tag-flex">FLEX</span>
+              </div>
+            </div>
+          </div>
+          <div class="position-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <div class="position-detail">
+          <div class="position-detail-inner">
+            <div class="detail-section">
+              <h5>ROLE</h5>
+              <p>超高速回答UIの設計、ダッシュボード・管理画面のUX設計、ブランドガイドラインの策定と運用。ユーザーの判断体験を最高のものにする。</p>
+            </div>
+            <div class="detail-section">
+              <h5>REQUIRED SKILLS</h5>
+              <ul>
+                <li>UI/UXデザインの実務経験 2年以上</li>
+                <li>Figma でのプロトタイピング・コンポーネント設計</li>
+                <li>ユーザビリティテスト・A/Bテストの経験</li>
+                <li>レスポンシブデザイン・アクセシビリティの知識</li>
+              </ul>
+            </div>
+            <div class="detail-section">
+              <h5>NICE TO HAVE</h5>
+              <ul>
+                <li>ダークテーマ / ダッシュボードUIの設計経験</li>
+                <li>HTML / CSS / Tailwind CSS の実装スキル</li>
+                <li>モーションデザイン / マイクロインタラクション設計</li>
+                <li>デザインシステムの構築経験</li>
+              </ul>
+            </div>
+            <a href="#apply" class="apply-btn">応募する<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section id="benefits">
+  <div class="container">
+    <div class="section-label fade-in">BENEFITS</div>
+    <h2 class="section-title fade-in">最高の環境で、<span class="accent">最高の仕事</span>を</h2>
+    <p class="section-desc fade-in">メンバーが最大のパフォーマンスを発揮できる環境を整えています。</p>
+    <div class="benefits-grid">
+      <div class="benefit-card fade-in fade-in-delay-1">
+        <span class="benefit-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--n)" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </span>
+        <h4>フルリモート</h4>
+        <p>世界中どこからでも。オフィス出社の義務なし。</p>
+      </div>
+      <div class="benefit-card fade-in fade-in-delay-2">
+        <span class="benefit-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--n2)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </span>
+        <h4>フレックスタイム</h4>
+        <p>コアタイムなし。成果で評価する文化。</p>
+      </div>
+      <div class="benefit-card fade-in fade-in-delay-3">
+        <span class="benefit-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </span>
+        <h4>ストックオプション</h4>
+        <p>初期メンバーとして、成長の果実を共有。</p>
+      </div>
+      <div class="benefit-card fade-in fade-in-delay-4">
+        <span class="benefit-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </span>
+        <h4>最新デバイス支給</h4>
+        <p>MacBook / 4Kモニターなど、必要な機材を支給。</p>
+      </div>
+      <div class="benefit-card fade-in fade-in-delay-5">
+        <span class="benefit-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--warn)" stroke-width="1.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </span>
+        <h4>自己学習支援</h4>
+        <p>書籍・カンファレンス・オンライン講座の費用負担。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="apply">
+  <div class="cta-box fade-in">
+    <div class="section-label" style="justify-content:center">JOIN US</div>
+    <h2>一緒に、<span class="accent">判断の未来</span>を創ろう</h2>
+    <p>少しでも興味があれば、まずはカジュアルにお話ししましょう。<br>ポジションに限らず、お気軽にご連絡ください。</p>
+    <div class="cta-email-form" id="ctaForm">
+      <input type="email" id="emailInput" placeholder="your@email.com" autocomplete="email">
+      <button type="button" onclick="handleApply()">応募する</button>
+    </div>
+    <p class="cta-or">or</p>
+    <a href="mailto:careers@judgement.app" class="cta-mailto">careers@judgement.app</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>&copy; 2026 JUDGEMENT Inc. All rights reserved. | <a href="hp.html">Home</a></p>
+</footer>
+
+<script>
+// パーティクル
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+let w, h;
+function resize() {
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * w;
+    this.y = Math.random() * h;
+    this.vx = (Math.random() - 0.5) * 0.3;
+    this.vy = (Math.random() - 0.5) * 0.3;
+    this.r = Math.random() * 1.5 + 0.5;
+    this.alpha = Math.random() * 0.4 + 0.1;
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    if (this.x < 0 || this.x > w || this.y < 0 || this.y > h) this.reset();
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(0,180,255,${this.alpha})`;
+    ctx.fill();
+  }
+}
+
+const count = Math.min(80, Math.floor(w * h / 15000));
+for (let i = 0; i < count; i++) particles.push(new Particle());
+
+function drawLines() {
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 150) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(0,180,255,${0.06 * (1 - dist / 150)})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+function animate() {
+  ctx.clearRect(0, 0, w, h);
+  particles.forEach(p => { p.update(); p.draw(); });
+  drawLines();
+  requestAnimationFrame(animate);
+}
+animate();
+
+// ナビゲーション
+const nav = document.getElementById('nav');
+const navToggle = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+navToggle.addEventListener('click', () => {
+  navLinks.classList.toggle('open');
+});
+
+navLinks.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => navLinks.classList.remove('open'));
+});
+
+// スクロールアニメーション
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('visible');
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// ポジション展開
+function togglePosition(card) {
+  const detail = card.querySelector('.position-detail');
+  const arrow = card.querySelector('.position-arrow svg');
+  const isOpen = detail.classList.contains('open');
+
+  // 他を閉じる
+  document.querySelectorAll('.position-detail.open').forEach(d => {
+    d.classList.remove('open');
+    d.closest('.position-card').querySelector('.position-arrow svg').style.transform = '';
+  });
+
+  if (!isOpen) {
+    detail.classList.add('open');
+    arrow.style.transform = 'rotate(180deg)';
+  }
+}
+
+// 応募フォーム
+function handleApply() {
+  const email = document.getElementById('emailInput').value;
+  if (email && email.includes('@')) {
+    window.location.href = `mailto:careers@judgement.app?subject=${encodeURIComponent('JUDGEMENT 採用応募')}&body=${encodeURIComponent('応募者メールアドレス: ' + email + '\n\n希望ポジション: \n\n自己紹介・経歴:\n\n')}`;
+  } else {
+    window.location.href = 'mailto:careers@judgement.app?subject=' + encodeURIComponent('JUDGEMENT 採用応募');
+  }
+}
+
+// Enter キー対応
+document.getElementById('emailInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') handleApply();
+});
+</script>
+</body>
+</html>

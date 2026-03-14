@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JUDGEMENT | 導入事例 - Case Studies</title>
+<meta name="description" content="JUDGEMENTの導入事例。AI品質評価の工数80%削減、CVR15%改善など、データドリブンな意思決定がもたらす成果をご紹介。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg1:#060918;--bg2:#0A0E27;--bg3:#0d1130;
+  --n:#00B4FF;--n2:#00E8FF;--ng:rgba(0,180,255,0.35);
+  --success:#00D9A3;--warn:#FFB800;--err:#FF4757;
+  --purple:#7B61FF;
+  --t1:#e0e6f0;--t2:rgba(180,195,225,0.85);--t3:rgba(120,140,180,0.6);
+  --glass:rgba(8,14,40,0.6);--glass2:rgba(10,18,50,0.8);
+  --border:rgba(0,180,255,0.12);--border2:rgba(0,180,255,0.25);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans JP','Rajdhani',sans-serif;background:var(--bg1);color:var(--t1);overflow-x:hidden;line-height:1.7}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(0,180,255,0.15);border-radius:3px}
+
+canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    repeating-linear-gradient(90deg,rgba(0,180,255,0.02) 0px,transparent 1px,transparent 100px),
+    repeating-linear-gradient(0deg,rgba(0,180,255,0.02) 0px,transparent 1px,transparent 100px);
+  opacity:0.4}
+
+.top-bar{position:fixed;top:0;left:0;right:0;height:2px;z-index:100;
+  background:linear-gradient(90deg,transparent,var(--n) 30%,#fff 50%,var(--n2) 70%,transparent);
+  box-shadow:0 0 30px var(--ng),0 0 60px rgba(0,180,255,0.1)}
+
+nav{position:fixed;top:2px;left:0;right:0;z-index:99;padding:16px 40px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(6,9,24,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+  transition:all 0.3s}
+nav.scrolled{background:rgba(6,9,24,0.95);box-shadow:0 4px 30px rgba(0,0,0,0.3)}
+.logo{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;
+  background:linear-gradient(135deg,var(--n),var(--n2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  letter-spacing:3px;text-decoration:none}
+.logo span{font-size:0.65rem;display:block;color:var(--t3);letter-spacing:4px;font-weight:400;
+  -webkit-text-fill-color:var(--t3)}
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-links a{color:var(--t2);text-decoration:none;font-size:0.85rem;font-weight:500;letter-spacing:0.5px;
+  transition:color 0.3s;font-family:'Rajdhani',sans-serif}
+.nav-links a:hover{color:var(--n)}
+.nav-cta{padding:8px 24px;background:linear-gradient(135deg,var(--n),var(--n2));color:#060918;
+  border:none;border-radius:6px;font-weight:700;font-size:0.85rem;cursor:pointer;
+  font-family:'Rajdhani',sans-serif;letter-spacing:1px;text-decoration:none;
+  box-shadow:0 0 20px rgba(0,180,255,0.3);transition:all 0.3s}
+.nav-cta:hover{box-shadow:0 0 40px rgba(0,180,255,0.5);transform:translateY(-1px)}
+
+section{position:relative;z-index:10;padding:100px 20px}
+.container{max-width:1200px;margin:0 auto}
+.section-label{font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--n);letter-spacing:5px;
+  text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.section-label::before{content:'';width:30px;height:1px;background:var(--n)}
+.section-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;
+  margin-bottom:20px;line-height:1.3}
+.section-title .accent{background:linear-gradient(135deg,var(--n),var(--n2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.section-desc{color:var(--t2);font-size:1.05rem;max-width:700px;line-height:1.8}
+
+.fade-in{opacity:0;transform:translateY(40px);transition:opacity 0.8s ease,transform 0.8s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+.fade-in-delay-1{transition-delay:0.15s}
+.fade-in-delay-2{transition-delay:0.3s}
+.fade-in-delay-3{transition-delay:0.45s}
+
+/* ========== HERO ========== */
+.hero{min-height:70vh;display:flex;align-items:center;padding-top:120px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:50%;left:50%;width:800px;height:800px;
+  background:radial-gradient(circle,rgba(0,180,255,0.06) 0%,transparent 70%);
+  transform:translate(-50%,-50%);pointer-events:none}
+.hero-content{max-width:800px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;
+  background:rgba(0,180,255,0.08);border:1px solid var(--border2);border-radius:30px;
+  font-size:0.8rem;color:var(--n);margin-bottom:32px;font-family:'Rajdhani',sans-serif;letter-spacing:1px}
+.hero-badge .dot{width:6px;height:6px;background:var(--success);border-radius:50%;
+  animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.hero h1{font-family:'Orbitron',sans-serif;font-size:clamp(2rem,5vw,3.4rem);font-weight:800;
+  line-height:1.2;margin-bottom:24px}
+.hero h1 .line2{display:block;font-size:clamp(1.2rem,3vw,2rem);color:var(--t2);font-weight:500;margin-top:8px}
+.hero h1 .highlight{background:linear-gradient(135deg,var(--n),var(--n2),#00FFB2);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:1.1rem;color:var(--t2);line-height:1.9;margin-bottom:48px;max-width:650px}
+
+/* ========== 実績サマリー ========== */
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-bottom:40px}
+.stat-item{text-align:center;padding:28px 16px;background:var(--glass);border:1px solid var(--border);
+  border-radius:12px;backdrop-filter:blur(10px)}
+.stat-number{font-family:'Orbitron',sans-serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:800;
+  background:linear-gradient(135deg,var(--n),var(--n2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  display:block;margin-bottom:8px}
+.stat-label{font-size:0.85rem;color:var(--t3);font-weight:500}
+
+/* ========== ケースカード ========== */
+.case-card{background:var(--glass);border:1px solid var(--border);border-radius:20px;
+  padding:0;margin-bottom:60px;overflow:hidden;backdrop-filter:blur(10px);
+  transition:transform 0.4s,box-shadow 0.4s}
+.case-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,180,255,0.08)}
+
+.case-header{padding:40px 48px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.case-number{font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--n);letter-spacing:4px;margin-bottom:4px}
+.case-company{font-family:'Orbitron',sans-serif;font-size:1.4rem;font-weight:700;color:var(--t1)}
+.case-industry{display:inline-flex;align-items:center;gap:6px;padding:4px 14px;
+  background:rgba(0,180,255,0.08);border:1px solid var(--border2);border-radius:20px;
+  font-size:0.75rem;color:var(--n);font-family:'Rajdhani',sans-serif;letter-spacing:1px}
+
+.case-body{padding:40px 48px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px}
+.case-step{position:relative;padding-left:20px}
+.case-step::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:2px}
+.step-challenge::before{background:var(--err)}
+.step-solution::before{background:var(--n)}
+.step-result::before{background:var(--success)}
+.step-label{font-family:'Orbitron',sans-serif;font-size:0.65rem;letter-spacing:3px;margin-bottom:12px;font-weight:600}
+.step-challenge .step-label{color:var(--err)}
+.step-solution .step-label{color:var(--n)}
+.step-result .step-label{color:var(--success)}
+.step-text{font-size:0.95rem;color:var(--t2);line-height:1.8}
+
+.case-metrics{padding:24px 48px 40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:20px}
+.metric{text-align:center;padding:20px 12px;background:rgba(0,180,255,0.04);border:1px solid rgba(0,180,255,0.08);border-radius:12px}
+.metric-value{font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:800;display:block;margin-bottom:6px}
+.metric-value.blue{color:var(--n)}
+.metric-value.green{color:var(--success)}
+.metric-value.yellow{color:var(--warn)}
+.metric-value.purple{color:var(--purple)}
+.metric-label{font-size:0.78rem;color:var(--t3)}
+
+/* ========== CTA ========== */
+.cta-section{text-align:center;padding:120px 20px}
+.cta-card{max-width:800px;margin:0 auto;padding:64px 48px;background:var(--glass);
+  border:1px solid var(--border2);border-radius:24px;backdrop-filter:blur(20px);
+  position:relative;overflow:hidden}
+.cta-card::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:radial-gradient(circle at center,rgba(0,180,255,0.05) 0%,transparent 50%);pointer-events:none}
+.cta-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin-bottom:16px;position:relative}
+.cta-desc{color:var(--t2);font-size:1.05rem;margin-bottom:40px;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.8;position:relative}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;padding:16px 40px;
+  background:linear-gradient(135deg,var(--n),var(--n2));color:#060918;font-weight:700;
+  border:none;border-radius:8px;font-size:1rem;cursor:pointer;text-decoration:none;
+  font-family:'Rajdhani',sans-serif;letter-spacing:1px;
+  box-shadow:0 0 30px rgba(0,180,255,0.3);transition:all 0.3s;position:relative}
+.btn-primary:hover{box-shadow:0 0 50px rgba(0,180,255,0.5);transform:translateY(-2px)}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;padding:16px 32px;
+  background:transparent;color:var(--n);font-weight:600;border:1px solid var(--border2);
+  border-radius:8px;font-size:0.95rem;cursor:pointer;text-decoration:none;
+  font-family:'Rajdhani',sans-serif;letter-spacing:1px;transition:all 0.3s;position:relative}
+.btn-ghost:hover{background:rgba(0,180,255,0.06);border-color:var(--n);box-shadow:0 0 20px rgba(0,180,255,0.15)}
+
+/* ========== フッター ========== */
+footer{position:relative;z-index:10;text-align:center;padding:40px 20px;border-top:1px solid var(--border);color:var(--t3);font-size:0.8rem}
+
+/* ========== モバイル ========== */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.hamburger span{width:22px;height:2px;background:var(--t1);border-radius:2px;transition:all 0.3s}
+
+@media(max-width:900px){
+  .case-body{grid-template-columns:1fr;gap:24px}
+  .stats-bar{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:768px){
+  nav{padding:12px 20px}
+  .nav-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;gap:0;
+    background:rgba(6,9,24,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:16px 0}
+  .nav-links.open{display:flex}
+  .nav-links a{padding:12px 24px;width:100%}
+  .hamburger{display:flex}
+  .case-header{padding:28px 24px 20px}
+  .case-body{padding:28px 24px}
+  .case-metrics{padding:20px 24px 28px}
+  .cta-card{padding:40px 24px}
+  .stats-bar{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+<div class="grid-bg"></div>
+<div class="top-bar"></div>
+
+<!-- ナビゲーション -->
+<nav>
+  <a href="hp.html" class="logo">JUDGEMENT<span>CASE STUDIES</span></a>
+  <div class="nav-links" id="navLinks">
+    <a href="hp.html">ホーム</a>
+    <a href="lp_client.html">企業向け</a>
+    <a href="lp_worker.html">ワーカー向け</a>
+    <a href="api_docs.html">API</a>
+    <a href="#" class="nav-cta">お問い合わせ</a>
+  </div>
+  <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ヒーロー -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content fade-in">
+      <div class="hero-badge"><span class="dot"></span> Case Studies</div>
+      <h1>導入事例<span class="line2">JUDGEMENTが<span class="highlight">意思決定</span>を変える</span></h1>
+      <p class="hero-sub">属人的な評価、曖昧な品質基準、膨大な判断工数。<br>JUDGEMENTはこれらの課題を、構造化された人間判断データで解決します。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 実績サマリー -->
+<section style="padding-top:0;padding-bottom:60px">
+  <div class="container">
+    <div class="stats-bar fade-in">
+      <div class="stat-item">
+        <span class="stat-number">80%</span>
+        <span class="stat-label">評価工数の削減</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">9,000+</span>
+        <span class="stat-label">判断データ件数</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">95%</span>
+        <span class="stat-label">品質検出率</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">2週間</span>
+        <span class="stat-label">最短導入期間</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE 1 -->
+<section style="padding-top:20px;padding-bottom:20px">
+  <div class="container">
+    <div class="case-card fade-in">
+      <div class="case-header">
+        <div>
+          <div class="case-number">CASE 01</div>
+          <div class="case-company">AI開発会社 A社</div>
+        </div>
+        <div class="case-industry">AI / Machine Learning</div>
+      </div>
+      <div class="case-body">
+        <div class="case-step step-challenge">
+          <div class="step-label">CHALLENGE</div>
+          <p class="step-text">LLM回答の品質評価が完全に属人的。エンジニア5名がフルタイムで月200時間を評価業務に費やし、評価基準のバラつきが大きな問題に。品質スコアの一貫性はわずか35%。</p>
+        </div>
+        <div class="case-step step-solution">
+          <div class="step-label">SOLUTION</div>
+          <p class="step-text">Decision Ops「AI回答A/B評価パック」を導入。ペアワイズ比較方式で、Trust Scoreに基づく品質管理されたワーカーが構造化評価を実施。合議スコアによる品質保証も併用。</p>
+        </div>
+        <div class="case-step step-result">
+          <div class="step-label">RESULT</div>
+          <p class="step-text">評価工数を80%削減し、エンジニアをコア開発に再配置。品質スコアの一貫性は35%から92%へ劇的に向上。評価のターンアラウンドタイムも3日→4時間に短縮。</p>
+        </div>
+      </div>
+      <div class="case-metrics">
+        <div class="metric">
+          <span class="metric-value green">80%</span>
+          <span class="metric-label">工数削減</span>
+        </div>
+        <div class="metric">
+          <span class="metric-value blue">35%→92%</span>
+          <span class="metric-label">一貫性向上</span>
+        </div>
+        <div class="metric">
+          <span class="metric-value yellow">2週間</span>
+          <span class="metric-label">導入期間</span>
+        </div>
+        <div class="metric">
+          <span class="metric-value purple">5,000件</span>
+          <span class="metric-label">評価規模</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE 2 -->
+<section style="padding-top:20px;padding-bottom:20px">
+  <div class="container">
+    <div class="case-card fade-in">
+      <div class="case-header">
+        <div>
+          <div class="case-number">CASE 02</div>
+          <div class="case-company">SaaS企業 B社</div>
+        </div>
+        <div class="case-industry">SaaS / Marketing</div>
+      </div>
+      <div class="case-body">
+        <div class="case-step step-challenge">
+          <div class="step-label">CHALLENGE</div>
+          <p class="step-text">LP・広告クリエイティブのA/Bテストが社内の「感覚」で行われ、マーケティングチームとデザインチームで評価がバラバラ。意思決定に毎回1週間以上のミーティングが必要だった。</p>
+        </div>
+        <div class="case-step step-solution">
+          <div class="step-label">SOLUTION</div>
+          <p class="step-text">「比較評価パック」を導入し、ターゲットユーザー属性にマッチしたワーカーによるペアワイズ比較を実施。多角的な評価軸（視認性・訴求力・信頼感）で定量データを取得。</p>
+        </div>
+        <div class="case-step step-result">
+          <div class="step-label">RESULT</div>
+          <p class="step-text">データに基づくクリエイティブ選定が可能に。感覚的な議論が消え、意思決定スピードが5倍に向上。選定クリエイティブのCVRは15%改善を達成。</p>
+        </div>
+      </div>
+      <div class="case-metrics">
+        <div class="metric">
+          <span class="metric-value green">+15%</span>
+          <span class="metric-label">CVR改善</span>
+        </div>
+        <div class="metric">
+          <span class="metric-value blue">5x</span>
+          <span class="metric-label">意思決定速度</span>
+        </div>
+        <div class="metric">
+          <span class="metric-value yellow">1週間</span>
+          <span class="metric-label">導入期間</span>
+        </div>
+        <div class="metric">
+          <span class="metric-value purple">1,000件</span>
+          <span class="metric-label">比較規模</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE 3 -->
+<section style="padding-top:20px;padding-bottom:40px">
+  <div class="container">
+    <div class="case-card fade-in">
+      <div class="case-header">
+        <div>
+          <div class="case-number">CASE 03</div>
+          <div class="case-company">メディア企業 C社</div>
+        </div>
+        <div class="case-industry">Media / Content</div>
+      </div>
+      <div class="case-body">
+        <div class="case-step step-challenge">
+          <div class="step-label">CHALLENGE</div>
+          <p class="step-text">AIで生成したニュース要約の品質検証に人手が足りず、低品質な要約がそのまま配信されるリスクを抱えていた。月間数千本の要約を少人数のチームでは検証しきれない状態。</p>
+        </div>
+        <div class="case-step step-solution">
+          <div class="step-label">SOLUTION</div>
+          <p class="step-text">「品質検証パック」を導入。正確性・網羅性・可読性の3軸で構造化評価を実施。ゴールド問題による品質管理と、Trust Scoreによるワーカー信頼性担保を組み合わせ。</p>
+        </div>
+        <div class="case-step step-result">
+          <div class="step-label">RESULT</div>
+          <p class="step-text">要約品質スコアのリアルタイム可視化を実現。低品質要約の検出率95%を達成し、配信前の品質ゲートとして機能。品質問題によるクレームがほぼゼロに。</p>
+        </div>
+      </div>
+      <div class="case-metrics">
+        <div class="metric">
+          <span class="metric-value green">95%</span>
+          <span class="metric-label">検出率</span>
+        </div>
+        <div class="metric">
+          <span class="metric-value blue">リアルタイム</span>
+          <span class="metric-label">品質可視化</span>
+        </div>
+        <div class="metric">
+          <span class="metric-value yellow">10日間</span>
+          <span class="metric-label">導入期間</span>
+        </div>
+        <div class="metric">
+          <span class="metric-value purple">3,000件</span>
+          <span class="metric-label">検証規模</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-card fade-in">
+    <div class="section-label" style="justify-content:center">CONTACT US</div>
+    <h2 class="cta-title">あなたの課題も<br><span class="accent">JUDGEMENT</span>で解決できます</h2>
+    <p class="cta-desc">AI品質評価、コンテンツ比較、意思決定の構造化。<br>まずはお気軽にご相談ください。</p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+      <a href="#" class="btn-primary">無料相談を申し込む</a>
+      <a href="api_docs.html" class="btn-ghost">APIドキュメントを見る</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2026 JUDGEMENT — Human Decision Infrastructure. All rights reserved.</p>
+</footer>
+
+<script>
+// パーティクル背景
+const canvas=document.getElementById('particles');const ctx=canvas.getContext('2d');
+let particles=[];
+function resize(){canvas.width=innerWidth;canvas.height=innerHeight}
+resize();addEventListener('resize',resize);
+class P{constructor(){this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;
+this.vx=(Math.random()-0.5)*0.3;this.vy=(Math.random()-0.5)*0.3;
+this.r=Math.random()*1.5+0.5;this.a=Math.random()*0.4+0.1}
+update(){this.x+=this.vx;this.y+=this.vy;
+if(this.x<0||this.x>canvas.width)this.vx*=-1;
+if(this.y<0||this.y>canvas.height)this.vy*=-1}
+draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+ctx.fillStyle=`rgba(0,180,255,${this.a})`;ctx.fill()}}
+for(let i=0;i<60;i++)particles.push(new P());
+function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);
+particles.forEach(p=>{p.update();p.draw()});
+for(let i=0;i<particles.length;i++)for(let j=i+1;j<particles.length;j++){
+const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y;
+const d=Math.sqrt(dx*dx+dy*dy);
+if(d<120){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);
+ctx.lineTo(particles[j].x,particles[j].y);
+ctx.strokeStyle=`rgba(0,180,255,${0.06*(1-d/120)})`;ctx.stroke()}}
+requestAnimationFrame(animate)}
+animate();
+
+// ナビスクロール
+addEventListener('scroll',()=>{document.querySelector('nav').classList.toggle('scrolled',scrollY>50)});
+
+// フェードイン
+const obs=new IntersectionObserver(entries=>{
+entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})
+},{threshold:0.1});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

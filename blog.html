@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JUDGEMENT Knowledge Hub | AI品質と人間判断の最前線</title>
+<meta name="description" content="AI品質評価・判断データに関する最新の知見を発信。Trust Score、LLM評価手法、人間判断データの活用など、AI時代の品質管理を解説します。">
+<meta name="keywords" content="AI品質管理,Trust Score,判断データ,LLM評価,人間判断,AI評価,データ品質,RLHF">
+<meta property="og:title" content="JUDGEMENT Knowledge Hub | AI品質と人間判断の最前線">
+<meta property="og:description" content="AI品質評価・判断データに関する最新の知見を発信するナレッジハブ。">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://judgement.ai/blog">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg1:#060918;--bg2:#0A0E27;--bg3:#0d1130;
+  --n:#00B4FF;--n2:#00E8FF;--ng:rgba(0,180,255,0.35);
+  --success:#00D9A3;--warn:#FFB800;--err:#FF4757;
+  --t1:#e0e6f0;--t2:rgba(180,195,225,0.85);--t3:rgba(120,140,180,0.6);
+  --glass:rgba(8,14,40,0.6);--glass2:rgba(10,18,50,0.8);
+  --border:rgba(0,180,255,0.12);--border2:rgba(0,180,255,0.25);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans JP','Rajdhani',sans-serif;background:var(--bg1);color:var(--t1);overflow-x:hidden;line-height:1.7}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(0,180,255,0.15);border-radius:3px}
+
+canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    repeating-linear-gradient(90deg,rgba(0,180,255,0.02) 0px,transparent 1px,transparent 100px),
+    repeating-linear-gradient(0deg,rgba(0,180,255,0.02) 0px,transparent 1px,transparent 100px);
+  opacity:0.4}
+
+.top-bar{position:fixed;top:0;left:0;right:0;height:2px;z-index:100;
+  background:linear-gradient(90deg,transparent,var(--n) 30%,#fff 50%,var(--n2) 70%,transparent);
+  box-shadow:0 0 30px var(--ng),0 0 60px rgba(0,180,255,0.1)}
+
+nav{position:fixed;top:2px;left:0;right:0;z-index:99;padding:16px 40px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(6,9,24,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+  transition:all 0.3s}
+nav.scrolled{background:rgba(6,9,24,0.95);box-shadow:0 4px 30px rgba(0,0,0,0.3)}
+.logo{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;
+  background:linear-gradient(135deg,var(--n),var(--n2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  letter-spacing:3px;text-decoration:none;display:block}
+.logo span{font-size:0.65rem;display:block;color:var(--t3);letter-spacing:4px;font-weight:400;
+  -webkit-text-fill-color:var(--t3)}
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-links a{color:var(--t2);text-decoration:none;font-size:0.85rem;font-weight:500;letter-spacing:0.5px;
+  transition:color 0.3s;font-family:'Rajdhani',sans-serif}
+.nav-links a:hover{color:var(--n)}
+.nav-cta{padding:8px 24px;background:linear-gradient(135deg,var(--n),var(--n2));color:#060918;
+  border:none;border-radius:6px;font-weight:700;font-size:0.85rem;cursor:pointer;
+  font-family:'Rajdhani',sans-serif;letter-spacing:1px;text-decoration:none;
+  box-shadow:0 0 20px rgba(0,180,255,0.3);transition:all 0.3s}
+.nav-cta:hover{box-shadow:0 0 40px rgba(0,180,255,0.5);transform:translateY(-1px)}
+
+section{position:relative;z-index:10;padding:100px 20px}
+.container{max-width:1200px;margin:0 auto}
+.section-label{font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--n);letter-spacing:5px;
+  text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.section-label::before{content:'';width:30px;height:1px;background:var(--n)}
+.section-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;
+  margin-bottom:20px;line-height:1.3}
+.section-title .accent{background:linear-gradient(135deg,var(--n),var(--n2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+.fade-in{opacity:0;transform:translateY(40px);transition:opacity 0.8s ease,transform 0.8s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+.fade-in-delay-1{transition-delay:0.15s}
+.fade-in-delay-2{transition-delay:0.3s}
+.fade-in-delay-3{transition-delay:0.45s}
+
+/* ========== HERO ========== */
+.hero{padding:180px 20px 100px;text-align:center;position:relative}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:200px;
+  background:linear-gradient(to bottom,transparent,var(--bg1));pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 20px;
+  border:1px solid var(--border2);border-radius:100px;font-size:0.8rem;color:var(--n);
+  font-family:'Rajdhani',sans-serif;letter-spacing:2px;margin-bottom:24px;
+  background:rgba(0,180,255,0.05)}
+.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--success);
+  box-shadow:0 0 8px var(--success);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.hero h1{font-family:'Orbitron',sans-serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:800;
+  margin-bottom:16px;line-height:1.2}
+.hero h1 .accent{background:linear-gradient(135deg,var(--n),var(--n2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--t2);font-size:1.15rem;max-width:600px;margin:0 auto 40px;line-height:1.8}
+
+/* ========== CATEGORIES ========== */
+.categories{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-bottom:20px}
+.cat-tag{padding:6px 18px;border:1px solid var(--border);border-radius:100px;
+  font-size:0.82rem;color:var(--t2);cursor:pointer;transition:all 0.3s;
+  font-family:'Rajdhani',sans-serif;letter-spacing:1px;background:transparent}
+.cat-tag:hover,.cat-tag.active{border-color:var(--n);color:var(--n);background:rgba(0,180,255,0.08)}
+
+/* ========== FEATURED ARTICLE ========== */
+.featured{padding:60px 20px 100px}
+.featured-card{background:var(--glass2);border:1px solid var(--border);border-radius:16px;
+  overflow:hidden;display:grid;grid-template-columns:1fr 1fr;gap:0;
+  transition:border-color 0.3s,box-shadow 0.3s}
+.featured-card:hover{border-color:var(--border2);box-shadow:0 0 60px rgba(0,180,255,0.08)}
+.featured-visual{background:linear-gradient(135deg,rgba(0,180,255,0.08),rgba(0,232,255,0.04));
+  display:flex;align-items:center;justify-content:center;min-height:400px;position:relative;overflow:hidden}
+.featured-visual::before{content:'';position:absolute;width:300px;height:300px;
+  border-radius:50%;background:radial-gradient(circle,rgba(0,180,255,0.12),transparent 70%);
+  animation:floatGlow 6s ease-in-out infinite}
+@keyframes floatGlow{0%,100%{transform:translate(-20px,20px)}50%{transform:translate(20px,-20px)}}
+.featured-icon{font-size:6rem;position:relative;z-index:1;filter:drop-shadow(0 0 30px rgba(0,180,255,0.3))}
+.featured-content{padding:48px}
+.featured-meta{display:flex;align-items:center;gap:16px;margin-bottom:16px;font-size:0.82rem;color:var(--t3)}
+.featured-meta .tag{padding:3px 12px;background:rgba(0,180,255,0.12);border-radius:4px;
+  color:var(--n);font-family:'Rajdhani',sans-serif;letter-spacing:1px}
+.featured-content h2{font-family:'Rajdhani','Noto Sans JP',sans-serif;font-size:1.6rem;font-weight:700;
+  margin-bottom:20px;line-height:1.4;color:var(--t1)}
+.featured-content .article-body{color:var(--t2);font-size:0.95rem;line-height:2}
+.featured-content .article-body p{margin-bottom:16px}
+.read-more{display:inline-flex;align-items:center;gap:8px;color:var(--n);
+  font-family:'Rajdhani',sans-serif;font-weight:600;font-size:0.95rem;
+  text-decoration:none;margin-top:20px;transition:gap 0.3s}
+.read-more:hover{gap:14px}
+.read-more svg{transition:transform 0.3s}
+.read-more:hover svg{transform:translateX(4px)}
+
+/* ========== ARTICLE GRID ========== */
+.article-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;padding:0 20px 100px}
+.article-card{background:var(--glass2);border:1px solid var(--border);border-radius:14px;
+  overflow:hidden;transition:all 0.3s;cursor:pointer}
+.article-card:hover{border-color:var(--border2);transform:translateY(-4px);
+  box-shadow:0 20px 60px rgba(0,0,0,0.3),0 0 40px rgba(0,180,255,0.06)}
+.article-thumb{height:200px;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden}
+.article-thumb.t1{background:linear-gradient(135deg,rgba(0,217,163,0.1),rgba(0,180,255,0.05))}
+.article-thumb.t2{background:linear-gradient(135deg,rgba(123,97,255,0.1),rgba(0,180,255,0.05))}
+.article-thumb .thumb-icon{font-size:4rem;filter:drop-shadow(0 0 20px rgba(0,180,255,0.2))}
+.article-body-wrap{padding:32px}
+.article-meta{display:flex;align-items:center;gap:12px;margin-bottom:12px;font-size:0.78rem;color:var(--t3)}
+.article-meta .tag{padding:2px 10px;background:rgba(0,217,163,0.12);border-radius:4px;
+  color:var(--success);font-family:'Rajdhani',sans-serif;letter-spacing:1px}
+.article-meta .tag.purple{background:rgba(123,97,255,0.12);color:#7B61FF}
+.article-card h3{font-family:'Rajdhani','Noto Sans JP',sans-serif;font-size:1.2rem;font-weight:700;
+  margin-bottom:14px;line-height:1.4;color:var(--t1)}
+.article-card .summary{color:var(--t2);font-size:0.9rem;line-height:1.9}
+.article-card .summary p{margin-bottom:12px}
+
+/* ========== NEWSLETTER ========== */
+.newsletter{padding:100px 20px;text-align:center}
+.newsletter-box{max-width:600px;margin:0 auto;padding:60px 48px;
+  background:var(--glass2);border:1px solid var(--border);border-radius:16px;
+  position:relative;overflow:hidden}
+.newsletter-box::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:radial-gradient(circle at center,rgba(0,180,255,0.04),transparent 60%);pointer-events:none}
+.newsletter-box h2{font-family:'Orbitron',sans-serif;font-size:1.4rem;font-weight:700;margin-bottom:12px}
+.newsletter-box p{color:var(--t2);font-size:0.95rem;margin-bottom:32px}
+.newsletter-form{display:flex;gap:12px}
+.newsletter-form input{flex:1;padding:12px 20px;background:rgba(0,0,0,0.3);border:1px solid var(--border);
+  border-radius:8px;color:var(--t1);font-size:0.95rem;font-family:'Noto Sans JP',sans-serif;
+  outline:none;transition:border-color 0.3s}
+.newsletter-form input:focus{border-color:var(--n)}
+.newsletter-form input::placeholder{color:var(--t3)}
+.newsletter-form button{padding:12px 28px;background:linear-gradient(135deg,var(--n),var(--n2));
+  color:#060918;border:none;border-radius:8px;font-weight:700;font-size:0.9rem;cursor:pointer;
+  font-family:'Rajdhani',sans-serif;letter-spacing:1px;white-space:nowrap;
+  box-shadow:0 0 20px rgba(0,180,255,0.3);transition:all 0.3s}
+.newsletter-form button:hover{box-shadow:0 0 40px rgba(0,180,255,0.5);transform:translateY(-1px)}
+.newsletter-note{font-size:0.75rem;color:var(--t3);margin-top:16px}
+
+/* ========== FOOTER ========== */
+footer{position:relative;z-index:10;padding:60px 20px 30px;
+  border-top:1px solid var(--border);text-align:center}
+footer .footer-links{display:flex;justify-content:center;gap:32px;margin-bottom:20px}
+footer .footer-links a{color:var(--t3);text-decoration:none;font-size:0.85rem;
+  font-family:'Rajdhani',sans-serif;transition:color 0.3s}
+footer .footer-links a:hover{color:var(--n)}
+footer .copyright{color:var(--t3);font-size:0.75rem}
+
+/* ========== MOBILE ========== */
+.mobile-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px}
+.mobile-toggle span{display:block;width:24px;height:2px;background:var(--t1);margin:5px 0;transition:all 0.3s}
+
+@media(max-width:900px){
+  .featured-card{grid-template-columns:1fr}
+  .featured-visual{min-height:250px}
+  .article-grid{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  nav{padding:12px 20px}
+  .nav-links{display:none;position:fixed;top:56px;left:0;right:0;bottom:0;
+    background:rgba(6,9,24,0.98);flex-direction:column;align-items:center;
+    justify-content:center;gap:28px;backdrop-filter:blur(20px)}
+  .nav-links.open{display:flex}
+  .mobile-toggle{display:block}
+  .hero{padding:140px 20px 60px}
+  .hero h1{font-size:1.8rem}
+  .featured{padding:40px 20px 60px}
+  .featured-content{padding:28px}
+  .article-grid{padding:0 20px 60px}
+  .newsletter-form{flex-direction:column}
+  .newsletter-box{padding:40px 24px}
+  .categories{padding:0 20px}
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+<div class="grid-bg"></div>
+<div class="top-bar"></div>
+
+<!-- ナビゲーション -->
+<nav>
+  <a href="hp.html" class="logo">JUDGEMENT<span>KNOWLEDGE HUB</span></a>
+  <div class="nav-links" id="navLinks">
+    <a href="hp.html">HOME</a>
+    <a href="lp_client.html">企業向け</a>
+    <a href="lp_worker.html">ワーカー向け</a>
+    <a href="blog.html">ブログ</a>
+    <a href="legal.html">法的情報</a>
+    <a href="lp_client.html#contact" class="nav-cta">お問い合わせ</a>
+  </div>
+  <button class="mobile-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="メニュー">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container fade-in">
+    <div class="hero-badge"><span class="dot"></span>KNOWLEDGE HUB</div>
+    <h1>JUDGEMENT <span class="accent">Knowledge Hub</span></h1>
+    <p>AI品質と人間判断の最前線。判断データ・Trust Score・品質管理に関する最新の知見を発信します。</p>
+    <div class="categories">
+      <span class="cat-tag active">ALL</span>
+      <span class="cat-tag">AI品質管理</span>
+      <span class="cat-tag">Trust Score</span>
+      <span class="cat-tag">判断データ</span>
+      <span class="cat-tag">ケーススタディ</span>
+      <span class="cat-tag">プロダクト</span>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED ARTICLE -->
+<section class="featured">
+  <div class="container">
+    <div class="section-label fade-in">FEATURED</div>
+    <article class="featured-card fade-in fade-in-delay-1">
+      <div class="featured-visual">
+        <div class="featured-icon">&#x1F9E0;</div>
+      </div>
+      <div class="featured-content">
+        <div class="featured-meta">
+          <span class="tag">AI品質管理</span>
+          <span>2026.03.15</span>
+          <span>8 min read</span>
+        </div>
+        <h2>なぜAI時代に"人間の判断データ"が最重要資産になるのか</h2>
+        <div class="article-body">
+          <p>ChatGPTの登場以降、大規模言語モデル（LLM）は急速に社会インフラ化しつつある。しかし多くの企業が見落としている事実がある。<strong>AIの精度は、学習に用いるデータの品質に完全に依存する</strong>ということだ。特にRLHF（人間フィードバックによる強化学習）やDPO（直接選好最適化）といった最新の学習手法では、「人間がどちらの回答を好むか」「この回答は正確か」という判断データが不可欠となっている。</p>
+
+          <p>米国ではScale AIが評価額130億ドルに達し、Surge AI、Labelbox、Appen等が判断データ市場を形成している。彼らの成功はAI開発において判断データインフラが必須であることの証明だ。Scale AIは当初シンプルなデータラベリングから出発したが、現在ではLLM評価、RLHF用データセット生成、品質管理付きアノテーションまでをカバーする総合プラットフォームへと成長した。</p>
+
+          <p>ここで注目すべきは<strong>日本市場の状況</strong>だ。日本語特化のAI品質評価インフラは事実上存在しない。多くの日本企業がAI開発を進める中、品質管理された判断データの調達先がないという深刻なボトルネックを抱えている。大手IT企業でさえ、社内で急造したアノテーションチームに頼っており、品質のばらつきがAI精度の低下を招いている。</p>
+
+          <p>JUDGEMENTが提唱する「Trust Score」は、この課題を根本から解決するアプローチだ。個々の評価者の信頼性を7つの指標で定量化し、品質保証された判断データを生成する。従来の多数決方式とは異なり、評価者の専門性・一貫性・応答パターンを考慮した重み付け集約を行うことで、少ないサンプルでも高精度な判断データを得られる。</p>
+
+          <p>AI産業の成長は今後も続く。だが成長の裏で「品質の壁」に直面する企業は確実に増える。<strong>人間の判断データを体系的に収集・品質管理・提供するインフラ</strong>を持つ者が、AI時代の真の勝者になる。それが私たちJUDGEMENTのビジョンだ。</p>
+        </div>
+        <a href="#" class="read-more">続きを読む <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ARTICLE GRID -->
+<div class="container">
+  <div class="section-label fade-in" style="padding:0 20px;margin-bottom:32px">LATEST ARTICLES</div>
+  <div class="article-grid">
+
+    <!-- 記事2 -->
+    <article class="article-card fade-in fade-in-delay-1">
+      <div class="article-thumb t1">
+        <div class="thumb-icon">&#x1F4CA;</div>
+      </div>
+      <div class="article-body-wrap">
+        <div class="article-meta">
+          <span class="tag">Trust Score</span>
+          <span>2026.03.12</span>
+          <span>6 min read</span>
+        </div>
+        <h3>Trust Scoreとは何か — AI評価の品質を数値化する技術</h3>
+        <div class="summary">
+          <p>クラウドソーシングによるAI評価には根本的な課題がある。評価者の質がバラバラなのだ。同じタスクでも、熟練者と初心者では回答精度に最大40%の差が生じることが研究で示されている。従来の多数決方式では、この品質差を吸収するために大量のサンプルが必要となり、コストが膨らむ。</p>
+
+          <p>Trust Scoreはこの問題を7つの指標で解決する。<strong>正確性（Accuracy）</strong>はゴールド問題との一致率、<strong>一貫性（Consistency）</strong>は同一タスクでの回答安定性、<strong>応答時間適正度</strong>は早すぎず遅すぎない適切な回答時間、<strong>専門性スコア</strong>はカテゴリ別の得意分野、<strong>合意形成寄与度</strong>は集団決定への貢献度、<strong>不正検出スコア</strong>は異常パターンの検出、<strong>継続性</strong>は長期的な参加品質だ。</p>
+
+          <p>従来の品質管理手法（IAA: Inter-Annotator Agreement等）が「結果」のみを見るのに対し、Trust Scoreは<strong>プロセス全体</strong>を評価する。これにより、必要な評価者数を平均30%削減しながら、データ品質を15%向上させることが可能になる。</p>
+        </div>
+        <a href="#" class="read-more">記事を読む <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+    </article>
+
+    <!-- 記事3 -->
+    <article class="article-card fade-in fade-in-delay-2">
+      <div class="article-thumb t2">
+        <div class="thumb-icon">&#x2696;&#xFE0F;</div>
+      </div>
+      <div class="article-body-wrap">
+        <div class="article-meta">
+          <span class="tag purple">判断データ</span>
+          <span>2026.03.10</span>
+          <span>5 min read</span>
+        </div>
+        <h3>LLM回答のA/B評価を効率化する3つのアプローチ</h3>
+        <div class="summary">
+          <p>LLMの回答品質を評価するA/Bテストは、モデル改善の要だ。しかし人力評価は高コスト、自動評価は精度に限界がある。現場で有効な3つのアプローチを比較する。</p>
+
+          <p><strong>1. 完全人力評価</strong> — 最も信頼性が高いが、1件あたり$0.5〜2.0のコストと数日のリードタイムが課題。高品質なRLHFデータ生成には適するが、大規模評価には向かない。<strong>2. LLM-as-Judge（自動評価）</strong> — GPT-4等の上位モデルを評価者として使う手法。コスト1/10以下で即時結果が得られるが、自己評価バイアスや微妙なニュアンスの見落としが問題。<strong>3. ハイブリッド評価</strong> — 自動評価でスクリーニング後、不確実なケースのみ人間が判定。コスト効率と品質を両立する最適解として注目されている。</p>
+
+          <p>JUDGEMENTではハイブリッド評価にTrust Scoreを組み合わせることで、<strong>自動評価で90%をカバーし、残り10%の難問を信頼性の高い評価者に割り当てる</strong>仕組みを構築している。これにより従来比60%のコスト削減と品質維持の両立を実現する。</p>
+        </div>
+        <a href="#" class="read-more">記事を読む <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+    </article>
+
+  </div>
+</div>
+
+<!-- NEWSLETTER -->
+<section class="newsletter">
+  <div class="container">
+    <div class="newsletter-box fade-in">
+      <h2>最新の知見を受け取る</h2>
+      <p>AI品質管理・判断データに関する最新記事を、月2回お届けします。</p>
+      <form class="newsletter-form" onsubmit="event.preventDefault();this.querySelector('button').textContent='登録完了!';this.querySelector('button').style.background='var(--success)'">
+        <input type="email" placeholder="メールアドレスを入力" required>
+        <button type="submit">登録する</button>
+      </form>
+      <p class="newsletter-note">スパムは送りません。いつでも配信停止できます。</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-links">
+    <a href="hp.html">ホーム</a>
+    <a href="lp_client.html">企業向け</a>
+    <a href="lp_worker.html">ワーカー向け</a>
+    <a href="blog.html">ブログ</a>
+    <a href="legal.html">法的情報</a>
+  </div>
+  <p class="copyright">&copy; 2026 JUDGEMENT Inc. All rights reserved.</p>
+</footer>
+
+<script>
+// パーティクル背景
+const canvas=document.getElementById('particles'),ctx=canvas.getContext('2d');
+let w,h,particles=[];
+function resize(){w=canvas.width=innerWidth;h=canvas.height=innerHeight}
+resize();window.addEventListener('resize',resize);
+class P{constructor(){this.reset()}
+reset(){this.x=Math.random()*w;this.y=Math.random()*h;this.vx=(Math.random()-0.5)*0.3;
+this.vy=(Math.random()-0.5)*0.3;this.r=Math.random()*1.5+0.5;this.a=Math.random()*0.4+0.1}
+update(){this.x+=this.vx;this.y+=this.vy;
+if(this.x<0||this.x>w)this.vx*=-1;if(this.y<0||this.y>h)this.vy*=-1}
+draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+ctx.fillStyle=`rgba(0,180,255,${this.a})`;ctx.fill()}}
+for(let i=0;i<60;i++)particles.push(new P());
+function animate(){ctx.clearRect(0,0,w,h);particles.forEach(p=>{p.update();p.draw()});
+for(let i=0;i<particles.length;i++)for(let j=i+1;j<particles.length;j++){
+const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,d=Math.sqrt(dx*dx+dy*dy);
+if(d<120){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);
+ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle=`rgba(0,180,255,${0.06*(1-d/120)})`;
+ctx.stroke()}}requestAnimationFrame(animate)}animate();
+
+// スクロールナビ
+window.addEventListener('scroll',()=>{document.querySelector('nav').classList.toggle('scrolled',scrollY>40)});
+
+// フェードイン
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:0.1});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+// カテゴリタグ切替
+document.querySelectorAll('.cat-tag').forEach(tag=>{
+  tag.addEventListener('click',()=>{
+    document.querySelectorAll('.cat-tag').forEach(t=>t.classList.remove('active'));
+    tag.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

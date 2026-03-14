@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JUDGEMENT | プライバシーポリシー・利用規約</title>
+<meta name="description" content="JUDGEMENTのプライバシーポリシーおよび利用規約。個人情報の取り扱い、サービス利用条件についてご確認いただけます。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg1:#060918;--bg2:#0A0E27;--bg3:#0d1130;
+  --n:#00B4FF;--n2:#00E8FF;--ng:rgba(0,180,255,0.35);
+  --success:#00D9A3;--warn:#FFB800;--err:#FF4757;
+  --t1:#e0e6f0;--t2:rgba(180,195,225,0.85);--t3:rgba(120,140,180,0.6);
+  --glass:rgba(8,14,40,0.6);--glass2:rgba(10,18,50,0.8);
+  --border:rgba(0,180,255,0.12);--border2:rgba(0,180,255,0.25);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans JP','Rajdhani',sans-serif;background:var(--bg1);color:var(--t1);overflow-x:hidden;line-height:1.7}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(0,180,255,0.15);border-radius:3px}
+
+canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    repeating-linear-gradient(90deg,rgba(0,180,255,0.02) 0px,transparent 1px,transparent 100px),
+    repeating-linear-gradient(0deg,rgba(0,180,255,0.02) 0px,transparent 1px,transparent 100px);
+  opacity:0.4}
+
+.top-bar{position:fixed;top:0;left:0;right:0;height:2px;z-index:100;
+  background:linear-gradient(90deg,transparent,var(--n) 30%,#fff 50%,var(--n2) 70%,transparent);
+  box-shadow:0 0 30px var(--ng),0 0 60px rgba(0,180,255,0.1)}
+
+nav{position:fixed;top:2px;left:0;right:0;z-index:99;padding:16px 40px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(6,9,24,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+  transition:all 0.3s}
+nav.scrolled{background:rgba(6,9,24,0.95);box-shadow:0 4px 30px rgba(0,0,0,0.3)}
+.logo{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;
+  background:linear-gradient(135deg,var(--n),var(--n2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  letter-spacing:3px;text-decoration:none;display:block}
+.logo span{font-size:0.65rem;display:block;color:var(--t3);letter-spacing:4px;font-weight:400;
+  -webkit-text-fill-color:var(--t3)}
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-links a{color:var(--t2);text-decoration:none;font-size:0.85rem;font-weight:500;letter-spacing:0.5px;
+  transition:color 0.3s;font-family:'Rajdhani',sans-serif}
+.nav-links a:hover{color:var(--n)}
+.nav-cta{padding:8px 24px;background:linear-gradient(135deg,var(--n),var(--n2));color:#060918;
+  border:none;border-radius:6px;font-weight:700;font-size:0.85rem;cursor:pointer;
+  font-family:'Rajdhani',sans-serif;letter-spacing:1px;text-decoration:none;
+  box-shadow:0 0 20px rgba(0,180,255,0.3);transition:all 0.3s}
+.nav-cta:hover{box-shadow:0 0 40px rgba(0,180,255,0.5);transform:translateY(-1px)}
+
+section{position:relative;z-index:10;padding:100px 20px}
+.container{max-width:1200px;margin:0 auto}
+
+.fade-in{opacity:0;transform:translateY(40px);transition:opacity 0.8s ease,transform 0.8s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+/* ========== PAGE HEADER ========== */
+.page-header{padding:160px 20px 60px;text-align:center}
+.page-header h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;margin-bottom:12px}
+.page-header h1 .accent{background:linear-gradient(135deg,var(--n),var(--n2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.page-header p{color:var(--t2);font-size:0.95rem}
+.last-updated{color:var(--t3);font-size:0.82rem;margin-top:8px}
+
+/* ========== TABS ========== */
+.tabs{display:flex;justify-content:center;gap:4px;margin:0 auto 48px;max-width:500px;
+  background:var(--glass2);border:1px solid var(--border);border-radius:10px;padding:4px}
+.tab-btn{flex:1;padding:12px 24px;background:transparent;border:none;color:var(--t2);
+  font-family:'Rajdhani',sans-serif;font-size:0.95rem;font-weight:600;letter-spacing:1px;
+  cursor:pointer;border-radius:8px;transition:all 0.3s}
+.tab-btn.active{background:linear-gradient(135deg,rgba(0,180,255,0.15),rgba(0,232,255,0.08));
+  color:var(--n);border:1px solid var(--border2)}
+.tab-btn:hover:not(.active){color:var(--t1)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* ========== LEGAL LAYOUT ========== */
+.legal-layout{display:grid;grid-template-columns:240px 1fr;gap:48px;max-width:1100px;margin:0 auto}
+
+/* サイドナビ */
+.side-nav{position:sticky;top:100px;align-self:start;max-height:calc(100vh - 120px);overflow-y:auto}
+.side-nav ul{list-style:none;border-left:1px solid var(--border)}
+.side-nav li a{display:block;padding:8px 20px;color:var(--t3);font-size:0.85rem;
+  text-decoration:none;transition:all 0.3s;border-left:2px solid transparent;margin-left:-1px}
+.side-nav li a:hover{color:var(--t1);border-left-color:rgba(0,180,255,0.3)}
+.side-nav li a.active{color:var(--n);border-left-color:var(--n);background:rgba(0,180,255,0.04)}
+
+/* 本文エリア */
+.legal-content{max-width:800px}
+.legal-content h2{font-family:'Rajdhani','Noto Sans JP',sans-serif;font-size:1.4rem;font-weight:700;
+  color:var(--t1);margin:48px 0 20px;padding-bottom:12px;border-bottom:1px solid var(--border);
+  scroll-margin-top:100px}
+.legal-content h2:first-child{margin-top:0}
+.legal-content h3{font-size:1.05rem;font-weight:600;color:var(--t1);margin:28px 0 12px}
+.legal-content p{color:var(--t2);font-size:0.92rem;line-height:2;margin-bottom:16px}
+.legal-content ul,.legal-content ol{color:var(--t2);font-size:0.92rem;line-height:2;
+  margin:0 0 16px 20px}
+.legal-content li{margin-bottom:6px}
+.legal-content strong{color:var(--t1)}
+.legal-content .info-box{background:rgba(0,180,255,0.05);border:1px solid var(--border);
+  border-radius:10px;padding:20px 24px;margin:20px 0}
+.legal-content .info-box p{margin-bottom:4px}
+.legal-content table{width:100%;border-collapse:collapse;margin:16px 0 24px;font-size:0.9rem}
+.legal-content th,.legal-content td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}
+.legal-content th{color:var(--n);font-weight:600;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:1px}
+.legal-content td{color:var(--t2)}
+
+/* ========== FOOTER ========== */
+footer{position:relative;z-index:10;padding:60px 20px 30px;
+  border-top:1px solid var(--border);text-align:center}
+footer .footer-links{display:flex;justify-content:center;gap:32px;margin-bottom:20px}
+footer .footer-links a{color:var(--t3);text-decoration:none;font-size:0.85rem;
+  font-family:'Rajdhani',sans-serif;transition:color 0.3s}
+footer .footer-links a:hover{color:var(--n)}
+footer .copyright{color:var(--t3);font-size:0.75rem}
+
+/* ========== MOBILE ========== */
+.mobile-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px}
+.mobile-toggle span{display:block;width:24px;height:2px;background:var(--t1);margin:5px 0;transition:all 0.3s}
+
+@media(max-width:768px){
+  nav{padding:12px 20px}
+  .nav-links{display:none;position:fixed;top:56px;left:0;right:0;bottom:0;
+    background:rgba(6,9,24,0.98);flex-direction:column;align-items:center;
+    justify-content:center;gap:28px;backdrop-filter:blur(20px)}
+  .nav-links.open{display:flex}
+  .mobile-toggle{display:block}
+  .page-header{padding:120px 20px 40px}
+  .legal-layout{grid-template-columns:1fr;gap:24px}
+  .side-nav{position:static;max-height:none;
+    background:var(--glass2);border:1px solid var(--border);border-radius:10px;padding:16px}
+  .side-nav ul{display:flex;flex-wrap:wrap;gap:4px;border-left:none}
+  .side-nav li a{padding:6px 14px;font-size:0.78rem;border-left:none;border-radius:6px;
+    border:1px solid var(--border)}
+  .side-nav li a.active{background:rgba(0,180,255,0.1);border-color:var(--border2)}
+  .tabs{flex-direction:row}
+  .tab-btn{padding:10px 16px;font-size:0.85rem}
+}
+
+/* ========== 印刷対応 ========== */
+@media print{
+  body{background:#fff;color:#111;font-size:11pt;line-height:1.6}
+  canvas,nav,.top-bar,.grid-bg,.tabs,.side-nav,footer,.mobile-toggle{display:none!important}
+  .page-header{padding:20px 0;text-align:left}
+  .page-header h1{color:#111;-webkit-text-fill-color:#111;font-size:18pt}
+  .page-header h1 .accent{-webkit-text-fill-color:#111;color:#111}
+  .page-header p,.last-updated{color:#333}
+  .tab-content{display:block!important}
+  .tab-content::before{content:attr(data-print-title);display:block;font-size:16pt;font-weight:700;
+    margin:24pt 0 12pt;padding-bottom:8pt;border-bottom:2pt solid #111}
+  .legal-layout{display:block}
+  .legal-content{max-width:100%}
+  .legal-content h2{color:#111;border-bottom-color:#ccc;page-break-after:avoid}
+  .legal-content h3{color:#111}
+  .legal-content p,.legal-content li{color:#333}
+  .legal-content strong{color:#000}
+  .legal-content .info-box{background:#f5f5f5;border-color:#ccc}
+  .legal-content th{color:#111}
+  .legal-content td{color:#333}
+  .legal-content th,.legal-content td{border-bottom-color:#ccc}
+  a{color:#111;text-decoration:none}
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+<div class="grid-bg"></div>
+<div class="top-bar"></div>
+
+<!-- ナビゲーション -->
+<nav>
+  <a href="hp.html" class="logo">JUDGEMENT<span>LEGAL</span></a>
+  <div class="nav-links" id="navLinks">
+    <a href="hp.html">HOME</a>
+    <a href="lp_client.html">企業向け</a>
+    <a href="lp_worker.html">ワーカー向け</a>
+    <a href="blog.html">ブログ</a>
+    <a href="legal.html">法的情報</a>
+    <a href="lp_client.html#contact" class="nav-cta">お問い合わせ</a>
+  </div>
+  <button class="mobile-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="メニュー">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- PAGE HEADER -->
+<section class="page-header">
+  <div class="container fade-in">
+    <h1><span class="accent">Legal</span> Information</h1>
+    <p>JUDGEMENT サービスに関する法的文書</p>
+    <p class="last-updated">最終更新日: 2026年3月15日</p>
+  </div>
+</section>
+
+<!-- TABS + CONTENT -->
+<section style="padding:0 20px 100px">
+  <div class="container">
+
+    <!-- タブ切替 -->
+    <div class="tabs fade-in">
+      <button class="tab-btn active" onclick="switchTab('privacy')">プライバシーポリシー</button>
+      <button class="tab-btn" onclick="switchTab('terms')">利用規約</button>
+    </div>
+
+    <!-- ======================== プライバシーポリシー ======================== -->
+    <div class="tab-content active" id="tab-privacy" data-print-title="プライバシーポリシー">
+      <div class="legal-layout">
+        <aside class="side-nav" id="sideNav-privacy">
+          <ul>
+            <li><a href="#pp-1" class="active">基本方針</a></li>
+            <li><a href="#pp-2">収集する情報</a></li>
+            <li><a href="#pp-3">利用目的</a></li>
+            <li><a href="#pp-4">第三者提供</a></li>
+            <li><a href="#pp-5">データの保管・セキュリティ</a></li>
+            <li><a href="#pp-6">ユーザーの権利</a></li>
+            <li><a href="#pp-7">Cookieポリシー</a></li>
+            <li><a href="#pp-8">変更について</a></li>
+            <li><a href="#pp-9">お問い合わせ先</a></li>
+          </ul>
+        </aside>
+        <div class="legal-content fade-in">
+
+          <h2 id="pp-1">第1条 基本方針</h2>
+          <p>JUDGEMENT Inc.（以下「当社」）は、当社が提供するAI品質管理プラットフォーム「JUDGEMENT」（以下「本サービス」）における個人情報の取り扱いについて、以下のとおりプライバシーポリシー（以下「本ポリシー」）を定めます。</p>
+          <p>当社は、個人情報の保護に関する法律（個人情報保護法）その他の関連法令およびガイドラインを遵守し、ユーザーの皆様の個人情報を適切に取り扱います。当社は、個人情報の正確性および安全性を確保するために、セキュリティに関する技術的・組織的な対策を講じ、個人情報の漏洩、滅失または毀損の防止に努めます。</p>
+
+          <h2 id="pp-2">第2条 収集する情報</h2>
+          <p>当社は、本サービスの提供にあたり、以下の情報を収集することがあります。</p>
+
+          <h3>2.1 個人情報</h3>
+          <ul>
+            <li>氏名（またはニックネーム）</li>
+            <li>メールアドレス</li>
+            <li>パスワード（暗号化して保存）</li>
+            <li>プロフィール情報（言語、専門分野、スキルレベル等）</li>
+            <li>お支払い情報（法人契約の場合、請求先情報）</li>
+          </ul>
+
+          <h3>2.2 利用データ</h3>
+          <ul>
+            <li>本サービスにおける評価・回答データ</li>
+            <li>タスクの実行履歴および応答時間</li>
+            <li>Trust Scoreおよび品質スコアの算出に必要な行動データ</li>
+            <li>ログイン日時、アクセス頻度、機能利用状況</li>
+          </ul>
+
+          <h3>2.3 技術情報</h3>
+          <ul>
+            <li>IPアドレス、ブラウザ種類、OS情報</li>
+            <li>デバイス識別子</li>
+            <li>リファラURL、ページ閲覧履歴</li>
+            <li>Cookie およびこれに類する技術により取得される情報</li>
+          </ul>
+
+          <h2 id="pp-3">第3条 利用目的</h2>
+          <p>当社は、収集した情報を以下の目的で利用します。</p>
+          <ol>
+            <li>本サービスの提供、運営、維持および改善</li>
+            <li>ユーザーアカウントの作成・管理・認証</li>
+            <li>Trust Scoreの算出および品質管理</li>
+            <li>AI評価タスクの適切なマッチングおよび配信</li>
+            <li>報酬の計算および支払い処理</li>
+            <li>カスタマーサポートの提供</li>
+            <li>利用規約違反行為の検出および対応</li>
+            <li>不正行為（スパム、ボット、品質詐称等）の防止</li>
+            <li>サービスに関する通知、アップデート情報の送信</li>
+            <li>統計データの作成（個人を特定できない形式）</li>
+            <li>新機能・新サービスの開発</li>
+            <li>法令に基づく対応</li>
+          </ol>
+
+          <h2 id="pp-4">第4条 第三者提供</h2>
+          <p>当社は、以下の場合を除き、ユーザーの個人情報を第三者に提供しません。</p>
+          <ol>
+            <li><strong>ユーザーの同意がある場合</strong></li>
+            <li><strong>法令に基づく場合</strong> — 裁判所、検察庁、警察等の公的機関からの法令に基づく照会があった場合</li>
+            <li><strong>業務委託の場合</strong> — 本サービスの提供に必要な範囲で業務委託先に提供する場合（当社は委託先との間で適切な個人情報保護契約を締結します）</li>
+            <li><strong>事業承継の場合</strong> — 合併、分社化、事業譲渡等により事業が承継される場合</li>
+            <li><strong>統計データの場合</strong> — 個人を特定できない統計データ（集計・匿名化済み）を研究機関またはクライアント企業に提供する場合</li>
+          </ol>
+
+          <div class="info-box">
+            <p><strong>クライアント企業への評価データ提供について</strong></p>
+            <p>クライアント企業に提供される評価データは、原則として匿名化処理を施します。ワーカーの個人情報（氏名、メールアドレス等）がクライアント企業に開示されることはありません。Trust Scoreは統計的指標として提供されますが、個人の特定には使用されません。</p>
+          </div>
+
+          <h2 id="pp-5">第5条 データの保管・セキュリティ</h2>
+          <p>当社は、収集した個人情報を以下の措置により保護します。</p>
+          <table>
+            <thead>
+              <tr><th>対策区分</th><th>具体的措置</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>通信の暗号化</td><td>すべての通信にTLS 1.3を使用</td></tr>
+              <tr><td>データの暗号化</td><td>保存時にAES-256-GCMで暗号化</td></tr>
+              <tr><td>認証・認可</td><td>多要素認証（MFA）の提供、ロールベースアクセス制御</td></tr>
+              <tr><td>パスワード保護</td><td>bcryptによるハッシュ化（ソルト付き）</td></tr>
+              <tr><td>アクセス制御</td><td>最小権限の原則に基づく従業員アクセス管理</td></tr>
+              <tr><td>監視・検知</td><td>不正アクセスの24時間監視、異常検知アラート</td></tr>
+              <tr><td>バックアップ</td><td>日次バックアップ、暗号化保存、30日間保持</td></tr>
+            </tbody>
+          </table>
+          <p>個人情報は、利用目的の達成に必要な期間保管し、保管期間経過後は速やかに安全な方法で消去します。法令により保管が義務付けられている場合は、当該法令に定める期間保管します。</p>
+
+          <h2 id="pp-6">第6条 ユーザーの権利</h2>
+          <p>ユーザーは、当社に対して以下の権利を行使できます。</p>
+          <ol>
+            <li><strong>アクセス権</strong> — 当社が保有する自己の個人情報の開示を請求する権利</li>
+            <li><strong>訂正権</strong> — 不正確または不完全な個人情報の訂正を請求する権利</li>
+            <li><strong>削除権</strong> — 個人情報の削除を請求する権利（法令により保管が義務付けられている情報を除く）</li>
+            <li><strong>利用停止権</strong> — 個人情報の利用停止を請求する権利</li>
+            <li><strong>データポータビリティ</strong> — 自己の個人情報を構造化された一般的な機械可読形式で受け取る権利</li>
+            <li><strong>同意撤回権</strong> — 個人情報の処理に対する同意をいつでも撤回する権利</li>
+          </ol>
+          <p>上記の権利を行使される場合は、下記のお問い合わせ先までご連絡ください。本人確認のうえ、合理的な期間内（原則30日以内）に対応いたします。</p>
+
+          <h2 id="pp-7">第7条 Cookieポリシー</h2>
+          <p>当社は、本サービスにおいて以下の目的でCookieおよびこれに類する技術を使用します。</p>
+
+          <h3>7.1 必須Cookie</h3>
+          <p>ログイン状態の維持、セキュリティトークンの管理など、本サービスの基本機能に必要なCookieです。これらは無効化できません。</p>
+
+          <h3>7.2 機能Cookie</h3>
+          <p>言語設定、表示設定など、ユーザーの利便性を向上させるためのCookieです。</p>
+
+          <h3>7.3 分析Cookie</h3>
+          <p>サービスの利用状況を分析し、改善に役立てるためのCookieです。Google Analytics等の第三者分析ツールを使用する場合があります。</p>
+
+          <p>ユーザーは、ブラウザの設定によりCookieの受け入れを制御できます。ただし、必須Cookieを無効にした場合、本サービスの一部機能が利用できなくなることがあります。</p>
+
+          <h2 id="pp-8">第8条 変更について</h2>
+          <p>当社は、法令の改正、サービスの変更その他の事由により、本ポリシーを変更することがあります。重要な変更を行う場合は、本サービス上での通知またはメールにて、変更内容および施行日を事前にお知らせします。</p>
+          <p>変更後のプライバシーポリシーは、本ページに掲載した時点で効力を生じます。変更後も本サービスを継続して利用された場合、変更後のポリシーに同意したものとみなします。</p>
+
+          <h2 id="pp-9">第9条 お問い合わせ先</h2>
+          <div class="info-box">
+            <p><strong>JUDGEMENT Inc.</strong></p>
+            <p>〒150-0002 東京都渋谷区渋谷1-1-1（仮）</p>
+            <p>個人情報保護管理者: プライバシー担当</p>
+            <p>メール: <a href="mailto:privacy@judgement.ai" style="color:var(--n)">privacy@judgement.ai</a></p>
+            <p>受付時間: 平日 10:00〜18:00（土日祝日・年末年始を除く）</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================== 利用規約 ======================== -->
+    <div class="tab-content" id="tab-terms" data-print-title="利用規約">
+      <div class="legal-layout">
+        <aside class="side-nav" id="sideNav-terms">
+          <ul>
+            <li><a href="#tos-1">サービスの定義</a></li>
+            <li><a href="#tos-2">アカウント</a></li>
+            <li><a href="#tos-3">料金と支払い</a></li>
+            <li><a href="#tos-4">知的財産権</a></li>
+            <li><a href="#tos-5">データの取扱い</a></li>
+            <li><a href="#tos-6">禁止事項</a></li>
+            <li><a href="#tos-7">免責事項</a></li>
+            <li><a href="#tos-8">契約解除</a></li>
+            <li><a href="#tos-9">準拠法・管轄裁判所</a></li>
+            <li><a href="#tos-10">変更・通知</a></li>
+          </ul>
+        </aside>
+        <div class="legal-content fade-in">
+
+          <h2 id="tos-1">第1条 サービスの定義</h2>
+          <p>本利用規約（以下「本規約」）は、JUDGEMENT Inc.（以下「当社」）が提供するAI品質管理プラットフォーム「JUDGEMENT」（以下「本サービス」）の利用条件を定めるものです。本サービスのユーザー（以下「ユーザー」）は、本規約に同意のうえ本サービスを利用するものとします。</p>
+          <p>本サービスは、以下の機能を含みます。</p>
+          <ol>
+            <li><strong>JUDGEMENT Game</strong> — AI出力の品質評価タスク（A/B比較評価、評点付け、テキスト評価等）の提供・管理</li>
+            <li><strong>JUDGEMENT Network</strong> — 評価者（ワーカー）の品質スコア管理、信頼性評価（Trust Score）に基づくマッチング</li>
+            <li><strong>JUDGEMENT OS</strong> — クライアント企業向けのAPI、ダッシュボード、データ分析・エクスポート機能</li>
+          </ol>
+
+          <h2 id="tos-2">第2条 アカウント</h2>
+          <h3>2.1 アカウント登録</h3>
+          <p>本サービスの利用には、アカウント登録が必要です。ユーザーは、登録時に正確かつ最新の情報を提供し、登録内容に変更が生じた場合は速やかに更新するものとします。</p>
+
+          <h3>2.2 アカウントの管理</h3>
+          <p>ユーザーは、自己のアカウント（ログイン情報を含む）を適切に管理する責任を負います。アカウントの不正使用により生じた損害について、当社は一切の責任を負いません。</p>
+
+          <h3>2.3 アカウントの種類</h3>
+          <table>
+            <thead>
+              <tr><th>種類</th><th>対象</th><th>主な機能</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>ワーカーアカウント</td><td>評価タスクの実行者</td><td>タスク実行、報酬受取、Trust Score確認</td></tr>
+              <tr><td>クライアントアカウント</td><td>AI品質評価を依頼する企業</td><td>タスク作成、データ取得、API利用</td></tr>
+              <tr><td>管理者アカウント</td><td>クライアント企業の管理者</td><td>チーム管理、請求管理、権限設定</td></tr>
+            </tbody>
+          </table>
+
+          <h2 id="tos-3">第3条 料金と支払い</h2>
+          <h3>3.1 料金体系</h3>
+          <p>本サービスの料金は、当社が別途定める料金表に基づきます。料金体系は、利用プラン、タスク件数、データ量等に応じて設定されます。</p>
+
+          <h3>3.2 支払い条件</h3>
+          <p>クライアント企業は、当社が発行する請求書に基づき、請求書発行日の翌月末日までに指定の方法で支払うものとします。支払い遅延が生じた場合、年率14.6%の遅延損害金が発生します。</p>
+
+          <h3>3.3 ワーカーへの報酬</h3>
+          <p>ワーカーへの報酬は、完了したタスクの種類・品質（Trust Scoreを考慮）に基づき算出されます。報酬の支払いは、当社が定めるスケジュールおよび最低支払額に基づき実施します。</p>
+
+          <h3>3.4 料金の変更</h3>
+          <p>当社は、30日前までの事前通知をもって料金を変更できるものとします。変更後の料金に同意できない場合、ユーザーは変更施行日までに契約を解除できます。</p>
+
+          <h2 id="tos-4">第4条 知的財産権</h2>
+          <h3>4.1 当社の知的財産</h3>
+          <p>本サービスに関するすべての知的財産権（ソフトウェア、アルゴリズム、デザイン、商標、ドキュメント等を含む）は、当社に帰属します。ユーザーに対する本サービスの利用許諾は、知的財産権の譲渡を意味するものではありません。</p>
+
+          <h3>4.2 ユーザーコンテンツ</h3>
+          <p>クライアント企業が本サービスに入力したデータ（評価対象のAI出力等）に関する知的財産権は、クライアント企業に帰属します。ただし、当社は本サービスの提供・改善に必要な範囲で当該データを利用する権利を有します。</p>
+
+          <h2 id="tos-5">第5条 データの取扱い</h2>
+          <h3>5.1 クライアントデータ</h3>
+          <p>クライアント企業が本サービスに提供する評価対象データ（以下「クライアントデータ」）の所有権は、クライアント企業に帰属します。当社は、クライアントデータを本サービスの提供目的以外に使用しません。</p>
+
+          <h3>5.2 評価データ（ワーカー回答データ）</h3>
+          <p>ワーカーが本サービスにおいて生成した評価・回答データ（以下「評価データ」）の取扱いは以下のとおりとします。</p>
+          <ul>
+            <li><strong>生データの利用権</strong> — 当該タスクを依頼したクライアント企業が、契約で定めた範囲内で利用できます</li>
+            <li><strong>匿名化・統計データ</strong> — 当社は、評価データを匿名化・集計したうえで、サービス改善、品質基準の策定、研究目的に利用できます</li>
+            <li><strong>Trust Scoreの算出</strong> — 評価データは、ワーカーのTrust Score算出に利用されます</li>
+          </ul>
+
+          <h3>5.3 データの削除</h3>
+          <p>クライアント企業は、契約期間中または契約終了後30日以内に、クライアントデータの削除を請求できます。削除請求を受けた場合、当社は合理的な期間内にデータを削除します（法令により保存が義務付けられるデータを除く）。</p>
+
+          <h2 id="tos-6">第6条 禁止事項</h2>
+          <p>ユーザーは、本サービスの利用にあたり、以下の行為を行ってはなりません。</p>
+          <ol>
+            <li>法令または公序良俗に反する行為</li>
+            <li>虚偽の情報を登録・提供する行為</li>
+            <li>他のユーザーのアカウントを不正に使用する行為</li>
+            <li>評価タスクにおいて、故意に不正確な回答を行う行為</li>
+            <li>自動化ツール（ボット等）を使用して評価タスクを実行する行為</li>
+            <li>Trust Scoreを不正に操作しようとする行為</li>
+            <li>本サービスのリバースエンジニアリング、デコンパイル、逆アセンブル</li>
+            <li>本サービスのセキュリティ機能を回避または無効化する行為</li>
+            <li>当社または第三者の知的財産権、プライバシー権その他の権利を侵害する行為</li>
+            <li>本サービスの運営を妨害する行為（過度な負荷をかける行為を含む）</li>
+            <li>反社会的勢力への利益供与その他の関与</li>
+            <li>その他、当社が不適切と判断する行為</li>
+          </ol>
+
+          <h2 id="tos-7">第7条 免責事項</h2>
+          <h3>7.1 サービスの提供</h3>
+          <p>当社は、本サービスを「現状有姿（as is）」で提供します。当社は、本サービスの完全性、正確性、特定目的への適合性、中断なき提供について、明示または黙示を問わず保証しません。</p>
+
+          <h3>7.2 損害の制限</h3>
+          <p>当社の損害賠償責任は、当該損害の発生原因となった契約に基づきユーザーが当社に支払った直近12ヶ月間の利用料金の総額を上限とします。当社は、逸失利益、データの喪失、間接損害、特別損害、懲罰的損害について、いかなる場合も責任を負いません。</p>
+
+          <h3>7.3 評価データの品質</h3>
+          <p>当社は、Trust Scoreに基づく品質管理を行いますが、評価データの完全な正確性を保証するものではありません。クライアント企業は、評価データの利用に関する最終的な判断を自己の責任で行うものとします。</p>
+
+          <h2 id="tos-8">第8条 契約解除</h2>
+          <h3>8.1 ユーザーによる解約</h3>
+          <p>ユーザーは、いつでもアカウントの削除により本サービスの利用を終了できます。ただし、未完了のタスクがある場合は、当該タスクの完了または取消し後に解約が有効となります。</p>
+
+          <h3>8.2 当社による解除</h3>
+          <p>当社は、ユーザーが以下のいずれかに該当する場合、事前の通知なくアカウントの停止または削除を行うことができます。</p>
+          <ol>
+            <li>本規約に違反した場合</li>
+            <li>禁止事項に該当する行為を行った場合</li>
+            <li>料金の支払いを60日以上遅延した場合</li>
+            <li>反社会的勢力に該当することが判明した場合</li>
+            <li>その他、当社が本サービスの利用を継続させることが不適切と判断した場合</li>
+          </ol>
+
+          <h3>8.3 解約後の取扱い</h3>
+          <p>契約解除後、当社はユーザーの個人情報を、法令に定める保管義務がある場合を除き、合理的な期間内に削除します。ワーカーの未払い報酬については、解約後も支払い義務が継続します。</p>
+
+          <h2 id="tos-9">第9条 準拠法・管轄裁判所</h2>
+          <p>本規約は日本法に準拠し、日本法に従って解釈されるものとします。</p>
+          <p>本規約に関する一切の紛争については、東京地方裁判所を第一審の専属的合意管轄裁判所とします。</p>
+
+          <h2 id="tos-10">第10条 変更・通知</h2>
+          <h3>10.1 規約の変更</h3>
+          <p>当社は、以下のいずれかに該当する場合、本規約を変更できるものとします。</p>
+          <ol>
+            <li>本規約の変更がユーザーの一般の利益に適合する場合</li>
+            <li>本規約の変更が契約の目的に反せず、変更の必要性、変更後の内容の相当性その他の変更に係る事情に照らして合理的なものである場合</li>
+          </ol>
+
+          <h3>10.2 通知方法</h3>
+          <p>当社は、規約の変更を行う場合、変更の効力発生日の30日前までに、以下のいずれかの方法でユーザーに通知します。</p>
+          <ul>
+            <li>本サービス上での告知</li>
+            <li>登録メールアドレスへの電子メール送信</li>
+            <li>当社ウェブサイトでの掲載</li>
+          </ul>
+          <p>変更後の規約の効力発生日以降に本サービスを利用した場合、変更後の規約に同意したものとみなします。</p>
+
+          <div class="info-box">
+            <p><strong>お問い合わせ先</strong></p>
+            <p>JUDGEMENT Inc.</p>
+            <p>〒150-0002 東京都渋谷区渋谷1-1-1（仮）</p>
+            <p>メール: <a href="mailto:legal@judgement.ai" style="color:var(--n)">legal@judgement.ai</a></p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-links">
+    <a href="hp.html">ホーム</a>
+    <a href="lp_client.html">企業向け</a>
+    <a href="lp_worker.html">ワーカー向け</a>
+    <a href="blog.html">ブログ</a>
+    <a href="legal.html">法的情報</a>
+  </div>
+  <p class="copyright">&copy; 2026 JUDGEMENT Inc. All rights reserved.</p>
+</footer>
+
+<script>
+// パーティクル背景
+const canvas=document.getElementById('particles'),ctx=canvas.getContext('2d');
+let w,h,particles=[];
+function resize(){w=canvas.width=innerWidth;h=canvas.height=innerHeight}
+resize();window.addEventListener('resize',resize);
+class P{constructor(){this.reset()}
+reset(){this.x=Math.random()*w;this.y=Math.random()*h;this.vx=(Math.random()-0.5)*0.3;
+this.vy=(Math.random()-0.5)*0.3;this.r=Math.random()*1.5+0.5;this.a=Math.random()*0.3+0.05}
+update(){this.x+=this.vx;this.y+=this.vy;
+if(this.x<0||this.x>w)this.vx*=-1;if(this.y<0||this.y>h)this.vy*=-1}
+draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+ctx.fillStyle=`rgba(0,180,255,${this.a})`;ctx.fill()}}
+for(let i=0;i<40;i++)particles.push(new P());
+function animate(){ctx.clearRect(0,0,w,h);particles.forEach(p=>{p.update();p.draw()});
+for(let i=0;i<particles.length;i++)for(let j=i+1;j<particles.length;j++){
+const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,d=Math.sqrt(dx*dx+dy*dy);
+if(d<120){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);
+ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle=`rgba(0,180,255,${0.04*(1-d/120)})`;
+ctx.stroke()}}requestAnimationFrame(animate)}animate();
+
+// スクロールナビ
+window.addEventListener('scroll',()=>{document.querySelector('nav').classList.toggle('scrolled',scrollY>40)});
+
+// フェードイン
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:0.1});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+// タブ切替
+function switchTab(name){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  event.target.classList.add('active');
+  // サイドナビのアクティブ状態リセット
+  const sideNav=document.getElementById('sideNav-'+name);
+  if(sideNav){
+    sideNav.querySelectorAll('a').forEach((a,i)=>{
+      a.classList.toggle('active',i===0);
+    });
+  }
+}
+
+// サイドナビ - スクロールハイライト
+function setupSideNavHighlight(){
+  const sections=document.querySelectorAll('.legal-content h2[id]');
+  const navLinks=document.querySelectorAll('.side-nav a');
+  window.addEventListener('scroll',()=>{
+    let current='';
+    sections.forEach(s=>{
+      const top=s.getBoundingClientRect().top;
+      if(top<150)current=s.id;
+    });
+    navLinks.forEach(a=>{
+      a.classList.toggle('active',a.getAttribute('href')==='#'+current);
+    });
+  });
+}
+setupSideNavHighlight();
+</script>
+</body>
+</html>
