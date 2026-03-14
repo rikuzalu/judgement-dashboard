@@ -418,16 +418,8 @@ width:8px;height:8px;border-radius:50%;flex-shrink:0;
 /* ===== Products & Pricing ===== */
 .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
 .price-card{padding:2rem;text-align:center;position:relative}
-.price-card.featured{border-color:var(--accent);box-shadow:0 0 30px rgba(0,180,255,0.1);overflow:visible}
-.price-card.featured.glass::before,.price-card.featured.glass::after{z-index:0}
+.price-card.featured{border-color:var(--accent);box-shadow:0 0 30px rgba(0,180,255,0.1)}
 .price-card *{position:relative;z-index:1}
-.price-card.featured::before{
-content:'RECOMMENDED';position:absolute;top:-1px;left:50%;transform:translateX(-50%);
-font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:3px;
-color:var(--bg);background:linear-gradient(90deg,var(--accent),var(--secondary));
-padding:2px 16px;border-radius:0 0 8px 8px;z-index:1;width:auto;height:auto;
-pointer-events:none;
-}
 .price-tier{
 font-family:'Share Tech Mono',monospace;font-size:0.7rem;
 color:var(--accent);letter-spacing:3px;margin-bottom:0.5rem;
