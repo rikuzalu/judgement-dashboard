@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>JUDGEMENT // COSMIC COMMAND CENTER v7.0</title>
+<title>JUDGEMENT // COSMIC COMMAND CENTER v8.0</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@100;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -342,6 +342,56 @@ td{padding:10px;border-bottom:1px solid rgba(0,180,255,.02);font-size:.82em;over
 .kb{position:fixed;bottom:14px;right:14px;z-index:50;font-family:'Share Tech Mono';font-size:.52em;color:var(--t3);background:var(--sf);backdrop-filter:blur(10px);border:1px solid var(--bd);border-radius:10px;padding:10px 14px;opacity:.15;transition:opacity .3s}.kb:hover{opacity:1}
 .kb div{margin:2px 0}.kb kbd{background:rgba(0,180,255,.03);border:1px solid var(--bd);border-radius:3px;padding:1px 4px;margin-right:3px}
 
+/* === NEW SECTIONS: Skills, Meetings, Reports, Owner Tasks === */
+.sec4{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.sec4f{display:grid;grid-template-columns:1fr;gap:16px}
+
+/* Skill cards */
+.sk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.sk-card{padding:14px;border-radius:10px;border:1px solid rgba(0,180,255,.06);background:rgba(0,0,0,.12);transition:all .3s;position:relative;overflow:hidden}
+.sk-card:hover{border-color:rgba(0,180,255,.15);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.sk-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--n),var(--vi));opacity:.3;transition:opacity .3s}
+.sk-card:hover::before{opacity:1}
+.sk-name{font-family:'Orbitron';font-size:.52em;font-weight:600;color:var(--n);letter-spacing:1px;margin-bottom:4px}
+.sk-desc{font-size:.72em;color:var(--t2);line-height:1.4}
+.sk-path{font-family:'Share Tech Mono';font-size:.48em;color:var(--t3);margin-top:6px}
+
+/* Meeting list */
+.mt-item{padding:14px;border-bottom:1px solid rgba(0,180,255,.03);transition:all .2s;border-radius:6px;cursor:pointer}
+.mt-item:hover{background:rgba(0,180,255,.025);transform:translateX(4px)}
+.mt-title{font-family:'Exo 2';font-size:.82em;font-weight:600;color:var(--t1);margin-bottom:3px}
+.mt-date{font-family:'Share Tech Mono';font-size:.52em;color:var(--g);letter-spacing:1px}
+.mt-preview{font-size:.68em;color:var(--t3);margin-top:6px;line-height:1.5;max-height:60px;overflow:hidden;text-overflow:ellipsis}
+.mt-detail{display:none;font-size:.72em;color:var(--t2);margin-top:8px;padding:12px;background:rgba(0,0,0,.2);border-radius:8px;border:1px solid rgba(0,180,255,.04);line-height:1.6;white-space:pre-wrap;max-height:300px;overflow-y:auto}
+.mt-item.open .mt-detail{display:block}
+.mt-item.open .mt-preview{display:none}
+
+/* Report list */
+.rp-list{max-height:400px;overflow-y:auto}
+.rp-item{display:flex;align-items:center;gap:10px;padding:8px 6px;border-bottom:1px solid rgba(0,180,255,.02);transition:all .2s;font-size:.78em}
+.rp-item:hover{background:rgba(0,180,255,.02);transform:translateX(3px)}
+.rp-type{font-family:'Share Tech Mono';font-size:.58em;letter-spacing:1.5px;padding:2px 6px;border-radius:4px;min-width:48px;text-align:center}
+.rp-daily{background:rgba(0,180,255,.04);color:var(--n);border:1px solid rgba(0,180,255,.08)}
+.rp-weekly{background:rgba(139,92,246,.04);color:var(--vi);border:1px solid rgba(139,92,246,.08)}
+.rp-monthly{background:rgba(255,184,0,.04);color:var(--g);border:1px solid rgba(255,184,0,.08)}
+.rp-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--t1)}
+.rp-meta{font-family:'Share Tech Mono';font-size:.66em;color:var(--t3)}
+
+/* Owner tasks */
+.ot-grid{display:grid;gap:10px}
+.ot-card{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:10px;border:1px solid rgba(255,184,0,.08);background:rgba(255,184,0,.02);transition:all .3s}
+.ot-card:hover{border-color:rgba(255,184,0,.2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.ot-id{font-family:'Orbitron';font-size:.6em;font-weight:700;color:var(--g);min-width:32px}
+.ot-info{flex:1}
+.ot-task{font-family:'Exo 2';font-size:.82em;font-weight:500;color:var(--t1)}
+.ot-reason{font-family:'Share Tech Mono';font-size:.52em;color:var(--t3);margin-top:2px;letter-spacing:.5px}
+.ot-right{text-align:right}
+.ot-time{font-family:'Share Tech Mono';font-size:.6em;color:var(--n2)}
+.ot-phase{font-family:'Share Tech Mono';font-size:.48em;color:var(--vi);background:rgba(139,92,246,.04);padding:2px 6px;border-radius:4px;border:1px solid rgba(139,92,246,.06);margin-top:4px;display:inline-block}
+.ot-status{font-family:'Share Tech Mono';font-size:.52em;padding:2px 8px;border-radius:4px;margin-top:4px;display:inline-block}
+.ot-pending{background:rgba(255,184,0,.04);color:var(--g);border:1px solid rgba(255,184,0,.08)}
+.ot-completed{background:rgba(0,255,178,.04);color:var(--m);border:1px solid rgba(0,255,178,.08)}
+
 /* Staggered entry */
 @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .exec{animation:rise .7s cubic-bezier(.16,1,.3,1) .1s both}
@@ -349,16 +399,17 @@ td{padding:10px;border-bottom:1px solid rgba(0,180,255,.02);font-size:.82em;over
 .mid,.mid2{animation:rise .7s cubic-bezier(.16,1,.3,1) .2s both}
 .intel{animation:rise .7s cubic-bezier(.16,1,.3,1) .25s both}
 .strat{animation:rise .7s cubic-bezier(.16,1,.3,1) .3s both}
+.sec4,.sec4f{animation:rise .7s cubic-bezier(.16,1,.3,1) .33s both}
 .twp{animation:rise .8s cubic-bezier(.16,1,.3,1) .35s both}
 
 /* Responsive */
 @media(max-width:1400px){
 .exec{grid-template-columns:1.5fr 1fr 1fr}.exec .ec:last-child{display:none}
 .met{grid-template-columns:repeat(4,1fr)}.mid{grid-template-columns:1fr}.mid2{grid-template-columns:1fr}
-.intel,.strat{grid-template-columns:1fr 1fr}
+.intel,.strat{grid-template-columns:1fr 1fr}.sec4{grid-template-columns:1fr}
 }
 @media(max-width:1000px){
-.exec{grid-template-columns:1fr 1fr}.mid,.mid2,.intel,.strat{grid-template-columns:1fr}
+.exec{grid-template-columns:1fr 1fr}.mid,.mid2,.intel,.strat,.sec4{grid-template-columns:1fr}
 .sh{padding:16px 20px 80px}.hdr{flex-direction:column;gap:14px;align-items:flex-start}
 colgroup col:nth-child(4),td:nth-child(4),th:nth-child(4),colgroup col:nth-child(6),td:nth-child(6),th:nth-child(6){display:none}.agrid{grid-template-columns:repeat(2,1fr)}
 }
@@ -401,7 +452,7 @@ colgroup col:nth-child(7),td:nth-child(7),th:nth-child(7),colgroup col:nth-child
 <header class="hdr">
 <div class="logo">
 <div class="hex"><div class="r1"></div><div class="r2"></div><div class="hC"></div><span class="hJ">J</span></div>
-<div class="br"><h1>JUDGEMENT</h1><div class="tgl"><span class="tw-txt" id="tt"></span> <span class="ver">v7.0</span></div></div>
+<div class="br"><h1>JUDGEMENT</h1><div class="tgl"><span class="tw-txt" id="tt"></span> <span class="ver">v8.0</span></div></div>
 </div>
 <nav class="nav">
 <a href="https://github.com/rikuzalu/human-decision-os" target="_blank">GITHUB</a>
@@ -410,7 +461,7 @@ colgroup col:nth-child(7),td:nth-child(7),th:nth-child(7),colgroup col:nth-child
 <a href="https://sentry.io/organizations/judgement/" target="_blank">SENTRY</a>
 <a href="https://supabase.com/dashboard/project/lzjzwzdbxcgohrxeucrj" target="_blank">SUPABASE</a>
 </nav>
-<div class="hr"><div class="live"><span class="ld"></span>SYSTEM ONLINE</div><div class="clk" id="clk">2026-03-14 13:21:29</div></div>
+<div class="hr"><div class="live"><span class="ld"></span>SYSTEM ONLINE</div><div class="clk" id="clk">2026-03-14 13:38:21</div></div>
 </header>
 
 <!-- EXECUTIVE OVERVIEW -->
@@ -418,21 +469,21 @@ colgroup col:nth-child(7),td:nth-child(7),th:nth-child(7),colgroup col:nth-child
 <section class="exec">
 <div class="ec glass" style="--cc:var(--n);--cg:var(--ng)"><div class="eb"></div><div class="eph"><div class="ering"><svg width="96" height="96" viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="45"/><circle class="fg" cx="50" cy="50" r="45"/></svg><div class="rp">0.0%</div></div><div class="ei"><div class="en">PHASE 2.1 — TOTP認証</div><div class="ed">MFA実装: 0/6項目達成<br>TOTP設定・検証・Middleware実装済</div><div class="ex">NEXT › E2Eテスト通過 → 本番デプロイ</div></div></div></div>
 <div class="ec es glass" style="--cc:var(--n);--cg:var(--ng)"><div class="eb"></div><div class="ev en1">1</div><div class="el">OPERATING DAYS</div><div class="eu">1046.0 tasks/day</div></div>
-<div class="ec es glass" style="--cc:var(--m);--cg:var(--mg)"><div class="eb"></div><div class="ev en2">97.8<span style="font-size:.3em;opacity:.4">%</span></div><div class="el">SUCCESS RATE</div><div class="eu">1046/1069</div></div>
-<div class="ec es glass" style="--cc:var(--g);--cg:var(--gg)"><div class="eb"></div><div class="ev en3">23</div><div class="el">LAST HOUR</div><div class="eu">30.7/h avg</div></div>
+<div class="ec es glass" style="--cc:var(--m);--cg:var(--mg)"><div class="eb"></div><div class="ev en2">96.0<span style="font-size:.3em;opacity:.4">%</span></div><div class="el">SUCCESS RATE</div><div class="eu">1046/1090</div></div>
+<div class="ec es glass" style="--cc:var(--g);--cg:var(--gg)"><div class="eb"></div><div class="ev en3">15</div><div class="el">LAST HOUR</div><div class="eu">30.2/h avg</div></div>
 </section>
 
 <!-- OPERATIONAL METRICS -->
 <div class="sdiv"><span class="sp"></span><span class="st" data-text="OPERATIONAL METRICS">OPERATIONAL METRICS</span></div>
 <section class="met">
-<div class="mc glass" data-t="total"><div class="mtop"></div><div class="ms">TOTAL</div><div class="mn">1069</div><div class="ml">ALL OPS</div><div class="wb"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="mbot"></div></div>
+<div class="mc glass" data-t="total"><div class="mtop"></div><div class="ms">TOTAL</div><div class="mn">1090</div><div class="ml">ALL OPS</div><div class="wb"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="mbot"></div></div>
 <div class="mc glass" data-t="run"><div class="mtop"></div><div class="ms">ACTIVE</div><div class="mn">0</div><div class="ml">EXECUTING</div><div class="wb"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="mbot"></div></div>
-<div class="mc glass" data-t="que"><div class="mtop"></div><div class="ms">QUEUE</div><div class="mn">9</div><div class="ml">STANDBY</div><div class="wb"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="mbot"></div></div>
+<div class="mc glass" data-t="que"><div class="mtop"></div><div class="ms">QUEUE</div><div class="mn">21</div><div class="ml">STANDBY</div><div class="wb"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="mbot"></div></div>
 <div class="mc glass" data-t="ok"><div class="mtop"></div><div class="ms">CLEAR</div><div class="mn">1046</div><div class="ml">RESOLVED</div><div class="wb"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="mbot"></div></div>
 <div class="mc glass" data-t="err"><div class="mtop"></div><div class="ms">ALERT</div><div class="mn">0</div><div class="ml">ERRORS</div><div class="wb"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="mbot"></div></div>
-<div class="mc glass" data-t="rate"><div class="mtop"></div><div class="ms">RATE</div><div class="mn">97.8<span style="font-size:.28em;opacity:.3">%</span></div><div class="ml">SUCCESS</div><div class="wb"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="mbot"></div></div>
+<div class="mc glass" data-t="rate"><div class="mtop"></div><div class="ms">RATE</div><div class="mn">96.0<span style="font-size:.28em;opacity:.3">%</span></div><div class="ml">SUCCESS</div><div class="wb"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="mbot"></div></div>
 <div class="mc glass" data-t="dur"><div class="mtop"></div><div class="ms">AVG</div><div class="mn" style="font-size:1.5em">24m</div><div class="ml">DURATION</div><div class="wb"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="mbot"></div></div>
-<div class="mc glass" data-t="thru"><div class="mtop"></div><div class="ms">24H</div><div class="mn" style="font-size:1.5em">30.7<span style="font-size:.28em;opacity:.3">/h</span></div><div class="ml">THROUGHPUT</div><div class="wb"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="mbot"></div></div>
+<div class="mc glass" data-t="thru"><div class="mtop"></div><div class="ms">24H</div><div class="mn" style="font-size:1.5em">30.2<span style="font-size:.28em;opacity:.3">/h</span></div><div class="ml">THROUGHPUT</div><div class="wb"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="mbot"></div></div>
 </section>
 
 <!-- ACTIVITY INTELLIGENCE -->
@@ -461,12 +512,12 @@ colgroup col:nth-child(7),td:nth-child(7),th:nth-child(7),colgroup col:nth-child
 <!-- DEPARTMENT & RESOURCE -->
 <div class="sdiv"><span class="sp"></span><span class="st" data-text="DEPARTMENT &amp; RESOURCE">DEPARTMENT &amp; RESOURCE</span></div>
 <div class="intel">
-<div class="pn glass"><div class="pn-top"></div><div class="pt">CHANNEL DISTRIBUTION</div><div class="cr"><span class="cn">#dept-operations</span><div class="cw"><div class="cb" style="width:100%"></div></div><span class="cc">587</span></div><div class="cr"><span class="cn">#direct</span><div class="cw"><div class="cb" style="width:35%"></div></div><span class="cc">205</span></div><div class="cr"><span class="cn">#dept-data</span><div class="cw"><div class="cb" style="width:15%"></div></div><span class="cc">86</span></div><div class="cr"><span class="cn">#dept-product</span><div class="cw"><div class="cb" style="width:9%"></div></div><span class="cc">51</span></div><div class="cr"><span class="cn">#dept-ai-models</span><div class="cw"><div class="cb" style="width:6%"></div></div><span class="cc">33</span></div><div class="cr"><span class="cn">#dept-sales</span><div class="cw"><div class="cb" style="width:5%"></div></div><span class="cc">31</span></div></div>
+<div class="pn glass"><div class="pn-top"></div><div class="pt">CHANNEL DISTRIBUTION</div><div class="cr"><span class="cn">#dept-operations</span><div class="cw"><div class="cb" style="width:100%"></div></div><span class="cc">587</span></div><div class="cr"><span class="cn">#direct</span><div class="cw"><div class="cb" style="width:39%"></div></div><span class="cc">226</span></div><div class="cr"><span class="cn">#dept-data</span><div class="cw"><div class="cb" style="width:15%"></div></div><span class="cc">86</span></div><div class="cr"><span class="cn">#dept-product</span><div class="cw"><div class="cb" style="width:9%"></div></div><span class="cc">51</span></div><div class="cr"><span class="cn">#dept-ai-models</span><div class="cw"><div class="cb" style="width:6%"></div></div><span class="cc">33</span></div><div class="cr"><span class="cn">#dept-sales</span><div class="cw"><div class="cb" style="width:5%"></div></div><span class="cc">31</span></div></div>
 <div class="pn glass"><div class="pn-top"></div><div class="pt">PRIORITY MATRIX</div>
 <div class="pgrid">
 <div class="pc" style="border-color:rgba(255,45,85,.1)"><div class="pv" style="color:var(--r)">31</div><div class="pl">CRITICAL</div></div>
-<div class="pc" style="border-color:rgba(255,184,0,.1)"><div class="pv" style="color:var(--g)">773</div><div class="pl">HIGH</div></div>
-<div class="pc" style="border-color:rgba(0,232,255,.06)"><div class="pv" style="color:var(--n2)">204</div><div class="pl">MEDIUM</div></div>
+<div class="pc" style="border-color:rgba(255,184,0,.1)"><div class="pv" style="color:var(--g)">789</div><div class="pl">HIGH</div></div>
+<div class="pc" style="border-color:rgba(0,232,255,.06)"><div class="pv" style="color:var(--n2)">209</div><div class="pl">MEDIUM</div></div>
 <div class="pc" style="border-color:rgba(0,255,178,.06)"><div class="pv" style="color:var(--m)">61</div><div class="pl">LOW</div></div>
 </div>
 <div class="pt" style="margin-top:14px">DURATION STATS</div>
@@ -483,10 +534,10 @@ colgroup col:nth-child(7),td:nth-child(7),th:nth-child(7),colgroup col:nth-child
 <div class="sdiv"><span class="sp"></span><span class="st" data-text="STRATEGIC DASHBOARD">STRATEGIC DASHBOARD</span></div>
 <div class="strat">
 <div class="pn glass"><div class="pn-top"></div><div class="pt">KPI</div>
-<div class="ki"><span class="kn">COMPLETED</span><span><span class="kv">1046</span><span class="kc ku">+737 24h</span></span></div>
-<div class="ki"><span class="kn">SUCCESS RATE</span><span><span class="kv">97.8%</span></span></div>
+<div class="ki"><span class="kn">COMPLETED</span><span><span class="kv">1046</span><span class="kc ku">+726 24h</span></span></div>
+<div class="ki"><span class="kn">SUCCESS RATE</span><span><span class="kv">96.0%</span></span></div>
 <div class="ki"><span class="kn">AVG DURATION</span><span><span class="kv">24m</span></span></div>
-<div class="ki"><span class="kn">THROUGHPUT</span><span><span class="kv">30.7/h</span></span></div>
+<div class="ki"><span class="kn">THROUGHPUT</span><span><span class="kv">30.2/h</span></span></div>
 <div class="ki"><span class="kn">PRODUCTIVITY</span><span><span class="kv">1046.0/day</span></span></div>
 <div class="ki"><span class="kn">UPTIME</span><span><span class="kv">1d</span></span></div>
 </div>
@@ -510,6 +561,100 @@ colgroup col:nth-child(7),td:nth-child(7),th:nth-child(7),colgroup col:nth-child
 </div></div>
 </div>
 
+<!-- SKILLS & OWNER TASKS -->
+<div class="sdiv"><span class="sp"></span><span class="st" data-text="SKILLS &amp; OWNER REQUIRED">SKILLS &amp; OWNER REQUIRED</span></div>
+<div class="sec4">
+<div class="pn glass"><div class="pn-top"></div><div class="pt">REGISTERED SKILLS <span style="color:var(--m);font-size:.9em">(10)</span></div>
+<div class="sk-grid">
+<div class="sk-card"><div class="sk-name">DEPARTMENT MEETING AUTOMATION</div><div class="sk-desc">9つのAIエージェント（部門責任者）の作業記録を自動集約し、</div><div class="sk-path">skills/department_meeting_automation</div></div><div class="sk-card"><div class="sk-name">DISCORD BOT DEVELOPMENT</div><div class="sk-desc">discord.pyを使ったBot開発。Cog構成、スラッシュコマンド、リアクション監視、Webhook通知。</div><div class="sk-path">skills/discord_bot_development</div></div><div class="sk-card"><div class="sk-name">FILE BASED TASK QUEUE</div><div class="sk-desc">JSONファイルを共有ストアとして使うシンプルなタスクキュー。</div><div class="sk-path">skills/file_based_task_queue</div></div><div class="sk-card"><div class="sk-name">GITHUB PAGES AUTO DEPLOY</div><div class="sk-desc">GitHub Actionsを活用した静的コンテンツの自動デプロイスキル。</div><div class="sk-path">skills/github_pages_auto_deploy</div></div><div class="sk-card"><div class="sk-name">MFA TOTP IMPLEMENTATION</div><div class="sk-desc">RFC 6238準拠のTOTP（Time-based One-Time Password）認証を実装するスキル。</div><div class="sk-path">skills/mfa_totp_implementation</div></div><div class="sk-card"><div class="sk-name">NEXTAUTH MFA INTEGRATION</div><div class="sk-desc">NextAuth.js v5（Auth.js）にMFA状態を統合するスキル。</div><div class="sk-path">skills/nextauth_mfa_integration</div></div><div class="sk-card"><div class="sk-name">PRISMA SCHEMA MIGRATION</div><div class="sk-desc">Prisma ORMを使用したスキーマ設計・マイグレーション管理スキル。</div><div class="sk-path">skills/prisma_schema_migration</div></div><div class="sk-card"><div class="sk-name">SENTRY MONITORING SETUP</div><div class="sk-desc">Next.jsアプリケーションへのSentry統合スキル。</div><div class="sk-path">skills/sentry_monitoring_setup</div></div><div class="sk-card"><div class="sk-name">SUBPROCESS AI EXECUTION</div><div class="sk-desc">Claude Code CLIをsubprocessで実行し、ストリーミング出力をパースしてリアルタイム通知する技術。</div><div class="sk-path">skills/subprocess_ai_execution</div></div><div class="sk-card"><div class="sk-name">WORKER PAUSE CONTROL</div><div class="sk-desc">フラグファイルの存在/不在でワーカープロセスの一時停止・再開を制御するスキル。</div><div class="sk-path">skills/worker_pause_control</div></div>
+</div></div>
+<div class="pn glass"><div class="pn-top"></div><div class="pt">OWNER REQUIRED TASKS <span style="color:var(--g);font-size:.9em">(4)</span></div>
+<div class="ot-grid">
+<div class="ot-card"><div class="ot-id">O1</div><div class="ot-info"><div class="ot-task">Vercel環境変数にENCRYPTION_KEYを設定</div><div class="ot-reason">Vercelダッシュボードアクセス権限</div></div><div class="ot-right"><div class="ot-time">⏱ 2分</div><div class="ot-phase">2.1</div><div class="ot-status ot-pending">PENDING</div></div></div><div class="ot-card"><div class="ot-id">O2</div><div class="ot-info"><div class="ot-task">Google Authenticatorでの手動テスト</div><div class="ot-reason">物理デバイスでのQRコード読取</div></div><div class="ot-right"><div class="ot-time">⏱ 5分</div><div class="ot-phase">2.1</div><div class="ot-status ot-pending">PENDING</div></div></div><div class="ot-card"><div class="ot-id">O3</div><div class="ot-info"><div class="ot-task">本番MFA動作の最終承認</div><div class="ot-reason">Go/NoGo判定</div></div><div class="ot-right"><div class="ot-time">⏱ 10分</div><div class="ot-phase">2.1</div><div class="ot-status ot-pending">PENDING</div></div></div><div class="ot-card"><div class="ot-id">O4</div><div class="ot-info"><div class="ot-task">Twilioアカウント作成</div><div class="ot-reason">電話番号・クレジットカード登録</div></div><div class="ot-right"><div class="ot-time">⏱ 10分</div><div class="ot-phase">2.2</div><div class="ot-status ot-pending">PENDING</div></div></div>
+</div></div>
+</div>
+
+<!-- MEETING MINUTES & REPORTS -->
+<div class="sdiv"><span class="sp"></span><span class="st" data-text="MEETING MINUTES &amp; REPORTS">MEETING MINUTES &amp; REPORTS</span></div>
+<div class="sec4">
+<div class="pn glass"><div class="pn-top"></div><div class="pt">MEETING MINUTES <span style="color:var(--vi);font-size:.9em">(1)</span></div>
+<div class="mt-item" onclick="this.classList.toggle('open')"><div class="mt-title">第1回 部門責任者定例会議 議事録</div><div class="mt-date">2026年3月15日 13:30～14:00</div><div class="mt-preview"># 第1回 部門責任者定例会議 議事録
+
+**日時**: 2026年3月15日 13:30～14:00
+**参加者**: 9部門責任者（全員出席）
+**議長**: Ops Agent（運用管理責任者）
+**書記**: Ops Agent
+
+---
+
+## 議題1: Phase 2移行ステータス報告
+</div><div class="mt-detail"># 第1回 部門責任者定例会議 議事録
+
+**日時**: 2026年3月15日 13:30～14:00
+**参加者**: 9部門責任者（全員出席）
+**議長**: Ops Agent（運用管理責任者）
+**書記**: Ops Agent
+
+---
+
+## 議題1: Phase 2移行ステータス報告
+
+**報告者: Ops Agent（運用管理）**
+
+&gt; Phase 1は3月14日に100%完了し、本番環境（Vercel）で稼働中です。
+&gt; Phase 2.1（TOTP認証）のタスクを21件洗い出し、タスクキューに登録完了しました。
+&gt; ワーカーは現在一時停止中で、オーナー承認後に再開します。
+&gt; 無駄なタスク実行を防ぐため、Phase 2.1の達成項目に直結する21タスク以外の実行は禁止としました。
+
+**質疑:**
+- **Product Agent**: 「21タスクの実行順序は優先度ベースで自動？それとも依存関係を考慮する？」
+- **Ops Agent**: 「環境設定（#1079 ENCRYPTION_KEY設定）→API修正（#1078, #1088）→結合テスト（#1081-1083）→E2Eテスト（#1091-1095）→本番デプロイ（#1096-1097）の順で実行すべき。依存関係はworkerが考慮しないため、優先度で制御します。」
+
+---
+
+## 議題2: 各部門のPhase 2.1における役割分担
+
+**Trust Agent（信頼性管理）**:
+&gt; Phase 2.1の主担当です。TOTP実装のセキュリティレビュー、暗号化ロジック（AES-256-GCM）の検証、バックアップコードのbcryptハッシュ化が正しいことを確認します。
+&gt; 懸念点: mfa-crypto.tsでotplibのimportがtry-catchフォールバックになっている。フォールバック実装では`verify`が常にfalseを返すため、本番で問題になる可能性があります。
+
+**Data Agent（データ基盤）**:
+&gt; Prismaスキーマは完成済み。MfaBackupCode、MfaAuditLogテーブルは3回のマイグレーションで作成済みです。
+&gt; 懸念点: SQLite（開発）→PostgreSQL（本番）の差異。特にenumの扱いが異なるため、マイグレーション実行時にエラーが出る可能性があります。本番デプロイ前に`prisma migrate deploy`の動作確認が必要です。
+
+**Product Agent（プロダクト設計）**:
+&gt; MFA設定画面（/settings/mfa）、検証画面（/mfa/verify）、管理画面（/settings/mfa/manage）の3画面は実装済みです。UIは動作するはずですが、ローカル環境での動作確認がまだです。
+&gt; 改善提案: MFA設定完了後に「セットアップ完了」の通知バナーを追加したい。ただしPhase 2.1の達成基準外なので、2.2以降で対応します。
+
+**Model Agent（AIモデル）**:
+&gt; Phase 2.1ではAIモデル関連の作業はありません。Phase 3のHuman Feedback APIに向けた準備を進めたいですが、フェーズルールに従い待機します。
+
+**Growth Agent（グロース）**:
+&gt; Phase 2.1ではユーザー獲得施策はありません。MFA導入によるユーザー離脱リスクを監視する指標をPhase 2.2で設定予定です。
+
+**Sales Agent（営業）**:
+&gt; B2B顧客からMFA対応の要望があります。Phase 2.1完了後、Enterprise向けのMFA強制ポリシーを提案予定です。mfa-session.tsの`shouldEnforceMfa()`関数が既に実装されているため、拡張は容易です。
+
+**Economics Agent（経済設計）**:
+&gt; Phase 2.1では直接関係なし。SMS認証のTwilioコスト（$0.0075/SMS）の予算確保をPhase 2.2開始前に確認する必要があります。
+&gt; 質問: 「無料枠のみ」という制約はSMS認証にも適用されますか？
+
+**Research Agent（リサーチ）**:
+&gt; WebAuthn/FIDO2の技術調査をPhase 3向けに進めたいですが、フェーズルールに従い保留します。
+&gt; 情報共有: Twilioの無料枠はTrial Accountで$15.50のクレジットが付与されます。検証用には十分ですが、本番運用には有料プランが必要です。
+
+---
+
+## 議題3: ブロッカー・リスクの洗い出し
+
+| # | リスク | 影響度 | 報告者 </div></div>
+</div>
+<div class="pn glass"><div class="pn-top"></div><div class="pt">DAILY / WEEKLY REPORTS <span style="color:var(--n2);font-size:.9em">(30)</span></div>
+<div class="rp-list">
+<div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">step5_execution_status</span><span class="rp-meta">2026-03-14 05:30</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">step3_execution_status</span><span class="rp-meta">2026-03-14 05:29</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">sentry_step3_slack_integration_verification</span><span class="rp-meta">2026-03-13 23:28</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">phase2_weekly_report_template</span><span class="rp-meta">2026-03-14 11:47</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">GitHub本番デプロイ阻害状況</span><span class="rp-meta">2026-03-13 13:42</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">21時手動報告書</span><span class="rp-meta">2026-03-11 21:45</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-15</span><span class="rp-meta">2026-03-14 12:19</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-14_post_repo_creation_execution</span><span class="rp-meta">2026-03-14 05:53</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-14_alert_rules_execution</span><span class="rp-meta">2026-03-14 10:17</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-14_ai_organization_report</span><span class="rp-meta">2026-03-14 10:52</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-14</span><span class="rp-meta">2026-03-14 13:17</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-13_本番デプロイ状況</span><span class="rp-meta">2026-03-13 13:28</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-13_github_repository_creation_execution</span><span class="rp-meta">2026-03-13 20:09</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-13_VercelSentry環境確認</span><span class="rp-meta">2026-03-13 14:51</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-13_VercelSentry環境セットアップ</span><span class="rp-meta">2026-03-13 13:31</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-13_Model_Agent_デプロイ監視完了報告</span><span class="rp-meta">2026-03-13 18:03</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-13_MVPリリース判定会議準備完了</span><span class="rp-meta">2026-03-13 20:04</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-13_GitHub認証デプロイ状況</span><span class="rp-meta">2026-03-13 13:33</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-13_GitHubデプロイ実行準備</span><span class="rp-meta">2026-03-13 14:50</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-13_GitHubSSH本番デプロイ状況</span><span class="rp-meta">2026-03-13 13:36</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-13</span><span class="rp-meta">2026-03-14 00:01</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-12_本番デプロイ実行</span><span class="rp-meta">2026-03-12 12:27</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-12_テスト結果追跡</span><span class="rp-meta">2026-03-11 22:35</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-12</span><span class="rp-meta">2026-03-12 12:28</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-11_最終サマリー</span><span class="rp-meta">2026-03-11 22:26</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-11_リーダーボードE2E完了</span><span class="rp-meta">2026-03-11 22:38</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-11_Supabaseセットアップ状況</span><span class="rp-meta">2026-03-11 22:24</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-11_MFA信頼分析</span><span class="rp-meta">2026-03-11 22:19</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-11_AIモデルデプロイ検証</span><span class="rp-meta">2026-03-11 22:40</span></div><div class="rp-item"><span class="rp-type rp-daily">DAI</span><span class="rp-name">2026-03-11</span><span class="rp-meta">2026-03-11 23:54</span></div>
+</div></div>
+</div>
+
 <!-- TASK TABLE -->
 <div class="sdiv"><span class="sp"></span><span class="st" data-text="TASK OPERATIONS LOG">TASK OPERATIONS LOG</span></div>
 <div class="tb">
@@ -521,38 +666,74 @@ colgroup col:nth-child(7),td:nth-child(7),th:nth-child(7),colgroup col:nth-child
 <button class="fb" data-f="completed" onclick="doF('completed')"><span class="fd"></span>DONE</button>
 <button class="fb" data-f="failed" onclick="doF('failed')"><span class="fd"></span>FAIL</button>
 </div>
-<div class="cnt">SHOWING <b id="vc">1069</b> / <b>1069</b></div>
+<div class="cnt">SHOWING <b id="vc">1090</b> / <b>1090</b></div>
 </div>
 <div class="twp"><div class="tgl2"></div>
 <table id="tbl"><colgroup><col><col><col><col><col><col><col><col></colgroup>
 <thead><tr><th onclick="srt(0)">ID</th><th onclick="srt(1)">STATUS</th><th onclick="srt(2)">PRI</th><th onclick="srt(3)">CH</th><th onclick="srt(4)">INSTRUCTION</th><th onclick="srt(5)">OUTPUT</th><th onclick="srt(6)">TIME</th><th onclick="srt(7)">CREATED</th></tr></thead>
-<tbody><tr class="row s-pending" data-status="pending" data-s="認証フロー基盤修正計画策定サポート: tech agentと連携・修正スコープ確認・実装スケジュール調整（期限2026-03-15 23:59）" onclick="xp(this)">
-<td><span class="cid">#1073</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-medium">P2</span></td><td><span class="chtag">#dept-operations</span></td><td class="ci">認証フロー基盤修正計画策定サポート: Tech Agentと連携・修正スコープ確認・実装スケジュール調整（期限2026-03-15 23:59）</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
-<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">認証フロー基盤修正計画策定サポート: Tech Agentと連携・修正スコープ確認・実装スケジュール調整（期限2026-03-15 23:59）</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1073</span><span>PENDING</span><span>MEDIUM</span><span></span><span>—</span><span>—</span></div></div></td></tr>
-<tr class="row s-pending" data-status="pending" data-s="ops agent: 週次レポート体制開始（毎週金曜日17:00）- daily_logs/yyyy-mm-dd_phase2_weekly_report.md 生成・kpi/phase2_mfa_k" onclick="xp(this)">
-<td><span class="cid">#1070</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-medium">P2</span></td><td><span class="chtag">#dept-operations</span></td><td class="ci">Ops Agent: 週次レポート体制開始（毎週金曜日17:00）- daily_logs/YYYY-MM-DD_phase2_weekly_report.md 生成・kpi/phase2_mfa_k</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
-<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">Ops Agent: 週次レポート体制開始（毎週金曜日17:00）- daily_logs/YYYY-MM-DD_phase2_weekly_report.md 生成・kpi/phase2_mfa_kpi_dashboard.csv 更新・KPI達成状況・問題管理・次週計画記録</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1070</span><span>PENDING</span><span>MEDIUM</span><span></span><span>—</span><span>—</span></div></div></td></tr>
-<tr class="row s-pending" data-status="pending" data-s="quality agent: 単体テスト環境統一実施（期限: 2026-03-19 23:59）- jest→vitest完全移行・@/ alias解決・テスト実行成功・コードカバレッジ85%達成" onclick="xp(this)">
-<td><span class="cid">#1069</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-medium">P2</span></td><td><span class="chtag">#dept-operations</span></td><td class="ci">Quality Agent: 単体テスト環境統一実施（期限: 2026-03-19 23:59）- Jest→Vitest完全移行・@/ alias解決・テスト実行成功・コードカバレッジ85%達成</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
-<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">Quality Agent: 単体テスト環境統一実施（期限: 2026-03-19 23:59）- Jest→Vitest完全移行・@/ alias解決・テスト実行成功・コードカバレッジ85%達成</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1069</span><span>PENDING</span><span>MEDIUM</span><span></span><span>—</span><span>—</span></div></div></td></tr>
-<tr class="row s-pending" data-status="pending" data-s="mfa api・フロントエンド本番動作確認開始：ローカル環境でsetup/verify/complete全フロー実装動作テスト。ステージング環境でのe2e実行（api応答時間p95&lt;500ms確認）" onclick="xp(this)">
-<td><span class="cid">#1064</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-medium">P2</span></td><td><span class="chtag">#dept-operations</span></td><td class="ci">MFA API・フロントエンド本番動作確認開始：ローカル環境でSetup/Verify/Complete全フロー実装動作テスト。ステージング環境でのE2E実行（API応答時間P95&lt;500ms確認）</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
-<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">MFA API・フロントエンド本番動作確認開始：ローカル環境でSetup/Verify/Complete全フロー実装動作テスト。ステージング環境でのE2E実行（API応答時間P95&lt;500ms確認）</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1064</span><span>PENDING</span><span>MEDIUM</span><span></span><span>—</span><span>—</span></div></div></td></tr>
-<tr class="row s-pending" data-status="pending" data-s="[research agent] 競合分析最新版更新：scale ai・appen・clickworker等の最新サービス比較、差別化ポイント整理、ポジショニング戦略を 08_platform/com" onclick="xp(this)">
-<td><span class="cid">#1044</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-low">P3</span></td><td><span class="chtag">#dept-research</span></td><td class="ci">[Research Agent] 競合分析最新版更新：Scale AI・Appen・Clickworker等の最新サービス比較、差別化ポイント整理、ポジショニング戦略を 08_platform/com</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
-<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Research Agent] 競合分析最新版更新：Scale AI・Appen・Clickworker等の最新サービス比較、差別化ポイント整理、ポジショニング戦略を 08_platform/competitive_analysis_update.md に更新</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1044</span><span>PENDING</span><span>LOW</span><span></span><span>—</span><span>—</span></div></div></td></tr>
-<tr class="row s-pending" data-status="pending" data-s="[economics agent] phase 1収益化準備：企業向け評価データ販売価格設定、api利用料金体系、初期顧客向け割引プランを 07_marketplace/phase1_monetiza" onclick="xp(this)">
-<td><span class="cid">#1043</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-low">P3</span></td><td><span class="chtag">#dept-data</span></td><td class="ci">[Economics Agent] Phase 1収益化準備：企業向け評価データ販売価格設定、API利用料金体系、初期顧客向け割引プランを 07_marketplace/phase1_monetiza</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
-<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Economics Agent] Phase 1収益化準備：企業向け評価データ販売価格設定、API利用料金体系、初期顧客向け割引プランを 07_marketplace/phase1_monetization_strategy.md に設計</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1043</span><span>PENDING</span><span>LOW</span><span></span><span>—</span><span>—</span></div></div></td></tr>
-<tr class="row s-pending" data-status="pending" data-s="[product agent] ユーザーオンボーディング最適化：初回ユーザー向けガイド・チュートリアル・ヘルプセンター内容の最終確認、改善提案を 01_product/onboarding_optim" onclick="xp(this)">
-<td><span class="cid">#1042</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-low">P3</span></td><td><span class="chtag">#dept-sales</span></td><td class="ci">[Product Agent] ユーザーオンボーディング最適化：初回ユーザー向けガイド・チュートリアル・ヘルプセンター内容の最終確認、改善提案を 01_product/onboarding_optim</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
-<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Product Agent] ユーザーオンボーディング最適化：初回ユーザー向けガイド・チュートリアル・ヘルプセンター内容の最終確認、改善提案を 01_product/onboarding_optimization_plan.md に記録</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1042</span><span>PENDING</span><span>LOW</span><span></span><span>—</span><span>—</span></div></div></td></tr>
-<tr class="row s-pending" data-status="pending" data-s="[ops agent] 監視・アラート統合ダッシュボード構築：sentry・vercel analytics・supabase metricsを統合したモニタリングダッシュボード設計を 10_oper" onclick="xp(this)">
-<td><span class="cid">#1041</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-low">P3</span></td><td><span class="chtag">#dept-operations</span></td><td class="ci">[Ops Agent] 監視・アラート統合ダッシュボード構築：Sentry・Vercel Analytics・Supabase Metricsを統合したモニタリングダッシュボード設計を 10_oper</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
-<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Ops Agent] 監視・アラート統合ダッシュボード構築：Sentry・Vercel Analytics・Supabase Metricsを統合したモニタリングダッシュボード設計を 10_operations/monitoring_dashboard_design.md に作成</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1041</span><span>PENDING</span><span>LOW</span><span></span><span>—</span><span>—</span></div></div></td></tr>
-<tr class="row s-pending" data-status="pending" data-s="[data agent] 本番データバックアップ戦略実装：supabase自動バックアップ設定、point-in-time recovery設定確認、リストア手順書を 02_data/producti" onclick="xp(this)">
-<td><span class="cid">#1040</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-low">P3</span></td><td><span class="chtag">#dept-data</span></td><td class="ci">[Data Agent] 本番データバックアップ戦略実装：Supabase自動バックアップ設定、Point-in-Time Recovery設定確認、リストア手順書を 02_data/producti</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
-<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Data Agent] 本番データバックアップ戦略実装：Supabase自動バックアップ設定、Point-in-Time Recovery設定確認、リストア手順書を 02_data/production_backup_strategy.md に作成</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1040</span><span>PENDING</span><span>LOW</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tbody><tr class="row s-pending" data-status="pending" data-s="[phase 2.1] 本番環境でのmfa動作確認: 本番urlでtotp設定→検証→無効化の一連フローを手動テスト" onclick="xp(this)">
+<td><span class="cid">#1097</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-high">P1</span></td><td><span class="dm">—</span></td><td class="ci">[Phase 2.1] 本番環境でのMFA動作確認: 本番URLでTOTP設定→検証→無効化の一連フローを手動テスト</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Phase 2.1] 本番環境でのMFA動作確認: 本番URLでTOTP設定→検証→無効化の一連フローを手動テスト</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1097</span><span>PENDING</span><span>HIGH</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-pending" data-status="pending" data-s="[phase 2.1] 全e2eテストパス確認後、phase 2.1 mfa機能を本番デプロイ: git push → github actions → vercel自動デプロイ → 本番動作確認" onclick="xp(this)">
+<td><span class="cid">#1096</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-high">P1</span></td><td><span class="dm">—</span></td><td class="ci">[Phase 2.1] 全E2Eテストパス確認後、Phase 2.1 MFA機能を本番デプロイ: git push → GitHub Actions → Vercel自動デプロイ → 本番動作確認</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Phase 2.1] 全E2Eテストパス確認後、Phase 2.1 MFA機能を本番デプロイ: git push → GitHub Actions → Vercel自動デプロイ → 本番動作確認</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1096</span><span>PENDING</span><span>HIGH</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-pending" data-status="pending" data-s="[phase 2.1.6] e2eテスト: バックアップコード認証フロー（バックアップコード選択 → 8文字入力 → 認証成功）の自動テスト作成・実行" onclick="xp(this)">
+<td><span class="cid">#1095</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-high">P1</span></td><td><span class="dm">—</span></td><td class="ci">[Phase 2.1.6] E2Eテスト: バックアップコード認証フロー（バックアップコード選択 → 8文字入力 → 認証成功）の自動テスト作成・実行</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Phase 2.1.6] E2Eテスト: バックアップコード認証フロー（バックアップコード選択 → 8文字入力 → 認証成功）の自動テスト作成・実行</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1095</span><span>PENDING</span><span>HIGH</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-pending" data-status="pending" data-s="[phase 2.1.6] e2eテスト: mfa無効化フロー（/settings/mfa/manage → 無効化 → 次回ログインでmfaスキップ）の自動テスト作成・実行" onclick="xp(this)">
+<td><span class="cid">#1094</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-high">P1</span></td><td><span class="dm">—</span></td><td class="ci">[Phase 2.1.6] E2Eテスト: MFA無効化フロー（/settings/mfa/manage → 無効化 → 次回ログインでMFAスキップ）の自動テスト作成・実行</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Phase 2.1.6] E2Eテスト: MFA無効化フロー（/settings/mfa/manage → 無効化 → 次回ログインでMFAスキップ）の自動テスト作成・実行</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1094</span><span>PENDING</span><span>HIGH</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-pending" data-status="pending" data-s="[phase 2.1.6] e2eテスト: ログイン時mfa検証フロー（ログイン → /mfa/verify リダイレクト → コード入力 → ダッシュボード表示）の自動テスト作成・実行" onclick="xp(this)">
+<td><span class="cid">#1093</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-high">P1</span></td><td><span class="dm">—</span></td><td class="ci">[Phase 2.1.6] E2Eテスト: ログイン時MFA検証フロー（ログイン → /mfa/verify リダイレクト → コード入力 → ダッシュボード表示）の自動テスト作成・実行</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Phase 2.1.6] E2Eテスト: ログイン時MFA検証フロー（ログイン → /mfa/verify リダイレクト → コード入力 → ダッシュボード表示）の自動テスト作成・実行</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1093</span><span>PENDING</span><span>HIGH</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-pending" data-status="pending" data-s="[phase 2.1.6] e2eテスト: mfa設定フロー（/settings/mfa → qrコード表示 → コード入力 → 完了画面）の自動テスト作成・実行" onclick="xp(this)">
+<td><span class="cid">#1092</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-high">P1</span></td><td><span class="dm">—</span></td><td class="ci">[Phase 2.1.6] E2Eテスト: MFA設定フロー（/settings/mfa → QRコード表示 → コード入力 → 完了画面）の自動テスト作成・実行</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Phase 2.1.6] E2Eテスト: MFA設定フロー（/settings/mfa → QRコード表示 → コード入力 → 完了画面）の自動テスト作成・実行</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1092</span><span>PENDING</span><span>HIGH</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-pending" data-status="pending" data-s="[phase 2.1.6] e2eテスト環境構築: playwright設定確認、テスト用ユーザー作成スクリプト、encryption_key設定、テスト実行コマンドの確認" onclick="xp(this)">
+<td><span class="cid">#1091</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-high">P1</span></td><td><span class="dm">—</span></td><td class="ci">[Phase 2.1.6] E2Eテスト環境構築: Playwright設定確認、テスト用ユーザー作成スクリプト、ENCRYPTION_KEY設定、テスト実行コマンドの確認</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Phase 2.1.6] E2Eテスト環境構築: Playwright設定確認、テスト用ユーザー作成スクリプト、ENCRYPTION_KEY設定、テスト実行コマンドの確認</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1091</span><span>PENDING</span><span>HIGH</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-pending" data-status="pending" data-s="[phase 2.1.5] middlewareのセッションcookie名確認: authjs.session-token vs __secure-authjs.session-token の本番/開" onclick="xp(this)">
+<td><span class="cid">#1090</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-medium">P2</span></td><td><span class="dm">—</span></td><td class="ci">[Phase 2.1.5] MiddlewareのセッションCookie名確認: authjs.session-token vs __Secure-authjs.session-token の本番/開</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Phase 2.1.5] MiddlewareのセッションCookie名確認: authjs.session-token vs __Secure-authjs.session-token の本番/開発環境での使い分けを確認</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1090</span><span>PENDING</span><span>MEDIUM</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-pending" data-status="pending" data-s="[phase 2.1.5] middleware mfaリダイレクトの動作確認: mfaenabled=true &amp; mfaverified=falseのユーザーが/dashboardアクセス時に/m" onclick="xp(this)">
+<td><span class="cid">#1089</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-high">P1</span></td><td><span class="dm">—</span></td><td class="ci">[Phase 2.1.5] Middleware MFAリダイレクトの動作確認: mfaEnabled=true &amp; mfaVerified=falseのユーザーが/dashboardアクセス時に/m</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Phase 2.1.5] Middleware MFAリダイレクトの動作確認: mfaEnabled=true &amp; mfaVerified=falseのユーザーが/dashboardアクセス時に/mfa/verifyにリダイレクトされることを確認</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1089</span><span>PENDING</span><span>HIGH</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-pending" data-status="pending" data-s="[phase 2.1.4] mfa無効化api（post /api/auth/mfa/disable）のhttpメソッド修正: フロントエンドはdeleteで呼んでいるがapiはpostで定義。統一が" onclick="xp(this)">
+<td><span class="cid">#1088</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-high">P1</span></td><td><span class="dm">—</span></td><td class="ci">[Phase 2.1.4] MFA無効化API（POST /api/auth/mfa/disable）のHTTPメソッド修正: フロントエンドはDELETEで呼んでいるがAPIはPOSTで定義。統一が</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Phase 2.1.4] MFA無効化API（POST /api/auth/mfa/disable）のHTTPメソッド修正: フロントエンドはDELETEで呼んでいるがAPIはPOSTで定義。統一が必要</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1088</span><span>PENDING</span><span>HIGH</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-pending" data-status="pending" data-s="[phase 2.1.4] mfa無効化フローの動作確認: /settings/mfa/manage画面から無効化→totp6桁入力→確認→mfa_enabled=false→次回ログインでmfa検証" onclick="xp(this)">
+<td><span class="cid">#1087</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-medium">P2</span></td><td><span class="dm">—</span></td><td class="ci">[Phase 2.1.4] MFA無効化フローの動作確認: /settings/mfa/manage画面から無効化→TOTP6桁入力→確認→mfa_enabled=false→次回ログインでMFA検証</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Phase 2.1.4] MFA無効化フローの動作確認: /settings/mfa/manage画面から無効化→TOTP6桁入力→確認→mfa_enabled=false→次回ログインでMFA検証スキップを確認</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1087</span><span>PENDING</span><span>MEDIUM</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-pending" data-status="pending" data-s="[phase 2.1.3] バックアップコード再生成フローの動作確認: /settings/mfa/manage画面からパスワード入力→再生成→古いコード無効化→新コード表示・ダウンロードを確認" onclick="xp(this)">
+<td><span class="cid">#1086</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-medium">P2</span></td><td><span class="dm">—</span></td><td class="ci">[Phase 2.1.3] バックアップコード再生成フローの動作確認: /settings/mfa/manage画面からパスワード入力→再生成→古いコード無効化→新コード表示・ダウンロードを確認</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Phase 2.1.3] バックアップコード再生成フローの動作確認: /settings/mfa/manage画面からパスワード入力→再生成→古いコード無効化→新コード表示・ダウンロードを確認</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1086</span><span>PENDING</span><span>MEDIUM</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-pending" data-status="pending" data-s="[phase 2.1.3] バックアップコードによるログイン認証テスト: mfa検証画面で「バックアップコード」を選択→8文字コード入力→認証成功→使用済みコードがdbでused_at更新されることを" onclick="xp(this)">
+<td><span class="cid">#1085</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-medium">P2</span></td><td><span class="dm">—</span></td><td class="ci">[Phase 2.1.3] バックアップコードによるログイン認証テスト: MFA検証画面で「バックアップコード」を選択→8文字コード入力→認証成功→使用済みコードがDBでused_at更新されることを</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Phase 2.1.3] バックアップコードによるログイン認証テスト: MFA検証画面で「バックアップコード」を選択→8文字コード入力→認証成功→使用済みコードがDBでused_at更新されることを確認</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1085</span><span>PENDING</span><span>MEDIUM</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-pending" data-status="pending" data-s="[phase 2.1.3] バックアップコード生成・表示・ダウンロードの動作確認: totp設定完了後にバックアップコード10個が表示され、テキストファイルとしてダウンロードできることを確認" onclick="xp(this)">
+<td><span class="cid">#1084</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-medium">P2</span></td><td><span class="dm">—</span></td><td class="ci">[Phase 2.1.3] バックアップコード生成・表示・ダウンロードの動作確認: TOTP設定完了後にバックアップコード10個が表示され、テキストファイルとしてダウンロードできることを確認</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Phase 2.1.3] バックアップコード生成・表示・ダウンロードの動作確認: TOTP設定完了後にバックアップコード10個が表示され、テキストファイルとしてダウンロードできることを確認</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1084</span><span>PENDING</span><span>MEDIUM</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-pending" data-status="pending" data-s="[phase 2.1.2] nextauth session.update()によるmfaverified更新の動作確認: jwtコールバックのtrigger=&quot;update&quot;でmfaverified" onclick="xp(this)">
+<td><span class="cid">#1083</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-high">P1</span></td><td><span class="dm">—</span></td><td class="ci">[Phase 2.1.2] NextAuth session.update()によるmfaVerified更新の動作確認: JWTコールバックのtrigger=&quot;update&quot;でmfaVerified</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Phase 2.1.2] NextAuth session.update()によるmfaVerified更新の動作確認: JWTコールバックのtrigger=&quot;update&quot;でmfaVerified=trueが正しく設定されるかテスト</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1083</span><span>PENDING</span><span>HIGH</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-pending" data-status="pending" data-s="[phase 2.1.2] mfa検証ページのapiエンドポイント修正確認: /api/auth/mfa/login-verifyエンドポイントが正しくsession認証を取得できるか確認。cooki" onclick="xp(this)">
+<td><span class="cid">#1082</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-high">P1</span></td><td><span class="dm">—</span></td><td class="ci">[Phase 2.1.2] MFA検証ページのAPIエンドポイント修正確認: /api/auth/mfa/login-verifyエンドポイントが正しくsession認証を取得できるか確認。Cooki</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Phase 2.1.2] MFA検証ページのAPIエンドポイント修正確認: /api/auth/mfa/login-verifyエンドポイントが正しくsession認証を取得できるか確認。Cookie名の整合性チェック</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1082</span><span>PENDING</span><span>HIGH</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-pending" data-status="pending" data-s="[phase 2.1.2] ログイン→mfa検証フローの結合テスト: credentials providerでログイン→mfaenabled=trueのユーザー→/mfa/verifyリダイレクト→" onclick="xp(this)">
+<td><span class="cid">#1081</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-high">P1</span></td><td><span class="dm">—</span></td><td class="ci">[Phase 2.1.2] ログイン→MFA検証フローの結合テスト: Credentials Providerでログイン→mfaEnabled=trueのユーザー→/mfa/verifyリダイレクト→</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Phase 2.1.2] ログイン→MFA検証フローの結合テスト: Credentials Providerでログイン→mfaEnabled=trueのユーザー→/mfa/verifyリダイレクト→6桁入力→session.update()→ダッシュボードアクセス可能を確認</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1081</span><span>PENDING</span><span>HIGH</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-pending" data-status="pending" data-s="[phase 2.1.1] otplib/speakeasyパッケージの動作確認: mfa-crypto.tsのauthenticatorオブジェクトが正しくインポートされているか検証。動作しない場合" onclick="xp(this)">
+<td><span class="cid">#1080</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-high">P1</span></td><td><span class="dm">—</span></td><td class="ci">[Phase 2.1.1] otplib/speakeasyパッケージの動作確認: mfa-crypto.tsのauthenticatorオブジェクトが正しくインポートされているか検証。動作しない場合</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Phase 2.1.1] otplib/speakeasyパッケージの動作確認: mfa-crypto.tsのauthenticatorオブジェクトが正しくインポートされているか検証。動作しない場合はspeakeasyに切り替え</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1080</span><span>PENDING</span><span>HIGH</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-pending" data-status="pending" data-s="[phase 2.1.1] encryption_key環境変数の設定: .env.localに64文字hex文字列のencryption_keyを生成・設定。vercel環境変数にも追加" onclick="xp(this)">
+<td><span class="cid">#1079</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-high">P1</span></td><td><span class="dm">—</span></td><td class="ci">[Phase 2.1.1] ENCRYPTION_KEY環境変数の設定: .env.localに64文字hex文字列のENCRYPTION_KEYを生成・設定。Vercel環境変数にも追加</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Phase 2.1.1] ENCRYPTION_KEY環境変数の設定: .env.localに64文字hex文字列のENCRYPTION_KEYを生成・設定。Vercel環境変数にも追加</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1079</span><span>PENDING</span><span>HIGH</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-pending" data-status="pending" data-s="[phase 2.1.1] totp setup apiのimportパス修正: app/api/auth/mfa/totp/setup/route.ts と app/app/api/v1/auth/" onclick="xp(this)">
+<td><span class="cid">#1078</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-high">P1</span></td><td><span class="dm">—</span></td><td class="ci">[Phase 2.1.1] TOTP Setup APIのimportパス修正: app/api/auth/mfa/totp/setup/route.ts と app/app/api/v1/auth/</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Phase 2.1.1] TOTP Setup APIのimportパス修正: app/api/auth/mfa/totp/setup/route.ts と app/app/api/v1/auth/mfa/totp/setup/route.ts の重複を解消。@/lib/db と @/lib/db/prisma のインポートパスを統一</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1078</span><span>PENDING</span><span>HIGH</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-pending" data-status="pending" data-s="[phase 2.1.1] totp設定フロー動作確認: ローカル環境でpnpm devを起動し、/settings/mfaにアクセス。qrコード生成→google authenticator読取→6" onclick="xp(this)">
+<td><span class="cid">#1077</span></td><td><span class="pill s-pending"><i class="dot"></i>QUEUE</span></td><td><span class="cpri p-high">P1</span></td><td><span class="dm">—</span></td><td class="ci">[Phase 2.1.1] TOTP設定フロー動作確認: ローカル環境でpnpm devを起動し、/settings/mfaにアクセス。QRコード生成→Google Authenticator読取→6</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Phase 2.1.1] TOTP設定フロー動作確認: ローカル環境でpnpm devを起動し、/settings/mfaにアクセス。QRコード生成→Google Authenticator読取→6桁入力→有効化の一連フローをテスト</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#1077</span><span>PENDING</span><span>HIGH</span><span></span><span>—</span><span>—</span></div></div></td></tr>
 <tr class="row s-completed" data-status="completed" data-s="今すぐプロジェクトの推進を一時停止して。再開する際は私から指示を出します！" onclick="xp(this)">
 <td><span class="cid">#1076</span></td><td><span class="pill s-completed"><i class="dot"></i>DONE</span></td><td><span class="cpri p-critical">P0</span></td><td><span class="chtag">#ai-command</span></td><td class="ci">今すぐプロジェクトの推進を一時停止して。再開する際は私から指示を出します！</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
 <tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">今すぐプロジェクトの推進を一時停止して。再開する際は私から指示を出します！</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres">了解いたしました。**JUDGEMENTプロジェクトの推進を即座に一時停止します。**
@@ -12065,6 +12246,33 @@ Flask等で軽量ダッシュボードを立てる（Grafana的なもの）
 <tr class="row s-completed" data-status="completed" data-s="このプロジェクトにおける組織として必要な部署や役割を定義してそれぞれが役割に応じたdiscord chでやりとりをしてほしいです。そのためそれ用のチャンネルも作成してください" onclick="xp(this)">
 <td><span class="cid">#1</span></td><td><span class="pill s-completed"><i class="dot"></i>DONE</span></td><td><span class="cpri p-medium">P2</span></td><td><span class="dm">—</span></td><td class="ci">このプロジェクトにおける組織として必要な部署や役割を定義してそれぞれが役割に応じたDiscord chでやりとりをしてほしいです。そのためそれ用のチャンネルも作成してください</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
 <tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">このプロジェクトにおける組織として必要な部署や役割を定義してそれぞれが役割に応じたDiscord chでやりとりをしてほしいです。そのためそれ用のチャンネルも作成してください</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres">9部署チャンネルをDEPARTMENTSカテゴリに作成。各エージェントが専門の人格で応答する仕組みを実装。</div></div></div><div class="xm"><span>#1</span><span>COMPLETED</span><span>MEDIUM</span><span></span><span>2026-03-11T13:30</span><span>—</span></div></div></td></tr>
+<tr class="row s-cancelled" data-status="cancelled" data-s="認証フロー基盤修正計画策定サポート: tech agentと連携・修正スコープ確認・実装スケジュール調整（期限2026-03-15 23:59）" onclick="xp(this)">
+<td><span class="cid">#1073</span></td><td><span class="pill s-cancelled"><i class="dot"></i>SKIP</span></td><td><span class="cpri p-medium">P2</span></td><td><span class="chtag">#dept-operations</span></td><td class="ci">認証フロー基盤修正計画策定サポート: Tech Agentと連携・修正スコープ確認・実装スケジュール調整（期限2026-03-15 23:59）</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">認証フロー基盤修正計画策定サポート: Tech Agentと連携・修正スコープ確認・実装スケジュール調整（期限2026-03-15 23:59）</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres">Phase 2.1タスク再定義のためcancelled</div></div></div><div class="xm"><span>#1073</span><span>CANCELLED</span><span>MEDIUM</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-cancelled" data-status="cancelled" data-s="ops agent: 週次レポート体制開始（毎週金曜日17:00）- daily_logs/yyyy-mm-dd_phase2_weekly_report.md 生成・kpi/phase2_mfa_k" onclick="xp(this)">
+<td><span class="cid">#1070</span></td><td><span class="pill s-cancelled"><i class="dot"></i>SKIP</span></td><td><span class="cpri p-medium">P2</span></td><td><span class="chtag">#dept-operations</span></td><td class="ci">Ops Agent: 週次レポート体制開始（毎週金曜日17:00）- daily_logs/YYYY-MM-DD_phase2_weekly_report.md 生成・kpi/phase2_mfa_k</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">Ops Agent: 週次レポート体制開始（毎週金曜日17:00）- daily_logs/YYYY-MM-DD_phase2_weekly_report.md 生成・kpi/phase2_mfa_kpi_dashboard.csv 更新・KPI達成状況・問題管理・次週計画記録</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres">Phase 2.1タスク再定義のためcancelled</div></div></div><div class="xm"><span>#1070</span><span>CANCELLED</span><span>MEDIUM</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-cancelled" data-status="cancelled" data-s="quality agent: 単体テスト環境統一実施（期限: 2026-03-19 23:59）- jest→vitest完全移行・@/ alias解決・テスト実行成功・コードカバレッジ85%達成" onclick="xp(this)">
+<td><span class="cid">#1069</span></td><td><span class="pill s-cancelled"><i class="dot"></i>SKIP</span></td><td><span class="cpri p-medium">P2</span></td><td><span class="chtag">#dept-operations</span></td><td class="ci">Quality Agent: 単体テスト環境統一実施（期限: 2026-03-19 23:59）- Jest→Vitest完全移行・@/ alias解決・テスト実行成功・コードカバレッジ85%達成</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">Quality Agent: 単体テスト環境統一実施（期限: 2026-03-19 23:59）- Jest→Vitest完全移行・@/ alias解決・テスト実行成功・コードカバレッジ85%達成</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres">Phase 2.1タスク再定義のためcancelled</div></div></div><div class="xm"><span>#1069</span><span>CANCELLED</span><span>MEDIUM</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-cancelled" data-status="cancelled" data-s="mfa api・フロントエンド本番動作確認開始：ローカル環境でsetup/verify/complete全フロー実装動作テスト。ステージング環境でのe2e実行（api応答時間p95&lt;500ms確認）" onclick="xp(this)">
+<td><span class="cid">#1064</span></td><td><span class="pill s-cancelled"><i class="dot"></i>SKIP</span></td><td><span class="cpri p-medium">P2</span></td><td><span class="chtag">#dept-operations</span></td><td class="ci">MFA API・フロントエンド本番動作確認開始：ローカル環境でSetup/Verify/Complete全フロー実装動作テスト。ステージング環境でのE2E実行（API応答時間P95&lt;500ms確認）</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">MFA API・フロントエンド本番動作確認開始：ローカル環境でSetup/Verify/Complete全フロー実装動作テスト。ステージング環境でのE2E実行（API応答時間P95&lt;500ms確認）</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres">Phase 2.1タスク再定義のためcancelled</div></div></div><div class="xm"><span>#1064</span><span>CANCELLED</span><span>MEDIUM</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-cancelled" data-status="cancelled" data-s="[research agent] 競合分析最新版更新：scale ai・appen・clickworker等の最新サービス比較、差別化ポイント整理、ポジショニング戦略を 08_platform/com" onclick="xp(this)">
+<td><span class="cid">#1044</span></td><td><span class="pill s-cancelled"><i class="dot"></i>SKIP</span></td><td><span class="cpri p-low">P3</span></td><td><span class="chtag">#dept-research</span></td><td class="ci">[Research Agent] 競合分析最新版更新：Scale AI・Appen・Clickworker等の最新サービス比較、差別化ポイント整理、ポジショニング戦略を 08_platform/com</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Research Agent] 競合分析最新版更新：Scale AI・Appen・Clickworker等の最新サービス比較、差別化ポイント整理、ポジショニング戦略を 08_platform/competitive_analysis_update.md に更新</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres">Phase 2.1タスク再定義のためcancelled</div></div></div><div class="xm"><span>#1044</span><span>CANCELLED</span><span>LOW</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-cancelled" data-status="cancelled" data-s="[economics agent] phase 1収益化準備：企業向け評価データ販売価格設定、api利用料金体系、初期顧客向け割引プランを 07_marketplace/phase1_monetiza" onclick="xp(this)">
+<td><span class="cid">#1043</span></td><td><span class="pill s-cancelled"><i class="dot"></i>SKIP</span></td><td><span class="cpri p-low">P3</span></td><td><span class="chtag">#dept-data</span></td><td class="ci">[Economics Agent] Phase 1収益化準備：企業向け評価データ販売価格設定、API利用料金体系、初期顧客向け割引プランを 07_marketplace/phase1_monetiza</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Economics Agent] Phase 1収益化準備：企業向け評価データ販売価格設定、API利用料金体系、初期顧客向け割引プランを 07_marketplace/phase1_monetization_strategy.md に設計</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres">Phase 2.1タスク再定義のためcancelled</div></div></div><div class="xm"><span>#1043</span><span>CANCELLED</span><span>LOW</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-cancelled" data-status="cancelled" data-s="[product agent] ユーザーオンボーディング最適化：初回ユーザー向けガイド・チュートリアル・ヘルプセンター内容の最終確認、改善提案を 01_product/onboarding_optim" onclick="xp(this)">
+<td><span class="cid">#1042</span></td><td><span class="pill s-cancelled"><i class="dot"></i>SKIP</span></td><td><span class="cpri p-low">P3</span></td><td><span class="chtag">#dept-sales</span></td><td class="ci">[Product Agent] ユーザーオンボーディング最適化：初回ユーザー向けガイド・チュートリアル・ヘルプセンター内容の最終確認、改善提案を 01_product/onboarding_optim</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Product Agent] ユーザーオンボーディング最適化：初回ユーザー向けガイド・チュートリアル・ヘルプセンター内容の最終確認、改善提案を 01_product/onboarding_optimization_plan.md に記録</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres">Phase 2.1タスク再定義のためcancelled</div></div></div><div class="xm"><span>#1042</span><span>CANCELLED</span><span>LOW</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-cancelled" data-status="cancelled" data-s="[ops agent] 監視・アラート統合ダッシュボード構築：sentry・vercel analytics・supabase metricsを統合したモニタリングダッシュボード設計を 10_oper" onclick="xp(this)">
+<td><span class="cid">#1041</span></td><td><span class="pill s-cancelled"><i class="dot"></i>SKIP</span></td><td><span class="cpri p-low">P3</span></td><td><span class="chtag">#dept-operations</span></td><td class="ci">[Ops Agent] 監視・アラート統合ダッシュボード構築：Sentry・Vercel Analytics・Supabase Metricsを統合したモニタリングダッシュボード設計を 10_oper</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Ops Agent] 監視・アラート統合ダッシュボード構築：Sentry・Vercel Analytics・Supabase Metricsを統合したモニタリングダッシュボード設計を 10_operations/monitoring_dashboard_design.md に作成</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres">Phase 2.1タスク再定義のためcancelled</div></div></div><div class="xm"><span>#1041</span><span>CANCELLED</span><span>LOW</span><span></span><span>—</span><span>—</span></div></div></td></tr>
+<tr class="row s-cancelled" data-status="cancelled" data-s="[data agent] 本番データバックアップ戦略実装：supabase自動バックアップ設定、point-in-time recovery設定確認、リストア手順書を 02_data/producti" onclick="xp(this)">
+<td><span class="cid">#1040</span></td><td><span class="pill s-cancelled"><i class="dot"></i>SKIP</span></td><td><span class="cpri p-low">P3</span></td><td><span class="chtag">#dept-data</span></td><td class="ci">[Data Agent] 本番データバックアップ戦略実装：Supabase自動バックアップ設定、Point-in-Time Recovery設定確認、リストア手順書を 02_data/producti</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
+<tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">[Data Agent] 本番データバックアップ戦略実装：Supabase自動バックアップ設定、Point-in-Time Recovery設定確認、リストア手順書を 02_data/production_backup_strategy.md に作成</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres">Phase 2.1タスク再定義のためcancelled</div></div></div><div class="xm"><span>#1040</span><span>CANCELLED</span><span>LOW</span><span></span><span>—</span><span>—</span></div></div></td></tr>
 <tr class="row s-cancelled" data-status="cancelled" data-s="本番運用手順書作成：デプロイ手順・障害対応・スケーリング・バックアップ・復旧手順を体系化。手順書を 10_operations/production_operations_manual.md に保存" onclick="xp(this)">
 <td><span class="cid">#1025</span></td><td><span class="pill s-cancelled"><i class="dot"></i>SKIP</span></td><td><span class="cpri p-medium">P2</span></td><td><span class="chtag">#dept-operations</span></td><td class="ci">本番運用手順書作成：デプロイ手順・障害対応・スケーリング・バックアップ・復旧手順を体系化。手順書を 10_operations/production_operations_manual.md に保存</td><td class="co"><span class="dm">—</span></td><td><span class="dm">—</span></td><td class="ct"></td></tr>
 <tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">本番運用手順書作成：デプロイ手順・障害対応・スケーリング・バックアップ・復旧手順を体系化。手順書を 10_operations/production_operations_manual.md に保存</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres">Phase 2移行に伴い整理: Phase 1残務タスクとして優先度を下げ、Phase 2完了後に再評価</div></div></div><div class="xm"><span>#1025</span><span>CANCELLED</span><span>MEDIUM</span><span></span><span>—</span><span>—</span></div></div></td></tr>
@@ -12109,7 +12317,7 @@ Flask等で軽量ダッシュボードを立てる（Grafana的なもの）
 <tr class="xr hidden"><td colspan="8"><div class="xc"><div class="xg"><div class="xs"><div class="xl">FULL INSTRUCTION</div><div class="xt">Alert Rules 3個設定: エラー率&gt;1%、P75レイテンシ&gt;3秒、5xxエラー≥10件（手順: 10_operations/sentry_alert_rules_execution_guide.md参照・約30分・別タスク）</div></div><div class="xs"><div class="xl">RESULT</div><div class="xt xres"><span class='dm'>—</span></div></div></div><div class="xm"><span>#314</span><span>CANCELLED</span><span>MEDIUM</span><span></span><span>—</span><span>—</span></div></div></td></tr></tbody></table></div>
 
 <div class="kb"><div><kbd>&#8984;</kbd><kbd>K</kbd> Search</div><div><kbd>1</kbd>-<kbd>5</kbd> Filter</div><div><kbd>Esc</kbd> Clear</div><div><kbd>Click</kbd> Expand</div></div>
-<footer class="ftr"><div>JUDGEMENT // COSMIC COMMAND CENTER v7.0</div><div>GEN 2026-03-14 13:21:29 — <a href="https://github.com/rikuzalu/human-decision-os" target="_blank">GITHUB</a></div></footer>
+<footer class="ftr"><div>JUDGEMENT // COSMIC COMMAND CENTER v8.0</div><div>GEN 2026-03-14 13:38:21 — <a href="https://github.com/rikuzalu/human-decision-os" target="_blank">GITHUB</a></div></footer>
 </div>
 
 <script>
@@ -12184,7 +12392,7 @@ const dpr=window.devicePixelRatio||1;
 const W=cv.offsetWidth||cv.parentElement.offsetWidth||400,H=cv.offsetHeight||200;
 cv.width=W*dpr;cv.height=H*dpr;cx.scale(dpr,dpr);
 const cX=W/2,cY=H/2,R=Math.min(W,H)/2-30;
-const data=[{"label": "\u5b8c\u4e86\u7387", "value": 97.8}, {"label": "\u30b9\u30eb\u30fc\u30d7\u30c3\u30c8", "value": 100}, {"label": "\u901f\u5ea6", "value": 0}, {"label": "\u54c1\u8cea", "value": 100.0}, {"label": "\u7a3c\u50cd", "value": 30}, {"label": "\u751f\u7523\u6027", "value": 100}];
+const data=[{"label": "\u5b8c\u4e86\u7387", "value": 96.0}, {"label": "\u30b9\u30eb\u30fc\u30d7\u30c3\u30c8", "value": 100}, {"label": "\u901f\u5ea6", "value": 0}, {"label": "\u54c1\u8cea", "value": 100.0}, {"label": "\u7a3c\u50cd", "value": 30}, {"label": "\u751f\u7523\u6027", "value": 100}];
 const n=data.length;const step=Math.PI*2/n;
 let rot=0;
 function draw(){
