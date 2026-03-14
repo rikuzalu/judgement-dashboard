@@ -86,6 +86,19 @@ letter-spacing:0.5px;text-transform:uppercase;
 position:relative;
 }
 .nav-links a:hover,.nav-links a.active{color:var(--accent);background:var(--glass2)}
+/* ナビネオンアンダーライン */
+.nav-links a::after{
+content:'';position:absolute;bottom:0;left:50%;
+width:0;height:2px;
+background:var(--accent);
+box-shadow:0 0 6px var(--accent),0 0 12px var(--accent);
+transition:all 0.4s cubic-bezier(0.16,1,0.3,1);
+transform:translateX(-50%);
+}
+.nav-links a:hover::after,.nav-links a.active::after{
+width:80%;
+box-shadow:0 0 8px var(--accent),0 0 16px var(--accent),0 2px 20px rgba(0,180,255,0.4);
+}
 /* ナビグリッチホバー */
 .nav-links a:hover{
 animation:navGlitch 0.3s ease;
@@ -118,11 +131,12 @@ background:linear-gradient(135deg,#fff 0%,var(--text) 100%);
 }
 .section-desc{color:var(--text2);font-size:1.05rem;max-width:700px;margin-bottom:2.5rem}
 
-/* ===== セクション区切り: ネオンライン + パルスドット ===== */
+/* ===== セクション区切り: ネオンライン + パルスドット + グロー走行 ===== */
 .section-divider{
 position:relative;width:100%;height:3px;margin:0 auto;
 background:linear-gradient(90deg,transparent,var(--accent),var(--secondary),var(--accent),transparent);
-opacity:0.4;
+opacity:0.5;
+overflow:visible;
 }
 .section-divider::before{
 content:'';position:absolute;left:50%;top:50%;
@@ -131,10 +145,25 @@ width:10px;height:10px;border-radius:50%;
 background:var(--accent);
 box-shadow:0 0 15px var(--accent),0 0 30px var(--accent);
 animation:dividerPulse 2s ease-in-out infinite;
+z-index:2;
+}
+.section-divider::after{
+content:'';position:absolute;left:-10%;top:-4px;
+width:60px;height:11px;border-radius:50%;
+background:radial-gradient(ellipse,rgba(0,232,255,0.9),rgba(0,180,255,0.4),transparent 70%);
+box-shadow:0 0 20px rgba(0,232,255,0.6),0 0 40px rgba(0,180,255,0.3);
+animation:glowRun 4s ease-in-out infinite;
+z-index:1;
 }
 @keyframes dividerPulse{
 0%,100%{box-shadow:0 0 10px var(--accent),0 0 20px var(--accent);transform:translate(-50%,-50%) scale(1)}
 50%{box-shadow:0 0 20px var(--accent),0 0 40px var(--accent),0 0 60px rgba(0,180,255,0.3);transform:translate(-50%,-50%) scale(1.5)}
+}
+@keyframes glowRun{
+0%{left:-10%;opacity:0}
+10%{opacity:1}
+90%{opacity:1}
+100%{left:110%;opacity:0}
 }
 
 /* グラスカード + ホログラフィックシマー */
@@ -173,8 +202,20 @@ animation:holoShimmer 1.5s ease infinite;
 100%{background-position:-200% 0}
 }
 .glass:hover{
-border-color:rgba(0,180,255,0.4);
-box-shadow:0 0 30px rgba(0,180,255,0.1),inset 0 0 30px rgba(0,180,255,0.03);
+border-color:rgba(0,180,255,0.5);
+box-shadow:0 0 30px rgba(0,180,255,0.15),0 0 60px rgba(0,180,255,0.08),inset 0 0 30px rgba(0,180,255,0.03);
+transform:scale(1.03);
+}
+/* conic-gradient回転ボーダー */
+.glass{--conic-angle:0deg}
+@property --conic-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+.glass:hover{--conic-angle:360deg;animation:conicSpin 3s linear infinite}
+@keyframes conicSpin{to{--conic-angle:360deg}}
+.glass:hover{
+background-image:conic-gradient(from var(--conic-angle),
+rgba(0,180,255,0.12),rgba(139,92,246,0.12),rgba(0,255,178,0.12),
+rgba(255,184,0,0.12),rgba(255,71,87,0.08),rgba(0,180,255,0.12));
+background-origin:border-box;
 }
 
 /* フェードインアニメーション */
@@ -217,7 +258,7 @@ animation:pulse 2s infinite;
 }
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,255,178,0.5)}70%{box-shadow:0 0 0 10px rgba(0,255,178,0)}}
 
-/* HEROグリッチタイトル */
+/* HEROグリッチタイトル - 3色分離レイヤー */
 .hero-title{
 font-family:'Orbitron',sans-serif;
 font-size:clamp(3rem,10vw,7rem);font-weight:900;
@@ -228,37 +269,62 @@ background-size:300% 300%;
 animation:gradientShift 6s ease infinite;
 position:relative;
 }
-.hero-title::before,
+/* グリッチレイヤー1: 赤シフト */
+.hero-title::before{
+content:'JUDGEMENT';
+position:absolute;left:0;top:0;right:0;
+-webkit-text-fill-color:rgba(255,0,60,0.7);
+pointer-events:none;
+animation:glitch1 2.5s steps(1) infinite;
+mix-blend-mode:screen;
+}
+/* グリッチレイヤー2: シアンシフト */
 .hero-title::after{
 content:'JUDGEMENT';
 position:absolute;left:0;top:0;right:0;
-background:linear-gradient(135deg,var(--accent),var(--secondary),var(--purple),var(--accent));
-background-size:300% 300%;
--webkit-background-clip:text;-webkit-text-fill-color:transparent;
-animation:gradientShift 6s ease infinite;
+-webkit-text-fill-color:rgba(0,232,255,0.7);
 pointer-events:none;
+animation:glitch2 3s steps(1) infinite;
+mix-blend-mode:screen;
 }
-.hero-title::before{
-animation:glitchTop 3s ease-in-out infinite;
-clip-path:polygon(0 0,100% 0,100% 33%,0 33%);
+/* グリッチレイヤー3: 紫シフト（span.glitch-3で実装） */
+.glitch-3{
+position:absolute;left:0;top:0;right:0;
+font-family:'Orbitron',sans-serif;
+font-size:clamp(3rem,10vw,7rem);font-weight:900;
+line-height:1;
+color:rgba(139,92,246,0.6);
+pointer-events:none;
+animation:glitch3 2.8s steps(1) infinite;
+mix-blend-mode:screen;
 }
-.hero-title::after{
-animation:glitchBottom 3s ease-in-out infinite;
-clip-path:polygon(0 67%,100% 67%,100% 100%,0 100%);
+@keyframes glitch1{
+0%,87%{clip-path:inset(0 0 100% 0);transform:translate(0)}
+88%{clip-path:inset(10% 0 60% 0);transform:translate(-6px,2px) skewX(-12deg)}
+89%{clip-path:inset(40% 0 20% 0);transform:translate(4px,-1px) skewX(8deg)}
+90%{clip-path:inset(70% 0 5% 0);transform:translate(-3px,3px) skewX(-5deg)}
+91%{clip-path:inset(20% 0 50% 0);transform:translate(5px,-2px) skewX(10deg)}
+92%{clip-path:inset(0 0 70% 0);transform:translate(-2px,1px)}
+93%{clip-path:inset(0 0 100% 0);transform:translate(0)}
+94%,100%{clip-path:inset(0 0 100% 0);transform:translate(0)}
 }
-@keyframes glitchTop{
-0%,93%,100%{transform:translate(0)}
-94%{transform:translate(-4px,-2px) skewX(-8deg)}
-95%{transform:translate(3px,1px) skewX(5deg)}
-96%{transform:translate(-2px,-1px) skewX(-3deg)}
-97%{transform:translate(0)}
+@keyframes glitch2{
+0%,84%{clip-path:inset(0 0 100% 0);transform:translate(0)}
+85%{clip-path:inset(60% 0 10% 0);transform:translate(5px,-3px) skewX(7deg)}
+86%{clip-path:inset(15% 0 55% 0);transform:translate(-4px,2px) skewX(-10deg)}
+87%{clip-path:inset(80% 0 0% 0);transform:translate(3px,1px) skewX(4deg)}
+88%{clip-path:inset(5% 0 80% 0);transform:translate(-6px,-1px) skewX(-8deg)}
+89%{clip-path:inset(35% 0 35% 0);transform:translate(2px,3px)}
+90%{clip-path:inset(0 0 100% 0);transform:translate(0)}
+91%,100%{clip-path:inset(0 0 100% 0);transform:translate(0)}
 }
-@keyframes glitchBottom{
-0%,93%,100%{transform:translate(0)}
-94%{transform:translate(4px,2px) skewX(8deg)}
-95%{transform:translate(-3px,-1px) skewX(-5deg)}
-96%{transform:translate(2px,1px) skewX(3deg)}
-97%{transform:translate(0)}
+@keyframes glitch3{
+0%,90%{clip-path:inset(0 0 100% 0);transform:translate(0)}
+91%{clip-path:inset(50% 0 20% 0);transform:translate(7px,1px) skewX(14deg)}
+92%{clip-path:inset(0% 0 70% 0);transform:translate(-5px,-2px) skewX(-6deg)}
+93%{clip-path:inset(30% 0 40% 0);transform:translate(3px,4px) skewX(9deg)}
+94%{clip-path:inset(0 0 100% 0);transform:translate(0)}
+95%,100%{clip-path:inset(0 0 100% 0);transform:translate(0)}
 }
 @keyframes gradientShift{
 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}
@@ -745,11 +811,156 @@ transform:translateX(50%);
 .plan-table{font-size:0.8rem}
 .plan-table th,.plan-table td{padding:0.6rem 0.4rem}
 .particles .particle{display:none}
-.particles .particle:nth-child(-n+12){display:block}
+.particles .particle:nth-child(-n+15){display:block}
 }
 @media(max-width:400px){
 .container{padding:0 1rem}
 .hero-title{font-size:2.5rem}
+}
+
+/* ===== ゴーストテキスト（数値の背後） ===== */
+.ghost-num{position:relative;display:inline-block}
+.ghost-num::before{
+content:attr(data-ghost);
+position:absolute;left:3px;top:3px;
+font:inherit;color:inherit;opacity:0.12;
+filter:blur(2px);pointer-events:none;z-index:-1;
+}
+.ghost-num::after{
+content:attr(data-ghost);
+position:absolute;left:-2px;top:-2px;
+font:inherit;color:inherit;opacity:0.08;
+filter:blur(3px);pointer-events:none;z-index:-1;
+}
+
+/* ===== EXECUTIVE SUMMARY ===== */
+.exec-summary{padding:4rem 0;position:relative}
+.exec-tagline{
+font-family:'Orbitron',sans-serif;font-size:clamp(1rem,2.5vw,1.5rem);
+font-weight:700;color:#fff;text-align:center;
+max-width:800px;margin:0 auto 2.5rem;line-height:1.6;
+}
+.exec-tagline .highlight{
+background:linear-gradient(135deg,var(--accent),var(--secondary));
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.exec-metrics{
+display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+gap:1.5rem;max-width:800px;margin:0 auto;
+}
+.exec-metric-card{
+text-align:center;padding:1.5rem 1rem;
+border:1px solid var(--border);border-radius:16px;
+background:var(--glass);backdrop-filter:blur(12px);
+position:relative;overflow:hidden;
+transition:all 0.4s;
+}
+.exec-metric-card::before{
+content:'';position:absolute;inset:0;
+background:radial-gradient(circle at 50% 0%,rgba(0,180,255,0.1),transparent 70%);
+pointer-events:none;
+}
+.exec-metric-card:hover{
+border-color:rgba(0,180,255,0.5);
+box-shadow:0 0 40px rgba(0,180,255,0.15);
+transform:translateY(-4px);
+}
+.exec-metric-val{
+font-family:'Share Tech Mono',monospace;font-size:2rem;font-weight:700;
+display:block;margin-bottom:0.3rem;
+}
+.exec-metric-label{font-size:0.8rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px}
+
+/* ===== TRACTION ===== */
+.traction-grid{
+display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+gap:1rem;
+}
+.traction-item{
+text-align:center;padding:1.5rem 0.8rem;
+border:1px solid var(--border);border-radius:12px;
+background:var(--glass);backdrop-filter:blur(8px);
+transition:all 0.4s;position:relative;overflow:hidden;
+}
+.traction-item::after{
+content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
+background:linear-gradient(90deg,var(--accent),var(--secondary));
+transform:scaleX(0);transition:transform 0.4s;
+}
+.traction-item:hover::after{transform:scaleX(1)}
+.traction-item:hover{transform:translateY(-3px);border-color:rgba(0,180,255,0.4)}
+.traction-val{
+font-family:'Share Tech Mono',monospace;font-size:1.8rem;font-weight:700;
+display:block;margin-bottom:0.2rem;
+}
+.traction-label{font-size:0.8rem;color:var(--text2)}
+.traction-sub{font-size:0.7rem;color:var(--text2);margin-top:0.3rem;opacity:0.7}
+
+/* ===== PITCH DECK ===== */
+.pitch-scroll{
+display:flex;gap:1rem;overflow-x:auto;
+padding:1rem 0.5rem 1.5rem;
+scrollbar-width:thin;scrollbar-color:rgba(0,180,255,0.3) transparent;
+-webkit-overflow-scrolling:touch;
+scroll-snap-type:x mandatory;
+}
+.pitch-scroll::-webkit-scrollbar{height:4px}
+.pitch-scroll::-webkit-scrollbar-track{background:rgba(255,255,255,0.03);border-radius:2px}
+.pitch-scroll::-webkit-scrollbar-thumb{background:rgba(0,180,255,0.3);border-radius:2px}
+.pitch-card{
+min-width:200px;max-width:220px;flex-shrink:0;
+padding:1.2rem;border-radius:12px;
+border:1px solid var(--border);
+background:var(--glass);backdrop-filter:blur(10px);
+scroll-snap-align:start;
+transition:all 0.4s;position:relative;overflow:hidden;
+}
+.pitch-card::before{
+content:'';position:absolute;top:0;left:0;right:0;height:2px;
+background:linear-gradient(90deg,var(--accent),var(--purple));
+}
+.pitch-card:hover{
+border-color:rgba(0,180,255,0.5);
+box-shadow:0 0 30px rgba(0,180,255,0.12);
+transform:translateY(-3px);
+}
+.pitch-num{
+font-family:'Orbitron',sans-serif;font-size:0.65rem;
+color:var(--accent);margin-bottom:0.5rem;letter-spacing:2px;
+}
+.pitch-title{
+font-family:'Orbitron',sans-serif;font-size:0.85rem;
+font-weight:700;color:#fff;margin-bottom:0.5rem;
+}
+.pitch-desc{font-size:0.8rem;color:var(--text2);line-height:1.5}
+.pitch-hint{
+text-align:center;font-size:0.75rem;color:var(--text2);
+margin-top:0.5rem;font-family:'Share Tech Mono',monospace;
+animation:float 3s ease-in-out infinite;
+}
+
+/* ===== フッターmarquee ===== */
+.agent-marquee-wrap{
+overflow:hidden;margin:1.5rem 0;position:relative;
+}
+.agent-marquee-wrap::before,.agent-marquee-wrap::after{
+content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;
+}
+.agent-marquee-wrap::before{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
+.agent-marquee-wrap::after{right:0;background:linear-gradient(90deg,transparent,var(--bg))}
+.agent-marquee{
+display:flex;gap:0;white-space:nowrap;
+animation:marqueeScroll 20s linear infinite;
+font-family:'Orbitron',sans-serif;font-size:0.7rem;
+letter-spacing:2px;color:var(--accent);
+}
+.agent-marquee span{
+padding:0 1rem;
+text-shadow:0 0 8px rgba(0,180,255,0.4);
+}
+@keyframes marqueeScroll{
+0%{transform:translateX(0)}
+100%{transform:translateX(-50%)}
 }
 </style>
 </head>
@@ -767,6 +978,7 @@ transform:translateX(50%);
 <div class="nav-logo">JUDGEMENT</div>
 <div class="nav-links">
 <a href="#hero">TOP</a>
+<a href="#exec">EXEC</a>
 <a href="#vision">VISION</a>
 <a href="#business">BIZ</a>
 <a href="#market">MARKET</a>
@@ -775,7 +987,9 @@ transform:translateX(50%);
 <a href="#org">ORG</a>
 <a href="#tech">TECH</a>
 <a href="#gtm">GTM</a>
+<a href="#traction">TRACTION</a>
 <a href="#risks">RISK</a>
+<a href="#pitch">PITCH</a>
 </div>
 </div>
 </nav>
@@ -787,7 +1001,7 @@ transform:translateX(50%);
 <span class="pulse"></span>
 Phase 2.1 進行中
 </div>
-<h1 class="hero-title fade-in">JUDGEMENT</h1>
+<h1 class="hero-title fade-in">JUDGEMENT<span class="glitch-3" aria-hidden="true">JUDGEMENT</span></h1>
 <p class="hero-tagline fade-in">Powering AI with Human Judgment</p>
 <p class="hero-philosophy fade-in">
 AIは生成できる。<br>しかし<strong>決めるのは人間だ。</strong>
@@ -811,6 +1025,38 @@ AIは生成できる。<br>しかし<strong>決めるのは人間だ。</strong>
 </div>
 </div>
 <div class="scroll-hint">▽ SCROLL</div>
+</div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ===== EXECUTIVE SUMMARY ===== -->
+<section id="exec" class="exec-summary">
+<div class="container">
+<div class="section-label fade-in">EXECUTIVE SUMMARY</div>
+<h2 class="section-title fade-in">ONE LINE</h2>
+<p class="exec-tagline fade-in">
+<span class="highlight">人間の判断力</span>をインフラ化し、<br>
+すべてのAIの品質を担保する<span class="highlight">世界唯一のプラットフォーム</span>
+</p>
+<div class="exec-metrics fade-in">
+<div class="exec-metric-card">
+<span class="exec-metric-val ghost-num" data-ghost="1兆円" style="color:var(--accent)">1兆円</span>
+<span class="exec-metric-label">TAM (AI評価市場)</span>
+</div>
+<div class="exec-metric-card">
+<span class="exec-metric-val ghost-num" data-ghost="100%" style="color:var(--success)">100%</span>
+<span class="exec-metric-label">Phase 1 完了率</span>
+</div>
+<div class="exec-metric-card">
+<span class="exec-metric-val ghost-num" data-ghost="30,000+" style="color:var(--secondary)">30,000+</span>
+<span class="exec-metric-label">技術資産 (行)</span>
+</div>
+<div class="exec-metric-card">
+<span class="exec-metric-val ghost-num" data-ghost="9" style="color:var(--purple)">9</span>
+<span class="exec-metric-label">AI Agents</span>
+</div>
+</div>
 </div>
 </section>
 
@@ -1506,6 +1752,67 @@ Phase 4 ▸ 大規模意思決定シミュレーション
 
 <div class="section-divider"></div>
 
+<!-- ===== TRACTION ===== -->
+<section id="traction">
+<div class="container">
+<div class="section-label fade-in">TRACTION</div>
+<h2 class="section-title fade-in">PROVEN EXECUTION</h2>
+<p class="section-desc fade-in">Phase 1で証明した実行力。ゼロコストで構築した本番稼働システム</p>
+
+<div class="traction-grid fade-in">
+<div class="traction-item">
+<span class="traction-val ghost-num" data-ghost="100%" style="color:var(--success)">100%</span>
+<span class="traction-label">技術基盤完成</span>
+<span class="traction-sub">本番稼働中</span>
+</div>
+<div class="traction-item">
+<span class="traction-val ghost-num" data-ghost="1,090" style="color:var(--accent)">
+<span class="countup" data-target="1090">0</span>
+</span>
+<span class="traction-label">タスク完了</span>
+<span class="traction-sub">AI Agent実行</span>
+</div>
+<div class="traction-item">
+<span class="traction-val ghost-num" data-ghost="53" style="color:var(--secondary)">
+<span class="countup" data-target="53">0</span>
+</span>
+<span class="traction-label">スキル蓄積</span>
+<span class="traction-sub">再利用可能</span>
+</div>
+<div class="traction-item">
+<span class="traction-val ghost-num" data-ghost="11" style="color:var(--purple)">
+<span class="countup" data-target="11">0</span>
+</span>
+<span class="traction-label">AI部門稼働</span>
+<span class="traction-sub">自律型組織</span>
+</div>
+<div class="traction-item">
+<span class="traction-val ghost-num" data-ghost="6" style="color:var(--warning)">
+<span class="countup" data-target="6">0</span>
+</span>
+<span class="traction-label">CI/CDステージ</span>
+<span class="traction-sub">自動パイプライン</span>
+</div>
+<div class="traction-item">
+<span class="traction-val ghost-num" data-ghost="11" style="color:var(--accent)">
+<span class="countup" data-target="11">0</span>
+</span>
+<span class="traction-label">E2Eテスト</span>
+<span class="traction-sub">品質保証</span>
+</div>
+<div class="traction-item">
+<span class="traction-val ghost-num" data-ghost="78" style="color:var(--success)">
+<span class="countup" data-target="78">0</span><span style="font-size:0.6em">/100</span>
+</span>
+<span class="traction-label">セキュリティ</span>
+<span class="traction-sub">スコア</span>
+</div>
+</div>
+</div>
+</section>
+
+<div class="section-divider"></div>
+
 <!-- ===== SECTION 10: RISKS & MOATS ===== -->
 <section id="risks">
 <div class="container">
@@ -1605,10 +1912,91 @@ Phase 4 ▸ 大規模意思決定シミュレーション
 </div>
 </section>
 
+<div class="section-divider"></div>
+
+<!-- ===== PITCH DECK ===== -->
+<section id="pitch">
+<div class="container">
+<div class="section-label fade-in">PITCH DECK</div>
+<h2 class="section-title fade-in">INVESTOR SLIDES</h2>
+<p class="section-desc fade-in">12スライド構成の投資家向けピッチ概要</p>
+
+<div class="pitch-scroll fade-in">
+<div class="pitch-card">
+<div class="pitch-num">SLIDE I</div>
+<div class="pitch-title" style="color:var(--error)">Problem</div>
+<div class="pitch-desc">AIの品質評価は人手依存で非効率。Scale AI等は品質より量を優先し、専門性の担保が困難</div>
+</div>
+<div class="pitch-card">
+<div class="pitch-num">SLIDE II</div>
+<div class="pitch-title" style="color:var(--accent)">Solution</div>
+<div class="pitch-desc">専門家ネットワーク + Trust Scoreで「判断の質」を定量化・担保するプラットフォーム</div>
+</div>
+<div class="pitch-card">
+<div class="pitch-num">SLIDE III</div>
+<div class="pitch-title" style="color:var(--secondary)">Product</div>
+<div class="pitch-desc">JUDGEMENT Game → Network → OSの3層構造。ゲーミフィケーションで専門家を獲得・維持</div>
+</div>
+<div class="pitch-card">
+<div class="pitch-num">SLIDE IV</div>
+<div class="pitch-title" style="color:var(--warning)">Market</div>
+<div class="pitch-desc">TAM 1兆円。RLHF・データラベリング・AI安全性評価市場。年間成長率25-35%</div>
+</div>
+<div class="pitch-card">
+<div class="pitch-num">SLIDE V</div>
+<div class="pitch-title" style="color:var(--success)">Business Model</div>
+<div class="pitch-desc">データ販売 → API → SaaS → Simulationの4段階収益エンジン。粗利率70-85%</div>
+</div>
+<div class="pitch-card">
+<div class="pitch-num">SLIDE VI</div>
+<div class="pitch-title" style="color:var(--accent)">Unit Economics</div>
+<div class="pitch-desc">月コスト5万→売上40万。LTV/CAC > 5x。ゼロコスト運営で極限まで効率化</div>
+</div>
+<div class="pitch-card">
+<div class="pitch-num">SLIDE VII</div>
+<div class="pitch-title" style="color:var(--purple)">Moat</div>
+<div class="pitch-desc">Trust Score NW効果 + 独自データセット + Expert Community + Clone AI技術 + ゼロコスト運営</div>
+</div>
+<div class="pitch-card">
+<div class="pitch-num">SLIDE VIII</div>
+<div class="pitch-title" style="color:var(--secondary)">Roadmap</div>
+<div class="pitch-desc">Phase 1完了 → Phase 2 MFA&初期顧客 → Phase 3 SaaS化 → Phase 4 グローバル展開</div>
+</div>
+<div class="pitch-card">
+<div class="pitch-num">SLIDE IX</div>
+<div class="pitch-title" style="color:var(--warning)">Team</div>
+<div class="pitch-desc">Founder 1名 + 9 AI Agent自律型組織。人間の意思決定 + AIの実行力で24時間開発</div>
+</div>
+<div class="pitch-card">
+<div class="pitch-num">SLIDE X</div>
+<div class="pitch-title" style="color:var(--success)">Traction</div>
+<div class="pitch-desc">1,090タスク完了 / 53スキル蓄積 / 11部門稼働 / CI/CD 6ステージ / セキュリティ78点</div>
+</div>
+<div class="pitch-card">
+<div class="pitch-num">SLIDE XI</div>
+<div class="pitch-title" style="color:var(--accent)">Funding</div>
+<div class="pitch-desc">シード 1,000万円。開発40% / マーケ25% / インフラ15% / 人件費10% / 予備10%</div>
+</div>
+<div class="pitch-card">
+<div class="pitch-num">SLIDE XII</div>
+<div class="pitch-title" style="color:var(--purple)">Vision</div>
+<div class="pitch-desc">世界最大の人間判断ネットワーク。AIが生成し、人間が決める ── その意思決定インフラを創る</div>
+</div>
+</div>
+<div class="pitch-hint">◁ スワイプして閲覧 ▷</div>
+</div>
+</section>
+
 <!-- ===== Footer ===== -->
 <footer>
 <div class="foot-logo">JUDGEMENT</div>
 <p>Human Decision OS ─── Powering AI with Human Judgment</p>
+<div class="agent-marquee-wrap">
+<div class="agent-marquee">
+<span>ARCHON</span><span>═</span><span>STYX</span><span>═</span><span>ORACLE</span><span>═</span><span>AEGIS</span><span>═</span><span>NEXUS</span><span>═</span><span>HERALD</span><span>═</span><span>KRONOS</span><span>═</span><span>SENTINEL</span><span>═</span><span>VOID</span><span>═══</span>
+<span>ARCHON</span><span>═</span><span>STYX</span><span>═</span><span>ORACLE</span><span>═</span><span>AEGIS</span><span>═</span><span>NEXUS</span><span>═</span><span>HERALD</span><span>═</span><span>KRONOS</span><span>═</span><span>SENTINEL</span><span>═</span><span>VOID</span><span>═══</span>
+</div>
+</div>
 <p style="margin-top:0.5rem;font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--accent)">
 &#169; 2026 JUDGEMENT. All rights reserved.
 </p>
@@ -1619,26 +2007,41 @@ Phase 4 ▸ 大規模意思決定シミュレーション
 
 <!-- ===== JavaScript ===== -->
 <script>
-// ===== CSSパーティクル生成 =====
+// ===== CSSパーティクル生成（40個 + 流れ星） =====
 (function(){
   const container = document.getElementById('particles');
-  const count = window.innerWidth < 768 ? 12 : 25;
+  const count = window.innerWidth < 768 ? 15 : 40;
   const colors = ['rgba(0,180,255,0.6)','rgba(0,232,255,0.5)','rgba(139,92,246,0.5)','rgba(0,255,178,0.4)','rgba(255,255,255,0.4)'];
   for(let i=0;i<count;i++){
     const p = document.createElement('div');
     p.className='particle';
-    const size = Math.random()*2.5+0.5;
+    const isShooting = i < 5;
+    const size = isShooting ? Math.random()*2+2 : Math.random()*2.5+0.5;
+    const dur = isShooting ? Math.random()*6+4 : Math.random()*15+10;
+    const anim = isShooting ? 'shootingStar' : 'particleFloat';
     p.style.cssText=`
-      width:${size}px;height:${size}px;
+      width:${size}px;height:${isShooting?1:size}px;
       left:${Math.random()*100}%;
       top:${Math.random()*100+100}%;
       background:${colors[Math.floor(Math.random()*colors.length)]};
-      box-shadow:0 0 ${size*3}px ${colors[Math.floor(Math.random()*colors.length)]};
-      animation-duration:${Math.random()*15+10}s;
-      animation-delay:${Math.random()*10}s;
+      box-shadow:0 0 ${size*3}px ${colors[Math.floor(Math.random()*colors.length)]}${isShooting?','+size*6+'px 0 '+size*2+'px rgba(255,255,255,0.3)':''};
+      animation:${anim} ${dur}s linear infinite;
+      animation-delay:${Math.random()*15}s;
+      ${isShooting?'border-radius:0;':'border-radius:50%;'}
     `;
     container.appendChild(p);
   }
+  // 流れ星キーフレームを動的に追加
+  const style = document.createElement('style');
+  style.textContent=`
+    @keyframes shootingStar{
+      0%{transform:translateY(0) translateX(0);opacity:0}
+      5%{opacity:1}
+      85%{opacity:0.8}
+      100%{transform:translateY(-80vh) translateX(120px);opacity:0}
+    }
+  `;
+  document.head.appendChild(style);
 })();
 
 // ===== IntersectionObserver: フェードインアニメーション =====
