@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JUDGEMENT | あなたの判断力がAIを変える - ワーカー募集</title>
+<meta name="description" content="スマホでもPCでも。好きな時間に、好きな場所で。あなたの判断力でAIの品質を変える新しい働き方。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg1:#060918;--bg2:#0A0E27;--bg3:#0d1130;
+  --n:#00B4FF;--n2:#00E8FF;--ng:rgba(0,180,255,0.35);
+  --success:#00D9A3;--warn:#FFB800;--err:#FF4757;
+  --purple:#8B5CF6;--pink:#FF6B9D;
+  --t1:#e0e6f0;--t2:rgba(180,195,225,0.85);--t3:rgba(120,140,180,0.6);
+  --glass:rgba(8,14,40,0.6);--glass2:rgba(10,18,50,0.8);
+  --border:rgba(0,180,255,0.12);--border2:rgba(0,180,255,0.25);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans JP','Rajdhani',sans-serif;background:var(--bg1);color:var(--t1);overflow-x:hidden;line-height:1.7}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(0,180,255,0.15);border-radius:3px}
+
+canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    repeating-linear-gradient(90deg,rgba(0,180,255,0.02) 0px,transparent 1px,transparent 100px),
+    repeating-linear-gradient(0deg,rgba(0,180,255,0.02) 0px,transparent 1px,transparent 100px);
+  opacity:0.4}
+.top-bar{position:fixed;top:0;left:0;right:0;height:2px;z-index:100;
+  background:linear-gradient(90deg,transparent,var(--n) 30%,#fff 50%,var(--n2) 70%,transparent);
+  box-shadow:0 0 30px var(--ng),0 0 60px rgba(0,180,255,0.1)}
+
+nav{position:fixed;top:2px;left:0;right:0;z-index:99;padding:16px 40px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(6,9,24,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:all 0.3s}
+nav.scrolled{background:rgba(6,9,24,0.95);box-shadow:0 4px 30px rgba(0,0,0,0.3)}
+.logo{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;
+  background:linear-gradient(135deg,var(--n),var(--n2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:3px}
+.logo span{font-size:0.65rem;display:block;color:var(--t3);letter-spacing:4px;font-weight:400;-webkit-text-fill-color:var(--t3)}
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-links a{color:var(--t2);text-decoration:none;font-size:0.85rem;font-weight:500;letter-spacing:0.5px;
+  transition:color 0.3s;font-family:'Rajdhani',sans-serif}
+.nav-links a:hover{color:var(--n)}
+.nav-cta{padding:8px 24px;background:linear-gradient(135deg,var(--n),var(--n2));color:#060918;
+  border:none;border-radius:6px;font-weight:700;font-size:0.85rem;cursor:pointer;
+  font-family:'Rajdhani',sans-serif;letter-spacing:1px;text-decoration:none;
+  box-shadow:0 0 20px rgba(0,180,255,0.3);transition:all 0.3s}
+.nav-cta:hover{box-shadow:0 0 40px rgba(0,180,255,0.5);transform:translateY(-1px)}
+
+section{position:relative;z-index:10;padding:100px 20px}
+.container{max-width:1200px;margin:0 auto}
+.section-label{font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--n);letter-spacing:5px;
+  text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.section-label::before{content:'';width:30px;height:1px;background:var(--n)}
+.section-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;
+  margin-bottom:20px;line-height:1.3}
+.section-title .accent{background:linear-gradient(135deg,var(--n),var(--n2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.section-desc{color:var(--t2);font-size:1.05rem;max-width:700px;line-height:1.8}
+
+.fade-in{opacity:0;transform:translateY(40px);transition:opacity 0.8s ease,transform 0.8s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+.fade-in-delay-1{transition-delay:0.15s}
+.fade-in-delay-2{transition-delay:0.3s}
+.fade-in-delay-3{transition-delay:0.45s}
+.fade-in-delay-4{transition-delay:0.6s}
+
+/* ========== HERO ========== */
+.hero{min-height:100vh;display:flex;align-items:center;padding-top:120px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:40%;left:60%;width:900px;height:900px;
+  background:radial-gradient(circle,rgba(139,92,246,0.05) 0%,rgba(0,180,255,0.03) 40%,transparent 70%);
+  transform:translate(-50%,-50%);pointer-events:none}
+.hero-content{max-width:800px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;
+  background:rgba(0,180,255,0.08);border:1px solid var(--border2);border-radius:30px;
+  font-size:0.8rem;color:var(--n);margin-bottom:32px;font-family:'Rajdhani',sans-serif;letter-spacing:1px}
+.hero-badge .dot{width:6px;height:6px;background:var(--success);border-radius:50%;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.hero h1{font-family:'Orbitron',sans-serif;font-size:clamp(2rem,5vw,3.4rem);font-weight:800;
+  line-height:1.25;margin-bottom:24px}
+.hero h1 .highlight{background:linear-gradient(135deg,var(--n),var(--n2),var(--purple));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero h1 .line2{display:block;font-size:clamp(1.2rem,3vw,2rem);color:var(--t2);font-weight:500;margin-top:12px}
+.hero-sub{font-size:1.15rem;color:var(--t2);line-height:1.9;margin-bottom:48px;max-width:600px}
+.hero-sub strong{color:var(--n);font-weight:600}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;padding:18px 48px;
+  background:linear-gradient(135deg,var(--n),var(--n2));color:#060918;font-weight:700;
+  font-size:1.1rem;border:none;border-radius:8px;cursor:pointer;text-decoration:none;
+  font-family:'Rajdhani',sans-serif;letter-spacing:1px;
+  box-shadow:0 0 30px rgba(0,180,255,0.4),0 4px 15px rgba(0,0,0,0.3);
+  transition:all 0.3s;position:relative;overflow:hidden}
+.btn-primary::after{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:linear-gradient(45deg,transparent,rgba(255,255,255,0.1),transparent);
+  transform:rotate(45deg);transition:all 0.5s}
+.btn-primary:hover::after{left:100%}
+.btn-primary:hover{box-shadow:0 0 50px rgba(0,180,255,0.6),0 8px 25px rgba(0,0,0,0.4);transform:translateY(-2px)}
+.hero-trust{display:flex;gap:32px;margin-top:56px;padding-top:40px;border-top:1px solid var(--border)}
+.hero-trust-item{display:flex;align-items:center;gap:10px;color:var(--t3);font-size:0.85rem}
+.hero-trust-item svg{color:var(--success);flex-shrink:0}
+
+/* ========== WHAT IS THIS ========== */
+.what{background:linear-gradient(180deg,var(--bg1),var(--bg2))}
+.what-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-top:48px}
+.what-card{padding:32px;background:var(--glass);border:1px solid var(--border);border-radius:12px;
+  backdrop-filter:blur(10px);transition:all 0.4s;position:relative;overflow:hidden}
+.what-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--n),var(--n2));opacity:0;transition:opacity 0.4s}
+.what-card:hover{border-color:var(--border2);transform:translateY(-4px);
+  box-shadow:0 8px 30px rgba(0,0,0,0.3)}
+.what-card:hover::before{opacity:1}
+.what-icon{width:52px;height:52px;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,180,255,0.08);border:1px solid var(--border2);border-radius:12px;
+  margin-bottom:20px;color:var(--n)}
+.what-card h3{font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:10px}
+.what-card p{color:var(--t3);font-size:0.9rem;line-height:1.7}
+.what-time{display:inline-block;margin-top:12px;padding:3px 10px;
+  background:rgba(0,217,163,0.08);border:1px solid rgba(0,217,163,0.2);border-radius:20px;
+  font-size:0.75rem;color:var(--success);font-family:'Rajdhani',sans-serif;letter-spacing:0.5px}
+
+/* ========== MERIT ========== */
+.merit{background:var(--bg2);position:relative}
+.merit::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--border2),transparent)}
+.merit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:28px;margin-top:48px}
+.merit-card{padding:40px 32px;background:var(--glass2);border:1px solid var(--border);border-radius:16px;
+  backdrop-filter:blur(20px);transition:all 0.4s;text-align:center;position:relative;overflow:hidden}
+.merit-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;opacity:0;transition:opacity 0.4s}
+.merit-card:nth-child(1)::after{background:linear-gradient(90deg,var(--n),var(--n2))}
+.merit-card:nth-child(2)::after{background:linear-gradient(90deg,var(--success),var(--n2))}
+.merit-card:nth-child(3)::after{background:linear-gradient(90deg,var(--warn),var(--pink))}
+.merit-card:nth-child(4)::after{background:linear-gradient(90deg,var(--purple),var(--n))}
+.merit-card:hover{border-color:var(--border2);transform:translateY(-6px);
+  box-shadow:0 12px 40px rgba(0,0,0,0.3)}
+.merit-card:hover::after{opacity:1}
+.merit-icon{width:64px;height:64px;margin:0 auto 24px;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,180,255,0.06);border:1px solid var(--border);border-radius:50%;color:var(--n);
+  font-size:1.4rem}
+.merit-card h3{font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:12px}
+.merit-card p{color:var(--t2);font-size:0.9rem;line-height:1.7}
+
+/* ========== TIERS ========== */
+.tiers{background:linear-gradient(180deg,var(--bg2),var(--bg1))}
+.tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:48px}
+.tier-card{padding:40px 28px;background:var(--glass);border:1px solid var(--border);border-radius:16px;
+  backdrop-filter:blur(10px);transition:all 0.4s;text-align:center;position:relative;overflow:hidden}
+.tier-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
+.tier-card:nth-child(1)::before{background:linear-gradient(90deg,var(--t3),var(--n))}
+.tier-card:nth-child(2)::before{background:linear-gradient(90deg,var(--n),var(--n2))}
+.tier-card:nth-child(3)::before{background:linear-gradient(90deg,var(--warn),var(--pink))}
+.tier-card:nth-child(3){border-color:var(--warn);box-shadow:0 0 30px rgba(255,184,0,0.05)}
+.tier-card:hover{transform:translateY(-6px);box-shadow:0 12px 40px rgba(0,0,0,0.3)}
+.tier-badge{display:inline-block;padding:4px 16px;border-radius:20px;font-family:'Rajdhani',sans-serif;
+  font-size:0.75rem;font-weight:700;letter-spacing:2px;margin-bottom:20px}
+.tier-card:nth-child(1) .tier-badge{background:rgba(120,140,180,0.1);border:1px solid rgba(120,140,180,0.3);color:var(--t2)}
+.tier-card:nth-child(2) .tier-badge{background:rgba(0,180,255,0.1);border:1px solid rgba(0,180,255,0.3);color:var(--n)}
+.tier-card:nth-child(3) .tier-badge{background:rgba(255,184,0,0.1);border:1px solid rgba(255,184,0,0.3);color:var(--warn)}
+.tier-name{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;margin-bottom:8px}
+.tier-card:nth-child(2) .tier-name{color:var(--n)}
+.tier-card:nth-child(3) .tier-name{color:var(--warn)}
+.tier-desc{color:var(--t3);font-size:0.85rem;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.tier-features{list-style:none;text-align:left;margin-bottom:24px}
+.tier-features li{padding:6px 0;color:var(--t2);font-size:0.85rem;display:flex;align-items:center;gap:8px}
+.tier-features li::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--n);flex-shrink:0}
+.tier-card:nth-child(3) .tier-features li::before{background:var(--warn)}
+.tier-rate{font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:700;margin-top:16px}
+.tier-rate .unit{font-size:0.8rem;color:var(--t3);font-family:'Noto Sans JP';font-weight:400}
+.tier-card:nth-child(2) .tier-rate{color:var(--n)}
+.tier-card:nth-child(3) .tier-rate{color:var(--warn)}
+
+/* ========== EARNINGS ========== */
+.earnings{background:var(--bg1)}
+.earn-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:48px}
+.earn-card{padding:40px 28px;background:var(--glass2);border:1px solid var(--border);border-radius:16px;
+  backdrop-filter:blur(10px);text-align:center;transition:all 0.4s;position:relative;overflow:hidden}
+.earn-card:hover{border-color:var(--border2);transform:translateY(-4px);
+  box-shadow:0 8px 30px rgba(0,0,0,0.3)}
+.earn-time{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:600;color:var(--n2);
+  margin-bottom:8px;letter-spacing:1px}
+.earn-amount{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,3vw,2.4rem);font-weight:800;
+  margin-bottom:8px;line-height:1}
+.earn-card:nth-child(1) .earn-amount{color:var(--t1)}
+.earn-card:nth-child(2) .earn-amount{background:linear-gradient(135deg,var(--n),var(--n2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.earn-card:nth-child(3) .earn-amount{background:linear-gradient(135deg,var(--warn),var(--pink));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.earn-period{color:var(--t3);font-size:0.85rem;margin-bottom:20px}
+.earn-detail{color:var(--t2);font-size:0.85rem;line-height:1.6;padding-top:20px;border-top:1px solid var(--border)}
+.earn-bar{height:6px;background:var(--glass);border-radius:3px;margin:16px 0;overflow:hidden}
+.earn-bar-fill{height:100%;border-radius:3px;transition:width 1.5s ease}
+.earn-card:nth-child(1) .earn-bar-fill{width:20%;background:linear-gradient(90deg,var(--n),var(--n2))}
+.earn-card:nth-child(2) .earn-bar-fill{width:55%;background:linear-gradient(90deg,var(--n),var(--n2))}
+.earn-card:nth-child(3) .earn-bar-fill{width:100%;background:linear-gradient(90deg,var(--warn),var(--pink))}
+
+/* ========== HOW TO START ========== */
+.start{background:linear-gradient(180deg,var(--bg1),var(--bg2))}
+.start-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:48px;position:relative}
+.start-steps::before{content:'';position:absolute;top:56px;left:15%;right:15%;height:2px;
+  background:linear-gradient(90deg,var(--n),var(--n2));opacity:0.15}
+.start-step{text-align:center;position:relative}
+.start-num{width:72px;height:72px;margin:0 auto 28px;display:flex;align-items:center;justify-content:center;
+  background:var(--glass2);border:2px solid var(--border2);border-radius:50%;
+  font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:700;color:var(--n);
+  position:relative;z-index:2;box-shadow:0 0 25px rgba(0,180,255,0.15)}
+.start-step h3{font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:12px}
+.start-step p{color:var(--t3);font-size:0.9rem;line-height:1.7;max-width:280px;margin:0 auto}
+.start-step .time-badge{display:inline-block;margin-top:12px;padding:3px 10px;
+  background:rgba(0,180,255,0.08);border:1px solid var(--border);border-radius:20px;
+  font-size:0.75rem;color:var(--n);font-family:'Rajdhani',sans-serif}
+
+/* ========== FAQ ========== */
+.faq{background:var(--bg2)}
+.faq-list{max-width:800px;margin:48px auto 0}
+.faq-item{border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;
+  background:var(--glass);backdrop-filter:blur(10px);transition:all 0.3s}
+.faq-item:hover{border-color:var(--border2)}
+.faq-q{padding:20px 28px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;
+  font-weight:600;font-size:1rem;user-select:none;transition:color 0.3s}
+.faq-q:hover{color:var(--n)}
+.faq-arrow{width:24px;height:24px;display:flex;align-items:center;justify-content:center;
+  transition:transform 0.3s;color:var(--n);flex-shrink:0}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height 0.4s ease,padding 0.4s ease}
+.faq-item.open .faq-a{max-height:300px;padding:0 28px 20px}
+.faq-a p{color:var(--t2);font-size:0.9rem;line-height:1.8}
+
+/* ========== CTA ========== */
+.cta-section{background:var(--bg1);position:relative;overflow:hidden}
+.cta-section::before{content:'';position:absolute;top:50%;left:50%;width:700px;height:700px;
+  background:radial-gradient(circle,rgba(139,92,246,0.04) 0%,rgba(0,180,255,0.04) 40%,transparent 70%);
+  transform:translate(-50%,-50%);pointer-events:none}
+.cta-box{max-width:700px;margin:0 auto;text-align:center;padding:80px 40px;
+  background:var(--glass2);border:1px solid var(--border2);border-radius:24px;
+  backdrop-filter:blur(20px);position:relative;box-shadow:0 0 60px rgba(0,180,255,0.05)}
+.cta-box h2{font-family:'Orbitron',sans-serif;font-size:clamp(1.5rem,3vw,2.2rem);font-weight:700;
+  margin-bottom:16px}
+.cta-box h2 .accent{background:linear-gradient(135deg,var(--n),var(--n2));-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent}
+.cta-box p{color:var(--t2);margin-bottom:40px;font-size:1rem;line-height:1.8}
+.cta-register{display:inline-flex;align-items:center;gap:10px;padding:20px 60px;
+  background:linear-gradient(135deg,var(--n),var(--n2));color:#060918;font-weight:700;
+  font-size:1.15rem;border:none;border-radius:10px;cursor:pointer;text-decoration:none;
+  font-family:'Rajdhani',sans-serif;letter-spacing:1.5px;
+  box-shadow:0 0 40px rgba(0,180,255,0.4),0 4px 20px rgba(0,0,0,0.3);
+  transition:all 0.3s;position:relative;overflow:hidden}
+.cta-register::after{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:linear-gradient(45deg,transparent,rgba(255,255,255,0.15),transparent);
+  transform:rotate(45deg);transition:all 0.6s}
+.cta-register:hover::after{left:100%}
+.cta-register:hover{box-shadow:0 0 60px rgba(0,180,255,0.6),0 8px 30px rgba(0,0,0,0.4);transform:translateY(-3px)}
+.cta-sub{margin-top:20px;color:var(--t3);font-size:0.8rem}
+
+/* フッター */
+footer{position:relative;z-index:10;padding:48px 20px;text-align:center;
+  border-top:1px solid var(--border);background:var(--bg1)}
+.footer-logo{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:600;
+  background:linear-gradient(135deg,var(--n),var(--n2));-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;letter-spacing:3px;margin-bottom:12px}
+footer p{color:var(--t3);font-size:0.75rem}
+footer .footer-links{display:flex;gap:24px;justify-content:center;margin-bottom:16px}
+footer .footer-links a{color:var(--t3);text-decoration:none;font-size:0.8rem;transition:color 0.3s}
+footer .footer-links a:hover{color:var(--n)}
+
+@media(max-width:900px){
+  .tier-grid,.earn-grid,.start-steps{grid-template-columns:1fr}
+  .start-steps::before{display:none}
+  .hero-trust{flex-wrap:wrap;gap:16px}
+  nav{padding:12px 20px}
+  .nav-links a:not(.nav-cta){display:none}
+}
+@media(max-width:600px){
+  section{padding:60px 16px}
+  .what-grid,.merit-grid{grid-template-columns:1fr}
+  .btn-primary{width:100%;justify-content:center}
+  .hero-trust{flex-direction:column;gap:12px}
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+<div class="grid-bg"></div>
+<div class="top-bar"></div>
+
+<nav id="nav">
+  <div class="logo">JUDGEMENT<span>WORKER PLATFORM</span></div>
+  <div class="nav-links">
+    <a href="#what">仕事内容</a>
+    <a href="#merit">メリット</a>
+    <a href="#tiers">ランク制度</a>
+    <a href="#earnings">報酬</a>
+    <a href="#faq">FAQ</a>
+    <a href="#cta" class="nav-cta">今すぐ登録</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="container">
+    <div class="hero-content fade-in">
+      <div class="hero-badge"><span class="dot"></span> NOW RECRUITING</div>
+      <h1>
+        あなたの<span class="highlight">"判断力"</span>が、<br>AIの品質を変える。
+        <span class="line2">スマホでもPCでも。好きな時間に、好きな場所で。</span>
+      </h1>
+      <p class="hero-sub">
+        AIが作った文章やデザインを比較して、「どちらが良いか」を選ぶ。<br>
+        それだけで、<strong>AI開発の品質向上に貢献</strong>できる新しい働き方です。
+      </p>
+      <a href="#cta" class="btn-primary">今すぐ登録する（無料）</a>
+    </div>
+    <div class="hero-trust fade-in fade-in-delay-2">
+      <div class="hero-trust-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        登録無料・退会自由
+      </div>
+      <div class="hero-trust-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        スキル・経験不問
+      </div>
+      <div class="hero-trust-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        スマホ対応
+      </div>
+      <div class="hero-trust-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        即日開始OK
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT IS THIS -->
+<section class="what" id="what">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">WHAT IS THIS</div>
+      <h2 class="section-title">どんな<span class="accent">仕事？</span></h2>
+      <p class="section-desc">難しいスキルは不要。日常的な「判断」がそのまま仕事になります。</p>
+    </div>
+    <div class="what-grid">
+      <div class="what-card fade-in fade-in-delay-1">
+        <div class="what-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+        </div>
+        <h3>AIの回答を比較する</h3>
+        <p>AIが生成した2つの回答を読み比べて、「どちらがより良い回答か」を選びます。</p>
+        <span class="what-time">所要時間: 約10秒</span>
+      </div>
+      <div class="what-card fade-in fade-in-delay-2">
+        <div class="what-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </div>
+        <h3>デザインを評価する</h3>
+        <p>広告バナーやWebデザインの候補を比べて、どちらが魅力的か判断します。</p>
+        <span class="what-time">所要時間: 約15秒</span>
+      </div>
+      <div class="what-card fade-in fade-in-delay-3">
+        <div class="what-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <h3>要約の品質をチェック</h3>
+        <p>AIが作った文章の要約を読んで、元の内容を正しく反映しているかチェックします。</p>
+        <span class="what-time">所要時間: 約20秒</span>
+      </div>
+      <div class="what-card fade-in fade-in-delay-4">
+        <div class="what-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        </div>
+        <h3>カテゴリを分類する</h3>
+        <p>テキストや画像を、あらかじめ用意されたカテゴリに分類します。直感的に進められます。</p>
+        <span class="what-time">所要時間: 約5秒</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MERIT -->
+<section class="merit" id="merit">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">MERIT</div>
+      <h2 class="section-title">JUDGEMENTで<span class="accent">働くメリット</span></h2>
+    </div>
+    <div class="merit-grid">
+      <div class="merit-card fade-in fade-in-delay-1">
+        <div class="merit-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h3>完全在宅・スマホOK</h3>
+        <p>自宅でもカフェでも、移動中でも。スマホひとつあればどこでも作業できます。通勤ゼロの新しい働き方。</p>
+      </div>
+      <div class="merit-card fade-in fade-in-delay-2">
+        <div class="merit-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>スキマ時間でOK</h3>
+        <p>1タスクわずか数秒。電車の待ち時間、休憩中、寝る前のちょっとした時間を収入に変えられます。</p>
+      </div>
+      <div class="merit-card fade-in fade-in-delay-3">
+        <div class="merit-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <h3>やるほどランクUP</h3>
+        <p>正確な判断を続けるとランクが上がり、単価もアップ。努力がそのまま報酬に反映されます。</p>
+      </div>
+      <div class="merit-card fade-in fade-in-delay-4">
+        <div class="merit-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3>AI最前線に関われる</h3>
+        <p>あなたの判断がAIの品質を直接改善します。次世代テクノロジーの最前線に参加できるやりがいのある仕事です。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIERS -->
+<section class="tiers" id="tiers">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">TIER SYSTEM</div>
+      <h2 class="section-title"><span class="accent">3段階</span>ランク制度</h2>
+      <p class="section-desc">正確な判断を続けると自動でランクアップ。高ランクほど高単価タスクが解放されます。</p>
+    </div>
+    <div class="tier-grid">
+      <div class="tier-card fade-in fade-in-delay-1">
+        <span class="tier-badge">TIER 1</span>
+        <div class="tier-name">一般ワーカー</div>
+        <div class="tier-desc">登録直後からスタート。基本タスクに取り組みながら実績を積みます。</div>
+        <ul class="tier-features">
+          <li>基本的な比較評価タスク</li>
+          <li>チュートリアル完備</li>
+          <li>Trust Scoreの蓄積開始</li>
+          <li>タスク数の制限なし</li>
+        </ul>
+        <div class="tier-rate">5~10<span class="unit"> 円/タスク</span></div>
+      </div>
+      <div class="tier-card fade-in fade-in-delay-2">
+        <span class="tier-badge">TIER 2</span>
+        <div class="tier-name">認定ワーカー</div>
+        <div class="tier-desc">一定のTrust Scoreを達成すると自動昇格。高単価タスクが解放されます。</div>
+        <ul class="tier-features">
+          <li>高単価の専門タスク解放</li>
+          <li>優先タスクアサイン</li>
+          <li>品質フィードバック提供</li>
+          <li>月次ボーナス対象</li>
+        </ul>
+        <div class="tier-rate">15~30<span class="unit"> 円/タスク</span></div>
+      </div>
+      <div class="tier-card fade-in fade-in-delay-3">
+        <span class="tier-badge">TIER 3</span>
+        <div class="tier-name">専門家ワーカー</div>
+        <div class="tier-desc">トップクラスの精度を持つ選ばれたワーカー。最高単価タスクを担当。</div>
+        <ul class="tier-features">
+          <li>最高単価タスク独占</li>
+          <li>企業指名案件</li>
+          <li>品質管理チームへの参加</li>
+          <li>特別ボーナス制度</li>
+        </ul>
+        <div class="tier-rate">50~100<span class="unit"> 円/タスク</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EARNINGS -->
+<section class="earnings" id="earnings">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">EARNINGS</div>
+      <h2 class="section-title">報酬<span class="accent">シミュレーション</span></h2>
+      <p class="section-desc">あなたのペースに合わせて、無理なく収入を得られます。</p>
+    </div>
+    <div class="earn-grid">
+      <div class="earn-card fade-in fade-in-delay-1">
+        <div class="earn-time">1日 30分</div>
+        <div class="earn-amount">5,000~15,000</div>
+        <div class="earn-period">円 / 月</div>
+        <div class="earn-bar"><div class="earn-bar-fill"></div></div>
+        <div class="earn-detail">スキマ時間にコツコツ。お小遣い稼ぎや、ちょっとした副収入に最適です。</div>
+      </div>
+      <div class="earn-card fade-in fade-in-delay-2">
+        <div class="earn-time">1日 2時間</div>
+        <div class="earn-amount">30,000~80,000</div>
+        <div class="earn-period">円 / 月</div>
+        <div class="earn-bar"><div class="earn-bar-fill"></div></div>
+        <div class="earn-detail">本格的な副業として。ランクアップすれば単価も上がり、効率的に稼げます。</div>
+      </div>
+      <div class="earn-card fade-in fade-in-delay-3">
+        <div class="earn-time">専門家ワーカー</div>
+        <div class="earn-amount">100,000~</div>
+        <div class="earn-period">円 / 月</div>
+        <div class="earn-bar"><div class="earn-bar-fill"></div></div>
+        <div class="earn-detail">高精度ワーカーには指名案件や特別ボーナスも。在宅で安定収入を実現。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW TO START -->
+<section class="start" id="start">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">HOW TO START</div>
+      <h2 class="section-title">登録は<span class="accent">かんたん3ステップ</span></h2>
+    </div>
+    <div class="start-steps">
+      <div class="start-step fade-in fade-in-delay-1">
+        <div class="start-num">1</div>
+        <h3>無料アカウント作成</h3>
+        <p>メールアドレスだけで登録完了。個人情報の入力は最小限です。</p>
+        <span class="time-badge">約1分</span>
+      </div>
+      <div class="start-step fade-in fade-in-delay-2">
+        <div class="start-num">2</div>
+        <h3>チュートリアル完了</h3>
+        <p>短いチュートリアルで作業の流れを学びます。すぐにコツが掴めます。</p>
+        <span class="time-badge">約5分</span>
+      </div>
+      <div class="start-step fade-in fade-in-delay-3">
+        <div class="start-num">3</div>
+        <h3>タスク開始</h3>
+        <p>チュートリアル完了後、すぐにタスクに取り組めます。好きなだけどうぞ。</p>
+        <span class="time-badge">即日OK</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">FAQ</div>
+      <h2 class="section-title">よくある<span class="accent">ご質問</span></h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item fade-in">
+        <div class="faq-q">
+          <span>特別なスキルや経験は必要ですか？</span>
+          <span class="faq-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </div>
+        <div class="faq-a"><p>いいえ、特別なスキルは不要です。日本語が読めて、「どちらが良いか」を判断できれば誰でも始められます。チュートリアルも用意しているのでご安心ください。</p></div>
+      </div>
+      <div class="faq-item fade-in">
+        <div class="faq-q">
+          <span>報酬の支払いはどのように行われますか？</span>
+          <span class="faq-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </div>
+        <div class="faq-a"><p>月末締め・翌月15日払いです。銀行振込でお支払いします。最低支払額は1,000円からとなっています。</p></div>
+      </div>
+      <div class="faq-item fade-in">
+        <div class="faq-q">
+          <span>1日どれくらい作業すればいいですか？</span>
+          <span class="faq-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </div>
+        <div class="faq-a"><p>ノルマは一切ありません。1日5分でも、数時間でも、あなたのペースで自由に作業できます。タスクは常に用意されているので、好きな時に取り組んでください。</p></div>
+      </div>
+      <div class="faq-item fade-in">
+        <div class="faq-q">
+          <span>Trust Scoreとは何ですか？</span>
+          <span class="faq-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </div>
+        <div class="faq-a"><p>あなたの判断の正確さを測る独自のスコアです。正確な判断を続けるとスコアが上がり、ランクアップ・高単価タスクの解放につながります。スコアはダッシュボードでいつでも確認できます。</p></div>
+      </div>
+      <div class="faq-item fade-in">
+        <div class="faq-q">
+          <span>退会はいつでもできますか？</span>
+          <span class="faq-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </div>
+        <div class="faq-a"><p>はい、いつでも退会可能です。退会手数料や違約金は一切かかりません。未払いの報酬は退会後も指定の口座にお支払いします。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="cta">
+  <div class="container">
+    <div class="cta-box fade-in">
+      <div class="section-label" style="justify-content:center">GET STARTED</div>
+      <h2>あなたの判断力を、<span class="accent">価値に変えよう。</span></h2>
+      <p>登録は無料。今日からAI品質の向上に貢献しながら、<br>新しい収入を手に入れましょう。</p>
+      <a href="#" class="cta-register">今すぐ無料登録する</a>
+      <p class="cta-sub">登録は1分で完了 / クレジットカード不要 / いつでも退会可能</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="#">利用規約</a>
+    <a href="#">プライバシーポリシー</a>
+    <a href="#">特定商取引法に基づく表記</a>
+  </div>
+  <div class="footer-logo">JUDGEMENT</div>
+  <p>&copy; 2026 JUDGEMENT - Human Decision Infrastructure. All rights reserved.</p>
+</footer>
+
+<script>
+// パーティクル背景
+(function(){
+  const c=document.getElementById('particles'),ctx=c.getContext('2d');
+  let w,h,pts=[];
+  function resize(){w=c.width=innerWidth;h=c.height=innerHeight}
+  resize();window.addEventListener('resize',resize);
+  class P{
+    constructor(){this.reset()}
+    reset(){this.x=Math.random()*w;this.y=Math.random()*h;this.vx=(Math.random()-0.5)*0.3;
+      this.vy=(Math.random()-0.5)*0.3;this.r=Math.random()*1.5+0.5;this.a=Math.random()*0.3+0.05;
+      const colors=['0,180,255','0,232,255','139,92,246'];
+      this.color=colors[Math.floor(Math.random()*colors.length)]}
+    update(){this.x+=this.vx;this.y+=this.vy;
+      if(this.x<0||this.x>w)this.vx*=-1;if(this.y<0||this.y>h)this.vy*=-1}
+    draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${this.color},${this.a})`;ctx.fill()}
+  }
+  for(let i=0;i<80;i++)pts.push(new P());
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    pts.forEach(p=>{p.update();p.draw()});
+    for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+      const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<150){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
+        ctx.strokeStyle=`rgba(0,180,255,${0.03*(1-d/150)})`;ctx.stroke()}}
+    requestAnimationFrame(draw)}
+  draw()
+})();
+
+// スクロールフェードイン
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})
+},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+// ナビスクロール
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>50)
+});
+
+// FAQ
+document.querySelectorAll('.faq-q').forEach(q=>{
+  q.addEventListener('click',()=>{
+    const item=q.parentElement;
+    document.querySelectorAll('.faq-item').forEach(i=>{if(i!==item)i.classList.remove('open')});
+    item.classList.toggle('open')})
+});
+</script>
+</body>
+</html>

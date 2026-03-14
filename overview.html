@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JUDGEMENT - Human Decision Infrastructure | Business Overview</title>
+<meta name="description" content="JUDGEMENT - AI時代の人間意思決定インフラ。判断データを生成・検証・API化するインフラ企業。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@100;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+@property --angle{syntax:"<angle>";initial-value:0deg;inherits:false}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#060918;--bg2:#0A0E27;--accent:#00B4FF;--secondary:#00E8FF;
+--purple:#8B5CF6;--success:#00D9A3;--warning:#FFB800;--error:#FF4757;
+--glass:rgba(10,14,39,0.6);--glass2:rgba(0,180,255,0.08);
+--border:rgba(0,180,255,0.15);--border2:rgba(0,180,255,0.3);
+--text:#e0e6ff;--text2:#8892b0;--text3:rgba(80,100,150,0.5);
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);
+overflow-x:hidden;line-height:1.6;
+}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(0,180,255,0.15);border-radius:3px}
+
+/* ===== Canvas背景 ===== */
+canvas#bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ===== ネビュラ背景 ===== */
+body::before{
+content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
+background:
+radial-gradient(ellipse 80% 50% at 20% 30%,rgba(139,92,246,0.10) 0%,transparent 60%),
+radial-gradient(ellipse 60% 40% at 80% 20%,rgba(0,180,255,0.08) 0%,transparent 50%),
+radial-gradient(ellipse 70% 60% at 50% 80%,rgba(0,232,255,0.05) 0%,transparent 50%);
+animation:nebulaDrift 30s ease-in-out infinite alternate;
+}
+@keyframes nebulaDrift{
+0%{filter:hue-rotate(0deg) brightness(1)}
+50%{filter:hue-rotate(15deg) brightness(1.1)}
+100%{filter:hue-rotate(-10deg) brightness(1)}
+}
+
+/* ===== スキャンライン ===== */
+.scanline{position:fixed;inset:0;z-index:2;pointer-events:none;
+background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,180,255,0.008) 2px,rgba(0,180,255,0.008) 4px);
+mix-blend-mode:overlay}
+
+/* ===== スキャンビーム ===== */
+.scan-beam{position:fixed;left:0;right:0;height:120px;z-index:3;pointer-events:none;
+background:linear-gradient(180deg,transparent,rgba(0,180,255,0.02),transparent);
+animation:scanBeam 8s ease-in-out infinite}
+@keyframes scanBeam{0%{top:-120px}50%{top:100vh}100%{top:-120px}}
+
+/* ===== トップネオンバー ===== */
+.neon-bar{position:fixed;top:0;left:0;right:0;height:1px;z-index:99;
+background:linear-gradient(90deg,transparent,var(--accent) 30%,#fff 50%,var(--secondary) 70%,transparent);
+box-shadow:0 0 40px rgba(0,180,255,0.35),0 0 80px rgba(0,180,255,0.12)}
+
+/* ===== ナビゲーション ===== */
+nav{
+position:fixed;top:1px;left:0;right:0;z-index:1000;
+background:rgba(6,9,24,0.88);backdrop-filter:blur(20px);
+border-bottom:1px solid var(--border);padding:0 1.5rem;
+transition:transform 0.4s ease;
+}
+nav.hidden{transform:translateY(-100%)}
+.nav-inner{
+max-width:1200px;margin:0 auto;display:flex;align-items:center;
+justify-content:space-between;height:56px;
+}
+.nav-logo{
+font-family:'Orbitron',sans-serif;font-weight:900;font-size:1.1rem;
+background:linear-gradient(135deg,var(--accent),var(--secondary));
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+cursor:pointer;letter-spacing:3px;
+}
+.nav-links{display:flex;gap:0.2rem;overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{
+font-family:'Rajdhani',sans-serif;font-size:0.7rem;font-weight:600;
+color:var(--text2);text-decoration:none;padding:0.35rem 0.5rem;
+border-radius:4px;white-space:nowrap;transition:all 0.3s;
+letter-spacing:0.5px;text-transform:uppercase;position:relative;
+}
+.nav-links a:hover,.nav-links a.active{color:var(--accent);background:var(--glass2)}
+.nav-links a::after{
+content:'';position:absolute;bottom:0;left:50%;width:0;height:2px;
+background:var(--accent);box-shadow:0 0 6px var(--accent);
+transition:all 0.4s cubic-bezier(0.16,1,0.3,1);transform:translateX(-50%);
+}
+.nav-links a:hover::after{width:80%}
+
+/* ===== メインコンテンツ ===== */
+main{position:relative;z-index:10}
+
+/* ===== セクション共通 ===== */
+.section{
+min-height:100vh;display:flex;align-items:center;justify-content:center;
+padding:100px 1.5rem;position:relative;
+}
+.section-inner{max-width:1100px;width:100%;margin:0 auto}
+.section-label{
+font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:var(--accent);
+letter-spacing:4px;text-transform:uppercase;margin-bottom:0.75rem;
+display:flex;align-items:center;gap:0.6rem;
+}
+.section-label::before{content:'';width:30px;height:1px;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.section-title{
+font-family:'Orbitron',sans-serif;font-size:clamp(1.6rem,4vw,2.8rem);
+font-weight:900;margin-bottom:1rem;
+background:linear-gradient(135deg,#fff 0%,var(--text) 100%);
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+line-height:1.3;
+}
+.section-desc{color:var(--text2);font-size:1.05rem;max-width:700px;margin-bottom:2.5rem;line-height:1.8}
+
+/* ===== セクション区切り ===== */
+.divider{
+position:relative;width:100%;height:3px;
+background:linear-gradient(90deg,transparent,var(--accent),var(--secondary),var(--accent),transparent);
+opacity:0.4;
+}
+.divider::before{
+content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+width:8px;height:8px;border-radius:50%;background:var(--accent);
+box-shadow:0 0 15px var(--accent),0 0 30px var(--accent);
+animation:divPulse 2s ease-in-out infinite;
+}
+@keyframes divPulse{
+0%,100%{box-shadow:0 0 10px var(--accent),0 0 20px var(--accent);transform:translate(-50%,-50%) scale(1)}
+50%{box-shadow:0 0 20px var(--accent),0 0 40px var(--accent);transform:translate(-50%,-50%) scale(1.5)}
+}
+
+/* ===== ガラスカード ===== */
+.glass{
+background:var(--glass);backdrop-filter:blur(12px);
+border:1px solid var(--border);border-radius:16px;
+padding:1.8rem;position:relative;overflow:hidden;transition:all 0.4s ease;
+}
+.glass::before{
+content:'';position:absolute;inset:0;border-radius:16px;
+background:linear-gradient(135deg,rgba(0,180,255,0.05),transparent 60%);pointer-events:none;
+}
+.glass::after{
+content:'';position:absolute;inset:0;border-radius:16px;
+background:linear-gradient(105deg,transparent 40%,rgba(0,180,255,0.06) 45%,rgba(0,232,255,0.08) 50%,rgba(139,92,246,0.06) 55%,transparent 60%);
+background-size:200% 200%;pointer-events:none;opacity:0;transition:opacity 0.4s;
+}
+.glass:hover::after{opacity:1;animation:holoShimmer 1.5s ease infinite}
+@keyframes holoShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.glass:hover{
+border-color:rgba(0,180,255,0.4);
+box-shadow:0 0 30px rgba(0,180,255,0.12),0 0 60px rgba(0,180,255,0.06),inset 0 0 30px rgba(0,180,255,0.02);
+transform:translateY(-4px);
+}
+
+/* ===== フェードインアニメーション ===== */
+.fade-in{opacity:0;transform:translateY(40px);transition:all 0.9s cubic-bezier(0.16,1,0.3,1)}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+.fade-in-left{opacity:0;transform:translateX(-50px);transition:all 0.9s cubic-bezier(0.16,1,0.3,1)}
+.fade-in-left.visible{opacity:1;transform:translateX(0)}
+.fade-in-right{opacity:0;transform:translateX(50px);transition:all 0.9s cubic-bezier(0.16,1,0.3,1)}
+.fade-in-right.visible{opacity:1;transform:translateX(0)}
+
+/* ===== グリッド ===== */
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem}
+
+/* ===== ヒーローセクション ===== */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;padding:2rem}
+.hero-content{position:relative;z-index:10}
+.hero-hex{
+width:120px;height:120px;margin:0 auto 2rem;position:relative;
+display:flex;align-items:center;justify-content:center;
+}
+.hero-hex-ring{
+position:absolute;width:100%;height:100%;
+clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+background:conic-gradient(from var(--angle),var(--accent),var(--secondary),var(--purple),#FF00FF,var(--accent));
+animation:hexSpin 4s linear infinite;opacity:0.5;
+}
+.hero-hex-ring.r2{
+width:90%;height:90%;
+background:conic-gradient(from calc(var(--angle) + 180deg),var(--secondary),var(--success),var(--accent),var(--secondary));
+animation:hexSpin 6s linear infinite reverse;opacity:0.3;
+}
+@keyframes hexSpin{to{--angle:360deg}}
+.hero-hex-core{
+position:absolute;width:80%;height:80%;background:var(--bg);
+clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+}
+.hero-hex-letter{
+position:relative;z-index:2;font-family:'Orbitron';font-size:42px;font-weight:900;
+background:linear-gradient(135deg,var(--accent),var(--secondary),var(--success));
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+filter:drop-shadow(0 0 20px rgba(0,180,255,0.5));
+}
+.hero-title{
+font-family:'Orbitron',sans-serif;font-size:clamp(2.2rem,6vw,4.5rem);
+font-weight:900;letter-spacing:6px;margin-bottom:0.5rem;
+background:linear-gradient(90deg,var(--accent),var(--secondary),#fff,var(--secondary),var(--accent));
+background-size:300% 100%;
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+animation:titleShimmer 5s linear infinite;
+filter:drop-shadow(0 0 10px rgba(0,180,255,0.3));
+}
+@keyframes titleShimmer{0%{background-position:100% 0}100%{background-position:-200% 0}}
+.hero-subtitle{
+font-family:'Share Tech Mono',monospace;font-size:clamp(0.85rem,2vw,1.15rem);
+color:var(--secondary);letter-spacing:6px;text-transform:uppercase;
+margin-bottom:2rem;opacity:0.9;
+}
+.hero-desc{
+font-size:clamp(1rem,1.8vw,1.2rem);color:var(--text2);max-width:700px;
+margin:0 auto 3rem;line-height:1.9;
+}
+.hero-badge{
+display:inline-flex;align-items:center;gap:8px;
+font-family:'Share Tech Mono',monospace;font-size:0.75rem;
+color:var(--success);letter-spacing:2px;
+padding:8px 20px;border-radius:30px;
+background:rgba(0,217,163,0.06);border:1px solid rgba(0,217,163,0.2);
+}
+.hero-badge-dot{
+width:6px;height:6px;border-radius:50%;background:var(--success);
+box-shadow:0 0 10px var(--success);
+animation:badgePulse 2s ease-in-out infinite;
+}
+@keyframes badgePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(1.5)}}
+
+.hero-particles{position:absolute;inset:0;overflow:hidden;z-index:1}
+.hero-particle{
+position:absolute;border-radius:50%;background:var(--accent);opacity:0;
+animation:particleFloat linear infinite;
+}
+@keyframes particleFloat{
+0%{transform:translateY(100vh) scale(0);opacity:0}
+10%{opacity:0.6}
+90%{opacity:0.2}
+100%{transform:translateY(-20vh) scale(0.3);opacity:0}
+}
+.hero-scroll-hint{
+position:absolute;bottom:40px;left:50%;transform:translateX(-50%);
+display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.hero-scroll-hint span{font-family:'Share Tech Mono';font-size:0.65rem;color:var(--text3);letter-spacing:3px}
+.scroll-arrow{
+width:20px;height:20px;border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);
+transform:rotate(45deg);opacity:0.5;animation:scrollArrow 2s ease-in-out infinite;
+}
+@keyframes scrollArrow{0%,100%{opacity:0.3;transform:rotate(45deg) translateY(0)}50%{opacity:1;transform:rotate(45deg) translateY(6px)}}
+
+/* ===== Problem ===== */
+.problem-card{padding:2rem;text-align:center}
+.problem-icon{
+font-size:2rem;margin-bottom:1rem;
+filter:drop-shadow(0 0 12px currentColor);
+}
+.problem-card h3{
+font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;
+color:#fff;margin-bottom:0.6rem;
+}
+.problem-card p{color:var(--text2);font-size:0.92rem;line-height:1.7}
+
+/* ===== Solution ===== */
+.solution-highlight{
+font-family:'Orbitron',sans-serif;font-size:clamp(1rem,2vw,1.3rem);
+color:var(--secondary);margin-bottom:2rem;line-height:1.6;
+text-shadow:0 0 20px rgba(0,232,255,0.3);
+}
+.solution-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.solution-card{padding:2rem;text-align:center}
+.solution-num{
+font-family:'Orbitron',sans-serif;font-size:2.5rem;font-weight:900;
+background:linear-gradient(135deg,var(--accent),var(--secondary));
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+filter:drop-shadow(0 0 15px rgba(0,180,255,0.4));
+margin-bottom:0.5rem;
+}
+.solution-card h3{
+font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;
+color:#fff;margin-bottom:0.6rem;
+}
+.solution-card p{color:var(--text2);font-size:0.92rem;line-height:1.7}
+
+/* ===== Business Model ===== */
+.bm-layers{display:flex;flex-direction:column;gap:1.5rem;margin-bottom:3rem}
+.bm-layer{
+display:flex;align-items:center;gap:2rem;padding:2rem;
+position:relative;
+}
+.bm-layer-num{
+font-family:'Orbitron',sans-serif;font-size:3rem;font-weight:900;
+opacity:0.15;position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);
+}
+.bm-layer-icon{
+width:60px;height:60px;border-radius:12px;
+display:flex;align-items:center;justify-content:center;
+font-size:1.5rem;flex-shrink:0;
+}
+.bm-layer-content{flex:1}
+.bm-layer-content h3{
+font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;
+color:#fff;margin-bottom:0.3rem;
+}
+.bm-layer-content .bm-tag{
+font-family:'Share Tech Mono',monospace;font-size:0.72rem;
+padding:2px 10px;border-radius:12px;margin-left:0.5rem;
+}
+.bm-layer-content p{color:var(--text2);font-size:0.95rem;line-height:1.7}
+
+.bm-layer.l1 .bm-layer-icon{background:rgba(0,180,255,0.12);border:1px solid rgba(0,180,255,0.3);color:var(--accent)}
+.bm-layer.l1 .bm-tag{background:rgba(0,180,255,0.12);color:var(--accent);border:1px solid rgba(0,180,255,0.2)}
+.bm-layer.l1 .bm-layer-num{color:var(--accent)}
+
+.bm-layer.l2 .bm-layer-icon{background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.3);color:var(--purple)}
+.bm-layer.l2 .bm-tag{background:rgba(139,92,246,0.12);color:var(--purple);border:1px solid rgba(139,92,246,0.2)}
+.bm-layer.l2 .bm-layer-num{color:var(--purple)}
+
+.bm-layer.l3 .bm-layer-icon{background:rgba(0,217,163,0.12);border:1px solid rgba(0,217,163,0.3);color:var(--success)}
+.bm-layer.l3 .bm-tag{background:rgba(0,217,163,0.12);color:var(--success);border:1px solid rgba(0,217,163,0.2)}
+.bm-layer.l3 .bm-layer-num{color:var(--success)}
+
+/* フライホイール */
+.flywheel{
+display:flex;align-items:center;justify-content:center;
+padding:3rem;position:relative;
+}
+.flywheel-ring{
+width:300px;height:300px;border-radius:50%;position:relative;
+border:2px solid var(--border);
+animation:flywheelSpin 20s linear infinite;
+}
+.flywheel-node{
+position:absolute;
+width:100px;padding:10px;text-align:center;
+font-family:'Share Tech Mono',monospace;font-size:0.7rem;
+background:var(--glass);border:1px solid var(--border);
+border-radius:8px;color:var(--text);
+transform:translate(-50%,-50%);
+}
+.flywheel-node:nth-child(1){top:0;left:50%;color:var(--accent)}
+.flywheel-node:nth-child(2){top:50%;left:100%;color:var(--purple)}
+.flywheel-node:nth-child(3){top:100%;left:50%;color:var(--success)}
+.flywheel-node:nth-child(4){top:50%;left:0;color:var(--warning)}
+.flywheel-arrow{
+position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+font-family:'Orbitron',sans-serif;font-size:0.65rem;font-weight:700;
+color:var(--accent);text-align:center;
+background:var(--bg);padding:12px;border-radius:50%;
+width:80px;height:80px;display:flex;align-items:center;justify-content:center;
+border:1px solid var(--border);
+}
+@keyframes flywheelSpin{
+0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}
+}
+.flywheel-node{animation:flywheelCounter 20s linear infinite}
+@keyframes flywheelCounter{
+0%{transform:translate(-50%,-50%) rotate(0deg)}
+100%{transform:translate(-50%,-50%) rotate(-360deg)}
+}
+
+/* ===== Market ===== */
+.market-bars{display:flex;align-items:flex-end;justify-content:center;gap:2.5rem;margin:3rem 0;min-height:280px}
+.market-bar{display:flex;flex-direction:column;align-items:center;gap:1rem}
+.market-bar-fill{
+width:100px;border-radius:12px 12px 4px 4px;position:relative;
+transition:height 1.5s cubic-bezier(0.16,1,0.3,1);
+overflow:hidden;
+}
+.market-bar-fill::after{
+content:'';position:absolute;inset:0;
+background:linear-gradient(180deg,rgba(255,255,255,0.1),transparent);
+}
+.market-bar-fill.tam{background:linear-gradient(180deg,var(--accent),rgba(0,180,255,0.3))}
+.market-bar-fill.sam{background:linear-gradient(180deg,var(--purple),rgba(139,92,246,0.3))}
+.market-bar-fill.som{background:linear-gradient(180deg,var(--success),rgba(0,217,163,0.3))}
+.market-bar-value{
+font-family:'Orbitron',sans-serif;font-size:clamp(1.5rem,3vw,2rem);font-weight:900;
+}
+.market-bar-label{
+font-family:'Share Tech Mono',monospace;font-size:0.75rem;
+color:var(--text2);letter-spacing:2px;
+}
+.market-bar-desc{font-size:0.82rem;color:var(--text2);text-align:center;max-width:120px}
+.market-growth{
+text-align:center;margin-top:2rem;
+font-family:'Share Tech Mono',monospace;
+}
+.market-growth-num{
+font-family:'Orbitron',sans-serif;font-size:2.5rem;font-weight:900;
+background:linear-gradient(135deg,var(--warning),#FF6B00);
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+filter:drop-shadow(0 0 15px rgba(255,184,0,0.4));
+}
+
+/* ===== Competitive Advantage ===== */
+.adv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem}
+.adv-card{padding:2rem;position:relative}
+.adv-card-num{
+font-family:'Orbitron',sans-serif;font-size:4rem;font-weight:900;
+position:absolute;top:1rem;right:1.5rem;opacity:0.06;
+}
+.adv-card h3{
+font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;
+color:#fff;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.5rem;
+}
+.adv-card h3 .adv-dot{
+width:8px;height:8px;border-radius:50%;flex-shrink:0;
+}
+.adv-card p{color:var(--text2);font-size:0.92rem;line-height:1.8}
+
+/* ===== Products & Pricing ===== */
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.price-card{padding:2rem;text-align:center;position:relative}
+.price-card.featured{border-color:var(--accent);box-shadow:0 0 30px rgba(0,180,255,0.1)}
+.price-card.featured::before{
+content:'RECOMMENDED';position:absolute;top:-1px;left:50%;transform:translateX(-50%);
+font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:3px;
+color:var(--bg);background:linear-gradient(90deg,var(--accent),var(--secondary));
+padding:2px 16px;border-radius:0 0 8px 8px;
+}
+.price-tier{
+font-family:'Share Tech Mono',monospace;font-size:0.7rem;
+color:var(--accent);letter-spacing:3px;margin-bottom:0.5rem;
+}
+.price-name{
+font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;
+color:#fff;margin-bottom:0.3rem;
+}
+.price-desc{color:var(--text2);font-size:0.85rem;margin-bottom:1.5rem;min-height:40px}
+.price-range{
+font-family:'Orbitron',sans-serif;font-size:clamp(1.3rem,2.5vw,1.8rem);font-weight:900;
+margin-bottom:0.3rem;
+}
+.price-unit{
+font-family:'Share Tech Mono',monospace;font-size:0.7rem;
+color:var(--text2);margin-bottom:1.5rem;
+}
+.price-features{list-style:none;text-align:left}
+.price-features li{
+padding:0.5rem 0;border-bottom:1px solid rgba(0,180,255,0.06);
+color:var(--text2);font-size:0.88rem;display:flex;align-items:center;gap:0.5rem;
+}
+.price-features li::before{
+content:'\25C6';font-size:0.5rem;color:var(--accent);
+}
+
+/* ===== Traction ===== */
+.traction-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.traction-card{padding:2rem;text-align:center}
+.traction-icon{font-size:2rem;margin-bottom:1rem;color:var(--accent)}
+.traction-status{
+font-family:'Share Tech Mono',monospace;font-size:0.7rem;
+padding:3px 12px;border-radius:12px;display:inline-block;margin-bottom:1rem;
+}
+.traction-status.done{background:rgba(0,217,163,0.1);color:var(--success);border:1px solid rgba(0,217,163,0.2)}
+.traction-status.progress{background:rgba(0,180,255,0.1);color:var(--accent);border:1px solid rgba(0,180,255,0.2)}
+.traction-card h3{
+font-family:'Orbitron',sans-serif;font-size:0.95rem;font-weight:700;
+color:#fff;margin-bottom:0.5rem;
+}
+.traction-card p{color:var(--text2);font-size:0.88rem;line-height:1.7}
+
+/* ===== Roadmap ===== */
+.roadmap{position:relative;padding-left:3rem}
+.roadmap::before{
+content:'';position:absolute;left:12px;top:0;bottom:0;width:2px;
+background:linear-gradient(180deg,var(--accent),var(--purple),var(--success),var(--warning));
+}
+.roadmap-item{position:relative;margin-bottom:2.5rem;padding-left:1rem}
+.roadmap-dot{
+position:absolute;left:-3rem;top:0.3rem;width:24px;height:24px;
+border-radius:50%;display:flex;align-items:center;justify-content:center;
+font-family:'Orbitron',sans-serif;font-size:0.5rem;font-weight:900;
+}
+.roadmap-item:nth-child(1) .roadmap-dot{background:rgba(0,180,255,0.15);border:2px solid var(--accent);color:var(--accent)}
+.roadmap-item:nth-child(2) .roadmap-dot{background:rgba(139,92,246,0.15);border:2px solid var(--purple);color:var(--purple)}
+.roadmap-item:nth-child(3) .roadmap-dot{background:rgba(0,217,163,0.15);border:2px solid var(--success);color:var(--success)}
+.roadmap-item:nth-child(4) .roadmap-dot{background:rgba(255,184,0,0.15);border:2px solid var(--warning);color:var(--warning)}
+.roadmap-item:nth-child(5) .roadmap-dot{background:rgba(255,71,87,0.15);border:2px solid var(--error);color:var(--error)}
+.roadmap-period{
+font-family:'Share Tech Mono',monospace;font-size:0.75rem;
+letter-spacing:2px;margin-bottom:0.3rem;
+}
+.roadmap-title{
+font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;
+color:#fff;margin-bottom:0.3rem;
+}
+.roadmap-desc{color:var(--text2);font-size:0.9rem;line-height:1.7}
+
+/* ===== Team ===== */
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.team-card{padding:2.5rem 2rem;text-align:center}
+.team-avatar{
+width:80px;height:80px;margin:0 auto 1.2rem;border-radius:50%;
+display:flex;align-items:center;justify-content:center;
+font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:900;
+}
+.team-card:nth-child(1) .team-avatar{
+background:linear-gradient(135deg,rgba(0,180,255,0.15),rgba(0,232,255,0.08));
+border:2px solid rgba(0,180,255,0.3);color:var(--accent);
+}
+.team-card:nth-child(2) .team-avatar{
+background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(139,92,246,0.08));
+border:2px solid rgba(139,92,246,0.3);color:var(--purple);
+}
+.team-card:nth-child(3) .team-avatar{
+background:linear-gradient(135deg,rgba(0,217,163,0.15),rgba(0,217,163,0.08));
+border:2px solid rgba(0,217,163,0.3);color:var(--success);
+}
+.team-role{
+font-family:'Share Tech Mono',monospace;font-size:0.7rem;
+letter-spacing:2px;color:var(--accent);margin-bottom:0.5rem;
+}
+.team-name{
+font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;
+color:#fff;margin-bottom:0.5rem;
+}
+.team-desc{color:var(--text2);font-size:0.88rem;line-height:1.7}
+
+/* ===== Financial ===== */
+.fin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:2.5rem}
+.fin-card{padding:2.5rem 2rem;text-align:center;position:relative}
+.fin-year{
+font-family:'Share Tech Mono',monospace;font-size:0.72rem;
+letter-spacing:2px;color:var(--text2);margin-bottom:0.5rem;
+}
+.fin-value{
+font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,4vw,2.5rem);font-weight:900;
+margin-bottom:0.3rem;
+}
+.fin-card:nth-child(1) .fin-value{
+background:linear-gradient(135deg,var(--accent),var(--secondary));
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+filter:drop-shadow(0 0 15px rgba(0,180,255,0.4));
+}
+.fin-card:nth-child(2) .fin-value{
+background:linear-gradient(135deg,var(--purple),#c084fc);
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+filter:drop-shadow(0 0 15px rgba(139,92,246,0.4));
+}
+.fin-card:nth-child(3) .fin-value{
+background:linear-gradient(135deg,var(--success),#34d399);
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+filter:drop-shadow(0 0 15px rgba(0,217,163,0.4));
+}
+.fin-range{color:var(--text2);font-size:0.9rem}
+.fin-margin{
+text-align:center;padding:2rem;
+border:1px solid var(--border);border-radius:16px;
+background:var(--glass);
+}
+.fin-margin-label{
+font-family:'Share Tech Mono',monospace;font-size:0.75rem;
+color:var(--text2);letter-spacing:2px;margin-bottom:0.5rem;
+}
+.fin-margin-value{
+font-family:'Orbitron',sans-serif;font-size:2.5rem;font-weight:900;
+background:linear-gradient(135deg,var(--warning),#FF6B00);
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+filter:drop-shadow(0 0 15px rgba(255,184,0,0.4));
+}
+.fin-margin-note{color:var(--text2);font-size:0.85rem;margin-top:0.3rem}
+
+/* ===== CTA ===== */
+.cta-section{
+text-align:center;padding:6rem 1.5rem;
+background:
+radial-gradient(ellipse 80% 60% at 50% 50%,rgba(0,180,255,0.06),transparent),
+radial-gradient(ellipse 50% 40% at 30% 70%,rgba(139,92,246,0.04),transparent);
+}
+.cta-title{
+font-family:'Orbitron',sans-serif;font-size:clamp(1.5rem,4vw,2.5rem);
+font-weight:900;margin-bottom:1rem;
+background:linear-gradient(135deg,#fff,var(--text));
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.cta-desc{color:var(--text2);font-size:1.05rem;max-width:600px;margin:0 auto 2.5rem;line-height:1.8}
+.cta-buttons{display:flex;justify-content:center;gap:1.2rem;flex-wrap:wrap}
+.btn{
+font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;
+padding:14px 40px;border-radius:8px;border:none;cursor:pointer;
+letter-spacing:1px;text-decoration:none;display:inline-flex;
+align-items:center;gap:8px;transition:all 0.4s ease;position:relative;overflow:hidden;
+}
+.btn::before{
+content:'';position:absolute;inset:0;
+background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent);
+opacity:0;transition:opacity 0.3s;
+}
+.btn:hover::before{opacity:1}
+.btn-primary{
+background:linear-gradient(135deg,var(--accent),var(--secondary));
+color:var(--bg);
+box-shadow:0 0 30px rgba(0,180,255,0.3),0 0 60px rgba(0,180,255,0.1);
+}
+.btn-primary:hover{
+transform:translateY(-3px);
+box-shadow:0 0 40px rgba(0,180,255,0.4),0 0 80px rgba(0,180,255,0.15);
+}
+.btn-secondary{
+background:transparent;color:var(--accent);
+border:1px solid var(--border2);
+}
+.btn-secondary:hover{
+background:var(--glass2);transform:translateY(-3px);
+border-color:var(--accent);
+box-shadow:0 0 20px rgba(0,180,255,0.15);
+}
+
+/* ===== フッター ===== */
+footer{
+border-top:1px solid var(--border);padding:2.5rem 1.5rem;text-align:center;
+background:rgba(6,9,24,0.8);backdrop-filter:blur(12px);position:relative;z-index:10;
+}
+.footer-logo{
+font-family:'Orbitron',sans-serif;font-size:0.9rem;font-weight:900;
+background:linear-gradient(135deg,var(--accent),var(--secondary));
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+letter-spacing:3px;margin-bottom:0.5rem;
+}
+.footer-copy{
+font-family:'Share Tech Mono',monospace;font-size:0.7rem;
+color:var(--text3);letter-spacing:1px;
+}
+
+/* ===== カウントアップ ===== */
+.count-up{
+font-family:'Orbitron',sans-serif;
+font-variant-numeric:tabular-nums;
+}
+
+/* ===== レスポンシブ ===== */
+@media(max-width:1024px){
+.grid-3,.solution-grid,.price-grid,.team-grid,.traction-grid,.fin-grid{grid-template-columns:repeat(2,1fr)}
+.grid-4{grid-template-columns:repeat(2,1fr)}
+.market-bars{gap:1.5rem}
+.market-bar-fill{width:80px}
+}
+@media(max-width:768px){
+.section{padding:80px 1rem;min-height:auto}
+.grid-2,.grid-3,.grid-4,.solution-grid,.price-grid,.team-grid,.adv-grid,.traction-grid,.fin-grid{grid-template-columns:1fr}
+.bm-layer{flex-direction:column;text-align:center;gap:1rem}
+.bm-layer-num{position:static;transform:none;opacity:0.08}
+.market-bars{flex-direction:column;align-items:center;gap:2rem;min-height:auto}
+.market-bar{flex-direction:row;gap:1.5rem}
+.market-bar-fill{width:60px;height:60px !important;border-radius:12px}
+.flywheel-ring{width:220px;height:220px}
+.flywheel-node{width:80px;font-size:0.6rem;padding:6px}
+.flywheel-arrow{width:60px;height:60px;font-size:0.55rem}
+.nav-links{display:none}
+.hero-title{letter-spacing:2px}
+.roadmap{padding-left:2.5rem}
+.roadmap-dot{left:-2.5rem}
+.cta-buttons{flex-direction:column;align-items:center}
+.btn{width:100%;max-width:300px;justify-content:center}
+}
+@media(max-width:480px){
+.hero-hex{width:90px;height:90px}
+.hero-hex-letter{font-size:30px}
+.hero-title{font-size:1.8rem}
+.section{padding:60px 1rem}
+.glass{padding:1.2rem}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+<div class="scanline"></div>
+<div class="scan-beam"></div>
+<div class="neon-bar"></div>
+
+<!-- ===== ナビゲーション ===== -->
+<nav id="navbar">
+<div class="nav-inner">
+<div class="nav-logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">JUDGEMENT</div>
+<div class="nav-links">
+<a href="#problem">PROBLEM</a>
+<a href="#solution">SOLUTION</a>
+<a href="#model">MODEL</a>
+<a href="#market">MARKET</a>
+<a href="#advantage">ADVANTAGE</a>
+<a href="#products">PRODUCTS</a>
+<a href="#traction">TRACTION</a>
+<a href="#roadmap">ROADMAP</a>
+<a href="#team">TEAM</a>
+<a href="#financial">FINANCIAL</a>
+<a href="#contact">CONTACT</a>
+</div>
+</div>
+</nav>
+
+<main>
+
+<!-- ===== SECTION 1: HERO ===== -->
+<section class="hero" id="hero">
+<div class="hero-particles" id="heroParticles"></div>
+<div class="hero-content">
+<div class="hero-hex">
+<div class="hero-hex-ring"></div>
+<div class="hero-hex-ring r2"></div>
+<div class="hero-hex-core"></div>
+<div class="hero-hex-letter">J</div>
+</div>
+<h1 class="hero-title">JUDGEMENT</h1>
+<p class="hero-subtitle">Human Decision Infrastructure</p>
+<p class="hero-desc">
+人間の判断データを生成・検証・API化する<br>
+次世代インフラストラクチャ
+</p>
+<div class="hero-badge">
+<div class="hero-badge-dot"></div>
+PLATFORM OPERATIONAL
+</div>
+</div>
+<div class="hero-scroll-hint">
+<span>SCROLL</span>
+<div class="scroll-arrow"></div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== SECTION 2: PROBLEM ===== -->
+<section class="section" id="problem">
+<div class="section-inner">
+<div class="section-label fade-in">PROBLEM</div>
+<h2 class="section-title fade-in">AIの精度は、人間の判断データに依存する</h2>
+<p class="section-desc fade-in">
+AIモデルの性能向上には高品質な人間の判断データが不可欠。
+しかし、その生成と品質管理には深刻な課題が存在する。
+</p>
+<div class="grid-2">
+<div class="glass problem-card fade-in" style="transition-delay:0.1s">
+<div class="problem-icon" style="color:var(--error)">&#x25B2;</div>
+<h3>データ品質の限界</h3>
+<p>AIの精度は学習データの品質に直結する。しかし人間の判断データは主観的で、品質の定量評価が極めて困難</p>
+</div>
+<div class="glass problem-card fade-in" style="transition-delay:0.2s">
+<div class="problem-icon" style="color:var(--warning)">&#x25C6;</div>
+<h3>高コスト構造</h3>
+<p>Scale AI等の既存ソリューションは大企業向け。中堅企業やスタートアップが利用できる価格帯のサービスが不足</p>
+</div>
+<div class="glass problem-card fade-in" style="transition-delay:0.3s">
+<div class="problem-icon" style="color:var(--purple)">&#x25CF;</div>
+<h3>スケーラビリティの壁</h3>
+<p>品質を維持しながら判断データの生産量を拡大する仕組みが存在しない。品質と量のトレードオフが常に発生</p>
+</div>
+<div class="glass problem-card fade-in" style="transition-delay:0.4s">
+<div class="problem-icon" style="color:var(--accent)">&#x25A0;</div>
+<h3>日本市場の空白</h3>
+<p>日本語特化の判断データインフラは皆無。海外サービスでは日本語ニュアンスの品質担保が困難</p>
+</div>
+</div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== SECTION 3: SOLUTION ===== -->
+<section class="section" id="solution">
+<div class="section-inner">
+<div class="section-label fade-in">SOLUTION</div>
+<h2 class="section-title fade-in">品質管理された判断データ生産インフラ</h2>
+<p class="solution-highlight fade-in">
+Trust Scoreによる品質保証 &#x00D7; 3層収益モデル &#x00D7; スケーラブルな生産網
+</p>
+<div class="solution-grid">
+<div class="glass solution-card fade-in" style="transition-delay:0.1s">
+<div class="solution-num">01</div>
+<h3>品質管理エンジン</h3>
+<p>独自のTrust Scoreアルゴリズムにより、ワーカーの信頼性をリアルタイムで評価。異常検知と品質フィードバックループを自動化</p>
+</div>
+<div class="glass solution-card fade-in" style="transition-delay:0.2s">
+<div class="solution-num">02</div>
+<h3>判断データ生産網</h3>
+<p>3層のワーカーネットワークで品質とスケーラビリティを両立。専門家レビューからクラウドソーシングまで最適なリソース配分を実現</p>
+</div>
+<div class="glass solution-card fade-in" style="transition-delay:0.3s">
+<div class="solution-num">03</div>
+<h3>データAPI基盤</h3>
+<p>蓄積した判断データをAPI経由で即座に提供。標準化されたフォーマットでAIモデルへのシームレスな統合を実現</p>
+</div>
+</div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== SECTION 4: BUSINESS MODEL ===== -->
+<section class="section" id="model">
+<div class="section-inner">
+<div class="section-label fade-in">BUSINESS MODEL</div>
+<h2 class="section-title fade-in">3層収益モデル</h2>
+<p class="section-desc fade-in">
+受託から始まり、データ資産を蓄積し、高粗利APIへ進化する段階的収益構造。
+</p>
+
+<div class="bm-layers">
+<div class="glass bm-layer l1 fade-in" style="transition-delay:0.1s">
+<div class="bm-layer-icon">&#x25B6;</div>
+<div class="bm-layer-content">
+<h3>Layer 1: Decision Ops <span class="bm-tag">即売上</span></h3>
+<p>AI企業・研究機関向けの判断データ生成受託。品質管理されたアノテーション・評価・ラベリングサービスを提供</p>
+</div>
+<div class="bm-layer-num">01</div>
+</div>
+<div class="glass bm-layer l2 fade-in" style="transition-delay:0.2s">
+<div class="bm-layer-icon">&#x25C6;</div>
+<div class="bm-layer-content">
+<h3>Layer 2: Decision Dataset <span class="bm-tag">ストック収益</span></h3>
+<p>受託案件で蓄積した判断データを匿名化・標準化しデータセットとして販売。データ資産が複利的に成長</p>
+</div>
+<div class="bm-layer-num">02</div>
+</div>
+<div class="glass bm-layer l3 fade-in" style="transition-delay:0.3s">
+<div class="bm-layer-icon">&#x25CF;</div>
+<div class="bm-layer-content">
+<h3>Layer 3: Decision API <span class="bm-tag">高粗利SaaS</span></h3>
+<p>判断モデルをAPIとして提供。リアルタイムの判断支援・品質評価・合意形成をAPI一本で実現</p>
+</div>
+<div class="bm-layer-num">03</div>
+</div>
+</div>
+
+<div class="flywheel fade-in" style="transition-delay:0.4s">
+<div class="flywheel-ring">
+<div class="flywheel-node">DECISION<br>OPS</div>
+<div class="flywheel-node">DATA<br>ACCUMULATION</div>
+<div class="flywheel-node">API<br>MONETIZATION</div>
+<div class="flywheel-node">CUSTOMER<br>EXPANSION</div>
+</div>
+<div class="flywheel-arrow">FLYWHEEL</div>
+</div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== SECTION 5: MARKET ===== -->
+<section class="section" id="market">
+<div class="section-inner">
+<div class="section-label fade-in">MARKET SIZE</div>
+<h2 class="section-title fade-in">急成長するAIデータ市場</h2>
+<p class="section-desc fade-in">
+AI Training Data市場は2030年までに$15Bに到達予測。
+日本市場は先行者不在の巨大なブルーオーシャン。
+</p>
+
+<div class="market-bars fade-in" style="transition-delay:0.2s">
+<div class="market-bar">
+<div class="market-bar-fill tam" id="tamBar" style="height:0px" data-height="220"></div>
+<div class="market-bar-value count-up" style="color:var(--accent)" data-target="15" data-prefix="$" data-suffix="B">$0B</div>
+<div class="market-bar-label">TAM</div>
+<div class="market-bar-desc">AI Training Data 市場 (2030)</div>
+</div>
+<div class="market-bar">
+<div class="market-bar-fill sam" id="samBar" style="height:0px" data-height="140"></div>
+<div class="market-bar-value count-up" style="color:var(--purple)" data-target="2" data-prefix="$" data-suffix="B">$0B</div>
+<div class="market-bar-label">SAM</div>
+<div class="market-bar-desc">ラベリング・評価市場</div>
+</div>
+<div class="market-bar">
+<div class="market-bar-fill som" id="somBar" style="height:0px" data-height="70"></div>
+<div class="market-bar-value count-up" style="color:var(--success)" data-target="50" data-prefix="$" data-suffix="M">$0M</div>
+<div class="market-bar-label">SOM</div>
+<div class="market-bar-desc">日本+東南アジア初期</div>
+</div>
+</div>
+
+<div class="market-growth fade-in" style="transition-delay:0.3s">
+<div>MARKET GROWTH RATE</div>
+<div class="market-growth-num count-up" data-target="25" data-suffix="%+">0%+</div>
+<div style="color:var(--text2);font-size:0.85rem">CAGR (2024-2030)</div>
+</div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== SECTION 6: COMPETITIVE ADVANTAGE ===== -->
+<section class="section" id="advantage">
+<div class="section-inner">
+<div class="section-label fade-in">COMPETITIVE ADVANTAGE</div>
+<h2 class="section-title fade-in">4つの競争優位性</h2>
+<p class="section-desc fade-in">
+技術・ネットワーク・市場ポジション・データ資産の4軸で持続的な競争優位を構築。
+</p>
+<div class="adv-grid">
+<div class="glass adv-card fade-in" style="transition-delay:0.1s">
+<div class="adv-card-num">01</div>
+<h3><span class="adv-dot" style="background:var(--accent);box-shadow:0 0 8px var(--accent)"></span>品質管理テクノロジー</h3>
+<p>Trust Score + 異常検知アルゴリズムによる品質保証。ワーカーの信頼性をリアルタイムに定量評価し、品質のばらつきを自動制御</p>
+</div>
+<div class="glass adv-card fade-in" style="transition-delay:0.2s">
+<div class="adv-card-num">02</div>
+<h3><span class="adv-dot" style="background:var(--purple);box-shadow:0 0 8px var(--purple)"></span>3層ワーカーネットワーク</h3>
+<p>Expert / Professional / Crowd の3層構造で、案件の難易度と求められる品質レベルに応じた最適なリソース配分を実現</p>
+</div>
+<div class="glass adv-card fade-in" style="transition-delay:0.3s">
+<div class="adv-card-num">03</div>
+<h3><span class="adv-dot" style="background:var(--success);box-shadow:0 0 8px var(--success)"></span>日本語市場の先行者優位</h3>
+<p>日本語特化の判断データインフラは国内に競合不在。言語特性を深く理解した品質基準と評価体系で市場を先行獲得</p>
+</div>
+<div class="glass adv-card fade-in" style="transition-delay:0.4s">
+<div class="adv-card-num">04</div>
+<h3><span class="adv-dot" style="background:var(--warning);box-shadow:0 0 8px var(--warning)"></span>データ資産の複利効果</h3>
+<p>受託案件ごとにデータ資産が蓄積。蓄積データがAPIの価値を高め、新規受託を呼び込むフライホイールが加速的に回転</p>
+</div>
+</div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== SECTION 7: PRODUCTS & PRICING ===== -->
+<section class="section" id="products">
+<div class="section-inner">
+<div class="section-label fade-in">PRODUCTS & PRICING</div>
+<h2 class="section-title fade-in">プロダクトラインナップ</h2>
+<p class="section-desc fade-in">
+3つのプロダクトラインで、あらゆる規模のAI開発ニーズに対応。
+</p>
+<div class="price-grid">
+<div class="glass price-card fade-in" style="transition-delay:0.1s">
+<div class="price-tier" style="color:var(--accent)">LAYER 1</div>
+<div class="price-name">Decision Ops</div>
+<div class="price-desc">判断データ生成受託</div>
+<div class="price-range" style="color:var(--accent)">20万 - 300万円</div>
+<div class="price-unit">/ 案件</div>
+<ul class="price-features">
+<li>カスタムアノテーション</li>
+<li>品質管理レポート付き</li>
+<li>Trust Score保証</li>
+<li>専任PM配置</li>
+<li>NDA対応</li>
+</ul>
+</div>
+<div class="glass price-card featured fade-in" style="transition-delay:0.2s">
+<div class="price-tier" style="color:var(--purple)">LAYER 2</div>
+<div class="price-name">Decision Dataset</div>
+<div class="price-desc">構造化判断データセット</div>
+<div class="price-range" style="color:var(--purple)">30万 - 150万円</div>
+<div class="price-unit">/ データセット</div>
+<ul class="price-features">
+<li>標準化フォーマット</li>
+<li>品質メトリクス付き</li>
+<li>ドメイン別カタログ</li>
+<li>カスタム抽出対応</li>
+<li>定期更新プラン</li>
+</ul>
+</div>
+<div class="glass price-card fade-in" style="transition-delay:0.3s">
+<div class="price-tier" style="color:var(--success)">LAYER 3</div>
+<div class="price-name">Decision API</div>
+<div class="price-desc">リアルタイム判断API</div>
+<div class="price-range" style="color:var(--success)">10万 - 300万円</div>
+<div class="price-unit">/ 月額</div>
+<ul class="price-features">
+<li>RESTful API</li>
+<li>リアルタイム判断支援</li>
+<li>品質スコアリング</li>
+<li>カスタムモデル構築</li>
+<li>SLA 99.9%保証</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== SECTION 8: TRACTION ===== -->
+<section class="section" id="traction">
+<div class="section-inner">
+<div class="section-label fade-in">TRACTION</div>
+<h2 class="section-title fade-in">開発実績と進捗</h2>
+<p class="section-desc fade-in">
+プラットフォーム開発を完了し、パイロット顧客の獲得フェーズへ移行。
+</p>
+<div class="traction-grid">
+<div class="glass traction-card fade-in" style="transition-delay:0.1s">
+<div class="traction-icon">&#x2B21;</div>
+<div class="traction-status done">COMPLETED</div>
+<h3>プラットフォーム開発</h3>
+<p>判断データ生成・管理プラットフォームの設計・開発・本番デプロイを完了</p>
+</div>
+<div class="glass traction-card fade-in" style="transition-delay:0.2s">
+<div class="traction-icon">&#x2B23;</div>
+<div class="traction-status done">COMPLETED</div>
+<h3>品質管理エンジン</h3>
+<p>Trust Score算出・異常検知・品質フィードバックループの実装を完了</p>
+</div>
+<div class="glass traction-card fade-in" style="transition-delay:0.3s">
+<div class="traction-icon">&#x2B22;</div>
+<div class="traction-status progress">IN PROGRESS</div>
+<h3>パイロット顧客獲得</h3>
+<p>AI企業・研究機関へのアプローチを開始。初期案件の獲得に向けて営業活動を展開中</p>
+</div>
+</div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== SECTION 9: ROADMAP ===== -->
+<section class="section" id="roadmap">
+<div class="section-inner">
+<div class="section-label fade-in">ROADMAP</div>
+<h2 class="section-title fade-in">成長ロードマップ</h2>
+<p class="section-desc fade-in">
+段階的な事業拡大により、受託ビジネスからプラットフォームビジネスへ進化。
+</p>
+<div class="roadmap">
+<div class="roadmap-item fade-in" style="transition-delay:0.1s">
+<div class="roadmap-dot">Q1</div>
+<div class="roadmap-period" style="color:var(--accent)">Q1 2026</div>
+<div class="roadmap-title">プラットフォーム開発 / 品質基盤構築</div>
+<div class="roadmap-desc">コアプラットフォームの開発完了。Trust Score、異常検知、品質管理エンジンの実装</div>
+</div>
+<div class="roadmap-item fade-in" style="transition-delay:0.2s">
+<div class="roadmap-dot">Q2</div>
+<div class="roadmap-period" style="color:var(--purple)">Q2 2026</div>
+<div class="roadmap-title">ワーカー網構築 / 初期受注獲得</div>
+<div class="roadmap-desc">3層ワーカーネットワークの構築。パイロット顧客獲得とDecision Ops案件の受注開始</div>
+</div>
+<div class="roadmap-item fade-in" style="transition-delay:0.3s">
+<div class="roadmap-dot">Q3</div>
+<div class="roadmap-period" style="color:var(--success)">Q3 2026</div>
+<div class="roadmap-title">データセット販売開始 / API Beta</div>
+<div class="roadmap-desc">蓄積データのデータセット化と販売開始。Decision APIのベータ版をローンチ</div>
+</div>
+<div class="roadmap-item fade-in" style="transition-delay:0.4s">
+<div class="roadmap-dot">Q4</div>
+<div class="roadmap-period" style="color:var(--warning)">Q4 2026</div>
+<div class="roadmap-title">API正式版 / ARR 1億円</div>
+<div class="roadmap-desc">Decision APIの正式リリース。3層収益モデルの本格稼働とARR 1億円の達成</div>
+</div>
+<div class="roadmap-item fade-in" style="transition-delay:0.5s">
+<div class="roadmap-dot">27</div>
+<div class="roadmap-period" style="color:var(--error)">2027</div>
+<div class="roadmap-title">東南アジア展開 / Decision Exchange</div>
+<div class="roadmap-desc">東南アジア市場への展開。判断データの取引所「Decision Exchange」の構築</div>
+</div>
+</div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== SECTION 10: TEAM ===== -->
+<section class="section" id="team">
+<div class="section-inner">
+<div class="section-label fade-in">TEAM</div>
+<h2 class="section-title fade-in">チーム</h2>
+<p class="section-desc fade-in">
+AI-Powered Developmentにより、少数精鋭で大規模プロダクト開発を実現。
+</p>
+<div class="team-grid">
+<div class="glass team-card fade-in" style="transition-delay:0.1s">
+<div class="team-avatar">F</div>
+<div class="team-role">FOUNDER / CEO</div>
+<div class="team-name">Founder</div>
+<div class="team-desc">プロダクト構想・事業戦略・アーキテクチャ設計を統括。AI時代の人間意思決定インフラの構築をリード</div>
+</div>
+<div class="glass team-card fade-in" style="transition-delay:0.2s">
+<div class="team-avatar">AI</div>
+<div class="team-role">AI-POWERED DEV TEAM</div>
+<div class="team-name">AI Development Team</div>
+<div class="team-desc">AIを活用した開発体制により、通常10人規模のチームに匹敵する開発速度と品質を少数精鋭で実現</div>
+</div>
+<div class="glass team-card fade-in" style="transition-delay:0.3s">
+<div class="team-avatar">A</div>
+<div class="team-role">ADVISORY BOARD</div>
+<div class="team-name">Advisory Board</div>
+<div class="team-desc">AI・データサイエンス・事業開発の各領域における専門家アドバイザーを順次招聘予定</div>
+</div>
+</div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== SECTION 11: FINANCIAL ===== -->
+<section class="section" id="financial">
+<div class="section-inner">
+<div class="section-label fade-in">FINANCIAL PROJECTIONS</div>
+<h2 class="section-title fade-in">収益予測</h2>
+<p class="section-desc fade-in">
+3層収益モデルの段階的稼働により、Year 3でARR 10億円超を目指す。
+</p>
+<div class="fin-grid">
+<div class="glass fin-card fade-in" style="transition-delay:0.1s">
+<div class="fin-year">YEAR 1 (2026)</div>
+<div class="fin-value count-up" data-target="1.8" data-suffix="億円" data-decimal="1">0億円</div>
+<div class="fin-range">ARR 6,000万 - 1.8億円</div>
+</div>
+<div class="glass fin-card fade-in" style="transition-delay:0.2s">
+<div class="fin-year">YEAR 2 (2027)</div>
+<div class="fin-value count-up" data-target="5" data-suffix="億円">0億円</div>
+<div class="fin-range">ARR 3億 - 5億円</div>
+</div>
+<div class="glass fin-card fade-in" style="transition-delay:0.3s">
+<div class="fin-year">YEAR 3 (2028)</div>
+<div class="fin-value count-up" data-target="10" data-suffix="億円+">0億円+</div>
+<div class="fin-range">ARR 10億円+</div>
+</div>
+</div>
+<div class="fin-margin fade-in" style="transition-delay:0.4s">
+<div class="fin-margin-label">GROSS MARGIN</div>
+<div class="fin-margin-value count-up" data-target="80" data-suffix="%">0%</div>
+<div class="fin-margin-note">API比率上昇に伴い粗利率60%から80%へ改善</div>
+</div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== SECTION 12: CTA ===== -->
+<section class="section cta-section" id="contact">
+<div class="section-inner" style="text-align:center">
+<div class="section-label fade-in" style="justify-content:center">CONTACT</div>
+<h2 class="cta-title fade-in">
+人間の判断を、<br>次世代インフラに。
+</h2>
+<p class="cta-desc fade-in" style="margin-left:auto;margin-right:auto">
+JUDGEMENTは、AI時代の判断データインフラを構築するパートナーを求めています。
+事業連携、投資、その他のお問い合わせはこちらから。
+</p>
+<div class="cta-buttons fade-in" style="transition-delay:0.2s">
+<a href="mailto:contact@judgement.tech" class="btn btn-primary">お問い合わせ &#x2192;</a>
+<a href="#" class="btn btn-secondary">資料請求</a>
+</div>
+</div>
+</section>
+
+</main>
+
+<!-- ===== フッター ===== -->
+<footer>
+<div class="footer-logo">JUDGEMENT</div>
+<div class="footer-copy">&copy; 2026 JUDGEMENT Inc. All rights reserved. | Human Decision Infrastructure</div>
+</footer>
+
+<script>
+/* ===== Canvas背景（パーティクル+グリッド） ===== */
+(function(){
+const c=document.getElementById('bgCanvas');
+const ctx=c.getContext('2d');
+let w,h;
+function resize(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}
+resize();
+window.addEventListener('resize',resize);
+
+const particles=[];
+const PARTICLE_COUNT=60;
+for(let i=0;i<PARTICLE_COUNT;i++){
+particles.push({
+x:Math.random()*w,y:Math.random()*h,
+vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,
+r:Math.random()*1.5+0.3,
+o:Math.random()*0.4+0.1,
+});
+}
+
+function draw(){
+ctx.clearRect(0,0,w,h);
+
+/* グリッド */
+ctx.strokeStyle='rgba(0,180,255,0.03)';
+ctx.lineWidth=1;
+const gridSize=80;
+for(let x=0;x<w;x+=gridSize){
+ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();
+}
+for(let y=0;y<h;y+=gridSize){
+ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();
+}
+
+/* パーティクル */
+for(const p of particles){
+p.x+=p.vx;p.y+=p.vy;
+if(p.x<0)p.x=w;if(p.x>w)p.x=0;
+if(p.y<0)p.y=h;if(p.y>h)p.y=0;
+ctx.beginPath();
+ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+ctx.fillStyle=`rgba(0,180,255,${p.o})`;
+ctx.fill();
+}
+
+/* 近接パーティクル接続 */
+for(let i=0;i<particles.length;i++){
+for(let j=i+1;j<particles.length;j++){
+const dx=particles[i].x-particles[j].x;
+const dy=particles[i].y-particles[j].y;
+const dist=Math.sqrt(dx*dx+dy*dy);
+if(dist<150){
+ctx.beginPath();
+ctx.moveTo(particles[i].x,particles[i].y);
+ctx.lineTo(particles[j].x,particles[j].y);
+ctx.strokeStyle=`rgba(0,180,255,${0.06*(1-dist/150)})`;
+ctx.stroke();
+}
+}
+}
+
+requestAnimationFrame(draw);
+}
+draw();
+})();
+
+/* ===== ヒーローパーティクル ===== */
+(function(){
+const container=document.getElementById('heroParticles');
+for(let i=0;i<20;i++){
+const p=document.createElement('div');
+p.className='hero-particle';
+p.style.left=Math.random()*100+'%';
+p.style.width=p.style.height=Math.random()*3+1+'px';
+p.style.animationDuration=Math.random()*8+6+'s';
+p.style.animationDelay=Math.random()*8+'s';
+container.appendChild(p);
+}
+})();
+
+/* ===== IntersectionObserver（フェードイン） ===== */
+(function(){
+const observer=new IntersectionObserver(function(entries){
+entries.forEach(function(entry){
+if(entry.isIntersecting){
+entry.target.classList.add('visible');
+}
+});
+},{threshold:0.1,rootMargin:'0px 0px -50px 0px'});
+document.querySelectorAll('.fade-in,.fade-in-left,.fade-in-right').forEach(function(el){
+observer.observe(el);
+});
+})();
+
+/* ===== ナビゲーションアクティブ状態 ===== */
+(function(){
+const sections=document.querySelectorAll('section[id]');
+const navLinks=document.querySelectorAll('.nav-links a');
+const observer=new IntersectionObserver(function(entries){
+entries.forEach(function(entry){
+if(entry.isIntersecting){
+navLinks.forEach(function(a){a.classList.remove('active')});
+const id=entry.target.getAttribute('id');
+const link=document.querySelector('.nav-links a[href="#'+id+'"]');
+if(link)link.classList.add('active');
+}
+});
+},{threshold:0.3});
+sections.forEach(function(s){observer.observe(s)});
+})();
+
+/* ===== ナビゲーション表示/非表示 ===== */
+(function(){
+let lastScroll=0;
+const nav=document.getElementById('navbar');
+window.addEventListener('scroll',function(){
+const current=window.pageYOffset;
+if(current>100){
+if(current>lastScroll){
+nav.classList.add('hidden');
+}else{
+nav.classList.remove('hidden');
+}
+}else{
+nav.classList.remove('hidden');
+}
+lastScroll=current;
+});
+})();
+
+/* ===== カウントアップアニメーション ===== */
+(function(){
+const countElements=document.querySelectorAll('.count-up');
+const animated=new Set();
+
+function animateCount(el){
+const key=el;
+if(animated.has(key))return;
+animated.add(key);
+
+const target=parseFloat(el.dataset.target);
+const prefix=el.dataset.prefix||'';
+const suffix=el.dataset.suffix||'';
+const decimal=parseInt(el.dataset.decimal)||0;
+const duration=2000;
+const start=performance.now();
+
+function update(now){
+const elapsed=now-start;
+const progress=Math.min(elapsed/duration,1);
+const eased=1-Math.pow(1-progress,4);
+const current=target*eased;
+el.textContent=prefix+(decimal>0?current.toFixed(decimal):Math.round(current))+suffix;
+if(progress<1)requestAnimationFrame(update);
+}
+requestAnimationFrame(update);
+}
+
+const observer=new IntersectionObserver(function(entries){
+entries.forEach(function(entry){
+if(entry.isIntersecting){
+animateCount(entry.target);
+}
+});
+},{threshold:0.5});
+countElements.forEach(function(el){observer.observe(el)});
+})();
+
+/* ===== マーケットバーアニメーション ===== */
+(function(){
+const bars=document.querySelectorAll('.market-bar-fill');
+const observer=new IntersectionObserver(function(entries){
+entries.forEach(function(entry){
+if(entry.isIntersecting){
+const target=entry.target.dataset.height;
+entry.target.style.height=target+'px';
+}
+});
+},{threshold:0.3});
+bars.forEach(function(b){observer.observe(b)});
+})();
+
+/* ===== スムーズスクロール ===== */
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+a.addEventListener('click',function(e){
+e.preventDefault();
+const target=document.querySelector(this.getAttribute('href'));
+if(target){
+target.scrollIntoView({behavior:'smooth',block:'start'});
+}
+});
+});
+</script>
+</body>
+</html>
