@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JUDGEMENT - Business Plan</title>
+<title>JUDGEMENT - Human Decision Infrastructure</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
 --bg:#060918;--bg2:#0a0e27;--accent:#00B4FF;--secondary:#00E8FF;
---success:#00FFB2;--warning:#FFB800;--error:#FF4757;--purple:#8B5CF6;
+--success:#00D9A3;--warning:#FFB800;--error:#FF4757;--purple:#8B5CF6;
 --glass:rgba(10,14,39,0.6);--glass2:rgba(0,180,255,0.08);
 --border:rgba(0,180,255,0.15);--text:#e0e6ff;--text2:#8892b0;
 }
@@ -18,16 +18,19 @@ body{
 font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);
 overflow-x:hidden;line-height:1.6;
 }
+
+/* ===== Canvas背景 ===== */
+#bgCanvas{position:fixed;inset:0;z-index:-2;pointer-events:none}
+
 /* ===== 宇宙ネビュラ背景 ===== */
 body::before{
-content:'';position:fixed;inset:0;z-index:-2;
+content:'';position:fixed;inset:0;z-index:-1;
 background:
-radial-gradient(ellipse 80% 50% at 20% 30%,rgba(139,92,246,0.12) 0%,transparent 60%),
-radial-gradient(ellipse 60% 40% at 80% 20%,rgba(0,180,255,0.10) 0%,transparent 50%),
-radial-gradient(ellipse 70% 60% at 50% 80%,rgba(0,232,255,0.06) 0%,transparent 50%),
-radial-gradient(ellipse 90% 50% at 60% 50%,rgba(0,255,178,0.04) 0%,transparent 60%),
-var(--bg);
+radial-gradient(ellipse 80% 50% at 20% 30%,rgba(139,92,246,0.10) 0%,transparent 60%),
+radial-gradient(ellipse 60% 40% at 80% 20%,rgba(0,180,255,0.08) 0%,transparent 50%),
+radial-gradient(ellipse 70% 60% at 50% 80%,rgba(0,232,255,0.05) 0%,transparent 50%);
 animation:nebulaDrift 30s ease-in-out infinite alternate;
+pointer-events:none;
 }
 @keyframes nebulaDrift{
 0%{filter:hue-rotate(0deg) brightness(1)}
@@ -35,37 +38,17 @@ animation:nebulaDrift 30s ease-in-out infinite alternate;
 100%{filter:hue-rotate(-10deg) brightness(1)}
 }
 
-/* ===== スキャンラインオーバーレイ ===== */
+/* ===== スキャンライン ===== */
 .scanline-overlay{
 position:fixed;inset:0;z-index:9999;pointer-events:none;
-background:repeating-linear-gradient(
-0deg,
-transparent 0px,
-transparent 2px,
-rgba(0,180,255,0.015) 2px,
-rgba(0,180,255,0.015) 4px
-);
-}
-
-/* ===== CSSパーティクルシステム ===== */
-.particles{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
-.particle{
-position:absolute;border-radius:50%;
-animation:particleFloat linear infinite;
-}
-@keyframes particleFloat{
-0%{transform:translateY(0) translateX(0);opacity:0}
-10%{opacity:1}
-90%{opacity:1}
-100%{transform:translateY(-100vh) translateX(30px);opacity:0}
+background:repeating-linear-gradient(0deg,transparent 0px,transparent 2px,rgba(0,180,255,0.012) 2px,rgba(0,180,255,0.012) 4px);
 }
 
 /* ===== ナビゲーション ===== */
 nav{
 position:sticky;top:0;z-index:1000;
-background:rgba(6,9,24,0.85);backdrop-filter:blur(20px);
-border-bottom:1px solid var(--border);
-padding:0 1rem;
+background:rgba(6,9,24,0.88);backdrop-filter:blur(20px);
+border-bottom:1px solid var(--border);padding:0 1rem;
 }
 .nav-inner{
 max-width:1200px;margin:0 auto;display:flex;align-items:center;
@@ -76,41 +59,21 @@ font-family:'Orbitron',sans-serif;font-weight:900;font-size:1.1rem;
 background:linear-gradient(135deg,var(--accent),var(--secondary));
 -webkit-background-clip:text;-webkit-text-fill-color:transparent;
 }
-.nav-links{display:flex;gap:0.3rem;overflow-x:auto;scrollbar-width:none}
+.nav-links{display:flex;gap:0.2rem;overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap}
 .nav-links::-webkit-scrollbar{display:none}
 .nav-links a{
-font-family:'Rajdhani',sans-serif;font-size:0.75rem;font-weight:600;
-color:var(--text2);text-decoration:none;padding:0.4rem 0.6rem;
+font-family:'Rajdhani',sans-serif;font-size:0.7rem;font-weight:600;
+color:var(--text2);text-decoration:none;padding:0.35rem 0.5rem;
 border-radius:4px;white-space:nowrap;transition:all 0.3s;
-letter-spacing:0.5px;text-transform:uppercase;
-position:relative;
+letter-spacing:0.5px;text-transform:uppercase;position:relative;
 }
 .nav-links a:hover,.nav-links a.active{color:var(--accent);background:var(--glass2)}
-/* ナビネオンアンダーライン */
 .nav-links a::after{
-content:'';position:absolute;bottom:0;left:50%;
-width:0;height:2px;
-background:var(--accent);
-box-shadow:0 0 6px var(--accent),0 0 12px var(--accent);
-transition:all 0.4s cubic-bezier(0.16,1,0.3,1);
-transform:translateX(-50%);
+content:'';position:absolute;bottom:0;left:50%;width:0;height:2px;
+background:var(--accent);box-shadow:0 0 6px var(--accent);
+transition:all 0.4s cubic-bezier(0.16,1,0.3,1);transform:translateX(-50%);
 }
-.nav-links a:hover::after,.nav-links a.active::after{
-width:80%;
-box-shadow:0 0 8px var(--accent),0 0 16px var(--accent),0 2px 20px rgba(0,180,255,0.4);
-}
-/* ナビグリッチホバー */
-.nav-links a:hover{
-animation:navGlitch 0.3s ease;
-}
-@keyframes navGlitch{
-0%{transform:translate(0)}
-20%{transform:translate(-1px,1px)}
-40%{transform:translate(1px,-1px)}
-60%{transform:translate(-1px,-1px)}
-80%{transform:translate(1px,1px)}
-100%{transform:translate(0)}
-}
+.nav-links a:hover::after{width:80%;box-shadow:0 0 8px var(--accent),0 0 16px var(--accent)}
 
 /* ===== 共通 ===== */
 .container{max-width:1200px;margin:0 auto;padding:0 1.5rem}
@@ -120,9 +83,7 @@ font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--accent);
 letter-spacing:3px;text-transform:uppercase;margin-bottom:0.5rem;
 display:flex;align-items:center;gap:0.5rem;
 }
-.section-label::before{
-content:'';width:30px;height:1px;background:var(--accent);
-}
+.section-label::before{content:'';width:30px;height:1px;background:var(--accent)}
 .section-title{
 font-family:'Orbitron',sans-serif;font-size:clamp(1.5rem,4vw,2.5rem);
 font-weight:900;margin-bottom:1rem;
@@ -131,94 +92,53 @@ background:linear-gradient(135deg,#fff 0%,var(--text) 100%);
 }
 .section-desc{color:var(--text2);font-size:1.05rem;max-width:700px;margin-bottom:2.5rem}
 
-/* ===== セクション区切り: ネオンライン + パルスドット + グロー走行 ===== */
+/* ===== セクション区切り ===== */
 .section-divider{
 position:relative;width:100%;height:3px;margin:0 auto;
 background:linear-gradient(90deg,transparent,var(--accent),var(--secondary),var(--accent),transparent);
-opacity:0.5;
-overflow:visible;
+opacity:0.5;overflow:visible;
 }
 .section-divider::before{
-content:'';position:absolute;left:50%;top:50%;
-transform:translate(-50%,-50%);
-width:10px;height:10px;border-radius:50%;
-background:var(--accent);
+content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+width:10px;height:10px;border-radius:50%;background:var(--accent);
 box-shadow:0 0 15px var(--accent),0 0 30px var(--accent);
-animation:dividerPulse 2s ease-in-out infinite;
-z-index:2;
+animation:dividerPulse 2s ease-in-out infinite;z-index:2;
 }
 .section-divider::after{
-content:'';position:absolute;left:-10%;top:-4px;
-width:60px;height:11px;border-radius:50%;
+content:'';position:absolute;left:-10%;top:-4px;width:60px;height:11px;border-radius:50%;
 background:radial-gradient(ellipse,rgba(0,232,255,0.9),rgba(0,180,255,0.4),transparent 70%);
-box-shadow:0 0 20px rgba(0,232,255,0.6),0 0 40px rgba(0,180,255,0.3);
-animation:glowRun 4s ease-in-out infinite;
-z-index:1;
+box-shadow:0 0 20px rgba(0,232,255,0.6);animation:glowRun 4s ease-in-out infinite;z-index:1;
 }
 @keyframes dividerPulse{
 0%,100%{box-shadow:0 0 10px var(--accent),0 0 20px var(--accent);transform:translate(-50%,-50%) scale(1)}
 50%{box-shadow:0 0 20px var(--accent),0 0 40px var(--accent),0 0 60px rgba(0,180,255,0.3);transform:translate(-50%,-50%) scale(1.5)}
 }
-@keyframes glowRun{
-0%{left:-10%;opacity:0}
-10%{opacity:1}
-90%{opacity:1}
-100%{left:110%;opacity:0}
-}
+@keyframes glowRun{0%{left:-10%;opacity:0}10%{opacity:1}90%{opacity:1}100%{left:110%;opacity:0}}
 
-/* グラスカード + ホログラフィックシマー */
+/* ===== ガラスカード ===== */
 .glass{
 background:var(--glass);backdrop-filter:blur(12px);
 border:1px solid var(--border);border-radius:16px;
-padding:1.5rem;position:relative;overflow:hidden;
-transition:all 0.4s ease;
+padding:1.5rem;position:relative;overflow:hidden;transition:all 0.4s ease;
 }
 .glass::before{
 content:'';position:absolute;inset:0;border-radius:16px;
-background:linear-gradient(135deg,rgba(0,180,255,0.05),transparent 60%);
-pointer-events:none;
+background:linear-gradient(135deg,rgba(0,180,255,0.05),transparent 60%);pointer-events:none;
 }
 .glass::after{
 content:'';position:absolute;inset:0;border-radius:16px;
-background:linear-gradient(
-105deg,
-transparent 40%,
-rgba(0,180,255,0.06) 45%,
-rgba(0,232,255,0.08) 50%,
-rgba(139,92,246,0.06) 55%,
-transparent 60%
-);
-background-size:200% 200%;
-pointer-events:none;
-opacity:0;
-transition:opacity 0.4s;
+background:linear-gradient(105deg,transparent 40%,rgba(0,180,255,0.06) 45%,rgba(0,232,255,0.08) 50%,rgba(139,92,246,0.06) 55%,transparent 60%);
+background-size:200% 200%;pointer-events:none;opacity:0;transition:opacity 0.4s;
 }
-.glass:hover::after{
-opacity:1;
-animation:holoShimmer 1.5s ease infinite;
-}
-@keyframes holoShimmer{
-0%{background-position:200% 0}
-100%{background-position:-200% 0}
-}
+.glass:hover::after{opacity:1;animation:holoShimmer 1.5s ease infinite}
+@keyframes holoShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .glass:hover{
 border-color:rgba(0,180,255,0.5);
 box-shadow:0 0 30px rgba(0,180,255,0.15),0 0 60px rgba(0,180,255,0.08),inset 0 0 30px rgba(0,180,255,0.03);
-transform:scale(1.03);
-}
-/* conic-gradient回転ボーダー */
-.glass{--conic-angle:0deg}
-@property --conic-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
-.glass:hover{--conic-angle:360deg;animation:conicSpin 3s linear infinite}
-@keyframes conicSpin{to{--conic-angle:360deg}}
-.glass:hover{
-background-image:conic-gradient(from var(--conic-angle),
-rgba(0,180,255,0.12),rgba(139,92,246,0.12),rgba(0,255,178,0.12),
-rgba(255,184,0,0.12),rgba(255,71,87,0.08),rgba(0,180,255,0.12));
-background-origin:border-box;
+transform:translateY(-4px);
 }
 
-/* フェードインアニメーション */
+/* ===== フェードイン ===== */
 .fade-in{opacity:0;transform:translateY(30px);transition:all 0.8s cubic-bezier(0.16,1,0.3,1)}
 .fade-in.visible{opacity:1;transform:translateY(0)}
 .fade-in-left{opacity:0;transform:translateX(-40px);transition:all 0.8s cubic-bezier(0.16,1,0.3,1)}
@@ -226,21 +146,15 @@ background-origin:border-box;
 .fade-in-right{opacity:0;transform:translateX(40px);transition:all 0.8s cubic-bezier(0.16,1,0.3,1)}
 .fade-in-right.visible{opacity:1;transform:translateX(0)}
 
-/* グリッド */
+/* ===== グリッド ===== */
 .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
 .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem}
 .grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem}
 
-/* ===== ネオングロー数値 ===== */
-.neon-glow{
-text-shadow:
-0 0 7px currentColor,
-0 0 15px currentColor,
-0 0 30px currentColor,
-0 0 50px currentColor;
-}
+/* ===== ネオングロー ===== */
+.neon-glow{text-shadow:0 0 7px currentColor,0 0 15px currentColor,0 0 30px currentColor,0 0 50px currentColor}
 
-/* ===== SECTION 1: HERO ===== */
+/* ===== HERO ===== */
 #hero{
 min-height:100vh;display:flex;align-items:center;justify-content:center;
 text-align:center;padding:2rem 1.5rem;position:relative;
@@ -256,805 +170,360 @@ margin-bottom:2rem;
 width:8px;height:8px;border-radius:50%;background:var(--success);
 animation:pulse 2s infinite;
 }
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,255,178,0.5)}70%{box-shadow:0 0 0 10px rgba(0,255,178,0)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,217,163,0.5)}70%{box-shadow:0 0 0 10px rgba(0,217,163,0)}}
 
-/* HEROグリッチタイトル - 3色分離レイヤー */
 .hero-title{
-font-family:'Orbitron',sans-serif;
-font-size:clamp(3rem,10vw,7rem);font-weight:900;
+font-family:'Orbitron',sans-serif;font-size:clamp(2.8rem,9vw,6.5rem);font-weight:900;
 line-height:1;margin-bottom:1.5rem;
 background:linear-gradient(135deg,var(--accent),var(--secondary),var(--purple),var(--accent));
 background-size:300% 300%;
 -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-animation:gradientShift 6s ease infinite;
-position:relative;
+animation:gradientShift 6s ease infinite;position:relative;
 }
-/* グリッチレイヤー1: 赤シフト */
 .hero-title::before{
-content:'JUDGEMENT';
-position:absolute;left:0;top:0;right:0;
--webkit-text-fill-color:rgba(255,0,60,0.7);
-pointer-events:none;
-animation:glitch1 2.5s steps(1) infinite;
-mix-blend-mode:screen;
+content:'JUDGEMENT';position:absolute;left:0;top:0;right:0;
+-webkit-text-fill-color:rgba(255,0,60,0.6);pointer-events:none;
+animation:glitch1 2.5s steps(1) infinite;mix-blend-mode:screen;
 }
-/* グリッチレイヤー2: シアンシフト */
 .hero-title::after{
-content:'JUDGEMENT';
-position:absolute;left:0;top:0;right:0;
--webkit-text-fill-color:rgba(0,232,255,0.7);
-pointer-events:none;
-animation:glitch2 3s steps(1) infinite;
-mix-blend-mode:screen;
+content:'JUDGEMENT';position:absolute;left:0;top:0;right:0;
+-webkit-text-fill-color:rgba(0,232,255,0.6);pointer-events:none;
+animation:glitch2 3s steps(1) infinite;mix-blend-mode:screen;
 }
-/* グリッチレイヤー3: 紫シフト（span.glitch-3で実装） */
-.glitch-3{
-position:absolute;left:0;top:0;right:0;
-font-family:'Orbitron',sans-serif;
-font-size:clamp(3rem,10vw,7rem);font-weight:900;
-line-height:1;
-color:rgba(139,92,246,0.6);
-pointer-events:none;
-animation:glitch3 2.8s steps(1) infinite;
-mix-blend-mode:screen;
-}
+@keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 @keyframes glitch1{
-0%,87%{clip-path:inset(0 0 100% 0);transform:translate(0)}
-88%{clip-path:inset(10% 0 60% 0);transform:translate(-6px,2px) skewX(-12deg)}
-89%{clip-path:inset(40% 0 20% 0);transform:translate(4px,-1px) skewX(8deg)}
-90%{clip-path:inset(70% 0 5% 0);transform:translate(-3px,3px) skewX(-5deg)}
-91%{clip-path:inset(20% 0 50% 0);transform:translate(5px,-2px) skewX(10deg)}
-92%{clip-path:inset(0 0 70% 0);transform:translate(-2px,1px)}
-93%{clip-path:inset(0 0 100% 0);transform:translate(0)}
-94%,100%{clip-path:inset(0 0 100% 0);transform:translate(0)}
+0%,92%{clip-path:inset(0);transform:translate(0)}
+93%{clip-path:inset(20% 0 60% 0);transform:translate(-3px,1px)}
+94%{clip-path:inset(60% 0 10% 0);transform:translate(3px,-1px)}
+95%{clip-path:inset(40% 0 30% 0);transform:translate(-2px)}
+96%,100%{clip-path:inset(0);transform:translate(0)}
 }
 @keyframes glitch2{
-0%,84%{clip-path:inset(0 0 100% 0);transform:translate(0)}
-85%{clip-path:inset(60% 0 10% 0);transform:translate(5px,-3px) skewX(7deg)}
-86%{clip-path:inset(15% 0 55% 0);transform:translate(-4px,2px) skewX(-10deg)}
-87%{clip-path:inset(80% 0 0% 0);transform:translate(3px,1px) skewX(4deg)}
-88%{clip-path:inset(5% 0 80% 0);transform:translate(-6px,-1px) skewX(-8deg)}
-89%{clip-path:inset(35% 0 35% 0);transform:translate(2px,3px)}
-90%{clip-path:inset(0 0 100% 0);transform:translate(0)}
-91%,100%{clip-path:inset(0 0 100% 0);transform:translate(0)}
+0%,90%{clip-path:inset(0);transform:translate(0)}
+91%{clip-path:inset(30% 0 50% 0);transform:translate(3px,1px)}
+92%{clip-path:inset(70% 0 5% 0);transform:translate(-3px,-1px)}
+93%{clip-path:inset(10% 0 70% 0);transform:translate(2px)}
+94%,100%{clip-path:inset(0);transform:translate(0)}
 }
-@keyframes glitch3{
-0%,90%{clip-path:inset(0 0 100% 0);transform:translate(0)}
-91%{clip-path:inset(50% 0 20% 0);transform:translate(7px,1px) skewX(14deg)}
-92%{clip-path:inset(0% 0 70% 0);transform:translate(-5px,-2px) skewX(-6deg)}
-93%{clip-path:inset(30% 0 40% 0);transform:translate(3px,4px) skewX(9deg)}
-94%{clip-path:inset(0 0 100% 0);transform:translate(0)}
-95%,100%{clip-path:inset(0 0 100% 0);transform:translate(0)}
-}
-@keyframes gradientShift{
-0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}
-}
-.hero-tagline{
-font-family:'Rajdhani',sans-serif;font-size:clamp(1.1rem,2.5vw,1.6rem);
-color:var(--secondary);font-weight:300;letter-spacing:2px;margin-bottom:1rem;
-}
-.hero-philosophy{
-font-size:clamp(1rem,2vw,1.3rem);color:var(--text2);
-max-width:600px;margin:0 auto 2rem;font-weight:300;
-}
-.hero-philosophy strong{color:#fff;font-weight:600}
-.hero-stats{
-display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin-top:2rem;
-}
-.hero-stat{text-align:center}
-.hero-stat-value{
-font-family:'Share Tech Mono',monospace;font-size:1.8rem;
-color:var(--accent);display:block;
-text-shadow:0 0 10px rgba(0,180,255,0.5),0 0 20px rgba(0,180,255,0.3);
-}
-.hero-stat-label{font-size:0.8rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px}
-.scroll-hint{
-position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
-color:var(--text2);font-size:0.8rem;animation:float 3s ease-in-out infinite;
-}
-@keyframes float{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-10px)}}
 
-/* ===== SECTION 2: VISION ===== */
-.layer-diagram{
-display:flex;flex-direction:column;align-items:center;gap:0;
-margin:2rem 0;
+.hero-subtitle{
+font-family:'Rajdhani',sans-serif;font-size:clamp(1.1rem,3vw,1.8rem);
+font-weight:300;color:var(--text2);margin-bottom:1rem;letter-spacing:2px;
 }
+.hero-concept{
+font-family:'Share Tech Mono',monospace;font-size:clamp(0.75rem,2vw,1rem);
+color:var(--accent);letter-spacing:4px;margin-bottom:3rem;
+}
+.hero-metrics{
+display:flex;flex-wrap:wrap;justify-content:center;gap:2rem;margin-top:2rem;
+}
+.hero-metric{text-align:center}
+.hero-metric .value{
+font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);
+font-weight:900;color:var(--accent);
+}
+.hero-metric .label{
+font-family:'Share Tech Mono',monospace;font-size:0.7rem;
+color:var(--text2);letter-spacing:1px;
+}
+.hero-scroll{
+position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+}
+.hero-scroll span{font-size:0.7rem;color:var(--text2);letter-spacing:2px;font-family:'Share Tech Mono',monospace}
+.scroll-arrow{
+width:20px;height:20px;border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);
+transform:rotate(45deg);animation:scrollBounce 2s infinite;
+}
+@keyframes scrollBounce{0%,100%{transform:rotate(45deg) translate(0)}50%{transform:rotate(45deg) translate(5px,5px)}}
+
+/* ===== 3層構造図 ===== */
+.layer-stack{display:flex;flex-direction:column;gap:0;max-width:800px;margin:0 auto}
 .layer-item{
-width:100%;max-width:500px;padding:1.2rem 1.5rem;
-text-align:center;position:relative;
-border:1px solid var(--border);
+padding:2rem;border:1px solid var(--border);position:relative;
+background:var(--glass);backdrop-filter:blur(10px);
 transition:all 0.4s;
 }
-.layer-item:nth-child(1){
-background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(0,180,255,0.10));
-border-radius:16px 16px 0 0;border-bottom:none;
+.layer-item:first-child{border-radius:16px 16px 0 0}
+.layer-item:last-child{border-radius:0 0 16px 16px}
+.layer-item:hover{border-color:var(--accent);box-shadow:0 0 30px rgba(0,180,255,0.1)}
+.layer-num{
+font-family:'Orbitron',sans-serif;font-size:0.7rem;font-weight:700;
+color:var(--accent);letter-spacing:2px;margin-bottom:0.3rem;
 }
-.layer-item:nth-child(2){
-background:linear-gradient(135deg,rgba(0,180,255,0.12),rgba(0,232,255,0.08));
-border-bottom:none;
-}
-.layer-item:nth-child(3){
-background:linear-gradient(135deg,rgba(0,255,178,0.10),rgba(0,232,255,0.06));
-border-radius:0 0 16px 16px;
-}
-.layer-item:hover{transform:scale(1.03);border-color:var(--accent)}
 .layer-name{
-font-family:'Orbitron',sans-serif;font-weight:700;font-size:1.1rem;
-margin-bottom:0.3rem;
+font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;
+color:#fff;margin-bottom:0.5rem;
 }
-.layer-desc{font-size:0.9rem;color:var(--text2)}
-.layer-arrow{
-font-size:1.5rem;color:var(--accent);margin:0.3rem 0;
-}
-.evolution-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-top:2rem}
-.evo-card{
-text-align:center;padding:1.5rem 1rem;
-}
-.evo-card .evo-icon{font-size:2rem;margin-bottom:0.5rem}
-.evo-card .evo-title{
-font-family:'Orbitron',sans-serif;font-size:0.85rem;font-weight:700;
-margin-bottom:0.3rem;color:var(--accent);
-}
-.evo-card .evo-desc{font-size:0.85rem;color:var(--text2)}
-.evo-arrow{
-display:flex;align-items:center;justify-content:center;
-color:var(--accent);font-size:1.5rem;
-}
-@media(max-width:600px){.evo-arrow{transform:rotate(90deg)}}
-
-/* ===== SECTION 3: BUSINESS MODEL ===== */
-.revenue-card{padding:1.5rem;position:relative}
-.revenue-card .rev-icon{
-font-size:2rem;margin-bottom:0.8rem;display:block;
-}
-.revenue-card .rev-title{
-font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;
-margin-bottom:0.5rem;color:#fff;
-}
-.revenue-card .rev-price{
-font-family:'Share Tech Mono',monospace;font-size:0.9rem;
-color:var(--success);margin-bottom:0.5rem;
-text-shadow:0 0 8px rgba(0,255,178,0.4);
-}
-.revenue-card .rev-target{font-size:0.85rem;color:var(--text2)}
-.revenue-card .rev-tag{
-position:absolute;top:1rem;right:1rem;
-font-family:'Share Tech Mono',monospace;font-size:0.65rem;
-padding:0.2rem 0.5rem;border-radius:4px;
-background:rgba(0,180,255,0.15);color:var(--accent);
-}
-
-/* ユニットエコノミクス */
-.unit-eco{
-display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;
-justify-content:center;margin:2rem 0;
-}
-.eco-block{text-align:center;min-width:120px}
-.eco-value{
-font-family:'Share Tech Mono',monospace;font-size:2rem;font-weight:700;
-text-shadow:0 0 10px currentColor,0 0 20px currentColor;
-}
-.eco-label{font-size:0.8rem;color:var(--text2);margin-top:0.3rem}
-.eco-op{
-font-family:'Orbitron',sans-serif;font-size:1.5rem;
-color:var(--accent);
-}
-
-/* 料金プラン */
-.plan-table{width:100%;border-collapse:collapse;margin-top:2rem}
-.plan-table th{
-font-family:'Orbitron',sans-serif;font-size:0.75rem;
-color:var(--accent);text-align:left;padding:1rem;
-border-bottom:1px solid var(--border);letter-spacing:1px;
-}
-.plan-table td{
-padding:1rem;border-bottom:1px solid rgba(0,180,255,0.08);
-font-size:0.95rem;
-}
-.plan-table tr:hover td{background:var(--glass2)}
-.plan-name{font-weight:700;color:#fff}
-.plan-price{
-font-family:'Share Tech Mono',monospace;color:var(--success);font-weight:700;
-}
-.plan-badge{
-display:inline-block;padding:0.15rem 0.5rem;border-radius:4px;
-font-size:0.7rem;font-family:'Share Tech Mono',monospace;
-}
-.plan-badge.popular{background:rgba(0,180,255,0.2);color:var(--accent)}
-
-/* ===== SECTION 4: MARKET ===== */
-.market-size-display{
-text-align:center;margin:2rem 0;
-}
-.market-circle{
-width:200px;height:200px;border-radius:50%;
-border:3px solid var(--accent);
-display:flex;flex-direction:column;align-items:center;justify-content:center;
-margin:0 auto;position:relative;
-background:radial-gradient(circle,rgba(0,180,255,0.1),transparent 70%);
-box-shadow:0 0 40px rgba(0,180,255,0.15);
-}
-.market-circle .market-val{
-font-family:'Share Tech Mono',monospace;font-size:2.5rem;color:var(--accent);
-text-shadow:0 0 15px rgba(0,180,255,0.6),0 0 30px rgba(0,180,255,0.3);
-}
-.market-circle .market-unit{font-size:0.85rem;color:var(--text2)}
-
-.competitor-card{padding:1.2rem}
-.competitor-card .comp-header{
-display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem;
-}
-.competitor-card .comp-name{
-font-family:'Orbitron',sans-serif;font-size:0.9rem;font-weight:700;color:#fff;
-}
-.competitor-card .comp-val{
-font-family:'Share Tech Mono',monospace;font-size:0.85rem;color:var(--warning);
-}
-.threat-bar{
-height:4px;border-radius:2px;background:rgba(255,255,255,0.1);
-margin:0.5rem 0;overflow:hidden;
-}
-.threat-bar-fill{
-height:100%;border-radius:2px;
-transition:width 1.5s cubic-bezier(0.16,1,0.3,1);
-}
-.comp-diff{font-size:0.8rem;color:var(--text2);margin-top:0.5rem}
-.stars{color:var(--warning);font-size:0.8rem;letter-spacing:2px}
-
-/* ポジショニングマップ */
-.position-map{
-position:relative;width:100%;max-width:500px;
-aspect-ratio:1;margin:2rem auto;
-border-left:2px solid var(--border);
-border-bottom:2px solid var(--border);
-}
-.position-map .axis-label{
-font-family:'Share Tech Mono',monospace;font-size:0.7rem;
-color:var(--text2);position:absolute;
-}
-.axis-label.x-label{bottom:-1.8rem;left:50%;transform:translateX(-50%)}
-.axis-label.y-label{left:-2rem;top:50%;transform:rotate(-90deg) translateX(-50%);transform-origin:left}
-.map-dot{
-position:absolute;width:60px;height:60px;border-radius:50%;
-display:flex;align-items:center;justify-content:center;
-font-size:0.6rem;font-family:'Share Tech Mono',monospace;
-text-align:center;transition:all 0.3s;cursor:default;
-line-height:1.2;
-}
-.map-dot:hover{transform:scale(1.3);z-index:10}
-.map-dot.judgement{
-background:rgba(0,180,255,0.25);border:2px solid var(--accent);color:var(--accent);
-box-shadow:0 0 20px rgba(0,180,255,0.3);
-animation:pulse 2s infinite;
-}
-
-/* ===== SECTION 5: FINANCIAL ===== */
-.chart-container{
-position:relative;width:100%;
-background:var(--glass);backdrop-filter:blur(12px);
-border:1px solid var(--border);border-radius:16px;
-padding:1.5rem;margin:1.5rem 0;
-}
-.chart-title{
-font-family:'Orbitron',sans-serif;font-size:0.9rem;font-weight:700;
-color:#fff;margin-bottom:1rem;
-}
-canvas{width:100%!important;display:block}
-
-.zero-cost-grid{
-display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-gap:1rem;margin:1.5rem 0;
-}
-.zero-cost-item{
-text-align:center;padding:1rem;
-}
-.zero-cost-item .zc-name{font-size:0.85rem;color:var(--text2);margin-bottom:0.3rem}
-.zero-cost-item .zc-price{
-font-family:'Share Tech Mono',monospace;font-size:1.8rem;
-color:var(--success);font-weight:700;
-text-shadow:0 0 10px rgba(0,255,178,0.5),0 0 20px rgba(0,255,178,0.3);
-}
-.zero-cost-item .zc-service{font-size:0.75rem;color:var(--text2)}
-
-.kpi-table{width:100%;border-collapse:collapse;margin:1rem 0}
-.kpi-table th{
-font-family:'Share Tech Mono',monospace;font-size:0.7rem;
-color:var(--accent);text-align:left;padding:0.8rem;
-border-bottom:1px solid var(--border);
-}
-.kpi-table td{
-padding:0.8rem;font-size:0.9rem;
-border-bottom:1px solid rgba(0,180,255,0.05);
-}
-.kpi-table .kpi-val{
-font-family:'Share Tech Mono',monospace;color:var(--success);font-weight:700;
-}
-
-/* ===== SECTION 6: ROADMAP ===== */
-.timeline{
-position:relative;padding:2rem 0;
-}
-.timeline::before{
-content:'';position:absolute;left:50%;top:0;bottom:0;
-width:2px;background:linear-gradient(to bottom,transparent,var(--accent),var(--accent),transparent);
-transform:translateX(-50%);
-}
-@media(max-width:768px){
-.timeline::before{left:24px}
-}
-.timeline-item{
-position:relative;width:50%;padding:1rem 2rem;
-}
-.timeline-item:nth-child(odd){margin-left:0;text-align:right;padding-right:3rem}
-.timeline-item:nth-child(even){margin-left:50%;padding-left:3rem}
-@media(max-width:768px){
-.timeline-item,.timeline-item:nth-child(even){
-width:100%;margin-left:0;text-align:left;
-padding-left:3.5rem;padding-right:1rem;
-}
-}
-.timeline-dot{
-position:absolute;top:1.5rem;width:16px;height:16px;
-border-radius:50%;border:2px solid var(--accent);
-background:var(--bg);z-index:2;
-}
-.timeline-item:nth-child(odd) .timeline-dot{right:-8px}
-.timeline-item:nth-child(even) .timeline-dot{left:-8px}
-@media(max-width:768px){
-.timeline-item .timeline-dot,
-.timeline-item:nth-child(odd) .timeline-dot,
-.timeline-item:nth-child(even) .timeline-dot{
-left:16px;right:auto;
-}
-}
-.timeline-dot.active{
-background:var(--accent);
-animation:pulse 2s infinite;
-}
-.timeline-card{
-padding:1.2rem;
-}
-.timeline-phase{
-font-family:'Orbitron',sans-serif;font-size:0.8rem;
-color:var(--accent);font-weight:700;margin-bottom:0.3rem;
-}
-.timeline-title{
-font-family:'Orbitron',sans-serif;font-size:1rem;
-font-weight:700;color:#fff;margin-bottom:0.5rem;
-}
-.timeline-desc{font-size:0.85rem;color:var(--text2);margin-bottom:0.5rem}
-.timeline-kpi{
-font-family:'Share Tech Mono',monospace;font-size:0.75rem;
+.layer-desc{color:var(--text2);font-size:0.95rem;margin-bottom:0.5rem}
+.layer-revenue{
+font-family:'Share Tech Mono',monospace;font-size:0.85rem;
 color:var(--success);
 }
-.timeline-status{
-display:inline-block;padding:0.15rem 0.5rem;border-radius:4px;
-font-size:0.7rem;font-family:'Share Tech Mono',monospace;
-margin-top:0.5rem;
+.layer-arrow{
+text-align:center;color:var(--accent);font-size:1.2rem;
+padding:0.3rem 0;opacity:0.5;
 }
-.status-done{background:rgba(0,255,178,0.15);color:var(--success)}
-.status-active{background:rgba(0,180,255,0.15);color:var(--accent)}
-.status-upcoming{background:rgba(255,255,255,0.05);color:var(--text2)}
 
-/* ===== SECTION 7: ORGANIZATION ===== */
-.hex-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-gap:1rem;margin:2rem 0;
+/* ===== 市場 ===== */
+.tam-circle{
+display:flex;align-items:center;justify-content:center;flex-direction:column;
+position:relative;margin:2rem auto;
 }
-.hex-card{
-text-align:center;padding:1.2rem 0.8rem;
-clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-background:linear-gradient(135deg,rgba(0,180,255,0.12),rgba(139,92,246,0.08));
-min-height:160px;display:flex;flex-direction:column;
-align-items:center;justify-content:center;
-transition:all 0.4s;position:relative;
+.tam-ring{
+border-radius:50%;display:flex;align-items:center;justify-content:center;
+flex-direction:column;border:2px solid;position:relative;
 }
-.hex-card::before{
-content:'';position:absolute;inset:1px;
-clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-background:rgba(6,9,24,0.85);
-}
-.hex-card>*{position:relative;z-index:1}
-.hex-card:hover{transform:scale(1.05);filter:brightness(1.3)}
-.hex-icon{font-size:1.5rem;margin-bottom:0.3rem}
-.hex-name{
-font-family:'Orbitron',sans-serif;font-size:0.65rem;
-font-weight:700;color:var(--accent);margin-bottom:0.2rem;
-}
-.hex-role{font-size:0.7rem;color:var(--text2);line-height:1.3}
+.tam-ring.outer{width:280px;height:280px;border-color:rgba(0,180,255,0.2);background:rgba(0,180,255,0.03)}
+.tam-ring.mid{width:200px;height:200px;border-color:rgba(0,232,255,0.3);background:rgba(0,232,255,0.05)}
+.tam-ring.inner{width:120px;height:120px;border-color:rgba(0,217,163,0.4);background:rgba(0,217,163,0.08)}
+.tam-label{font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--text2)}
+.tam-val{font-family:'Orbitron',sans-serif;font-weight:700;font-size:1rem}
 
-.agent-grid{
-display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:1rem;margin-top:2rem;
+/* ===== プロダクト ===== */
+.product-card{text-align:center}
+.product-icon{
+font-size:2.5rem;margin-bottom:1rem;display:block;
+filter:drop-shadow(0 0 10px var(--accent));
 }
-.agent-card{padding:1rem;display:flex;gap:0.8rem;align-items:flex-start}
-.agent-icon{
-font-size:1.5rem;min-width:40px;height:40px;
-display:flex;align-items:center;justify-content:center;
-border-radius:8px;background:rgba(0,180,255,0.1);
+.product-name{
+font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;
+color:#fff;margin-bottom:0.5rem;
+}
+.product-price{
+font-family:'Share Tech Mono',monospace;font-size:0.85rem;
+color:var(--warning);margin-bottom:0.8rem;
+}
+
+/* ===== ロードマップ ===== */
+.timeline{position:relative;padding-left:2rem}
+.timeline::before{
+content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+background:linear-gradient(to bottom,var(--accent),var(--secondary),var(--purple));
+}
+.timeline-item{position:relative;margin-bottom:2.5rem;padding-left:1.5rem}
+.timeline-item::before{
+content:'';position:absolute;left:-2rem;top:0.5rem;
+width:14px;height:14px;border-radius:50%;
+background:var(--accent);border:3px solid var(--bg2);
+box-shadow:0 0 10px var(--accent);
+}
+.timeline-phase{
+font-family:'Orbitron',sans-serif;font-size:0.75rem;font-weight:700;
+color:var(--accent);letter-spacing:2px;margin-bottom:0.3rem;
+}
+.timeline-title{
+font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;
+color:#fff;margin-bottom:0.3rem;
+}
+.timeline-desc{color:var(--text2);font-size:0.9rem}
+.timeline-metric{
+font-family:'Share Tech Mono',monospace;font-size:0.8rem;
+color:var(--success);margin-top:0.3rem;
+}
+
+/* ===== エージェント ===== */
+.agent-card{text-align:center;padding:1.2rem}
+.agent-symbol{
+font-size:1.8rem;margin-bottom:0.5rem;display:block;
+filter:drop-shadow(0 0 8px var(--accent));
 }
 .agent-name{
-font-family:'Orbitron',sans-serif;font-size:0.75rem;
-font-weight:700;color:#fff;margin-bottom:0.2rem;
+font-family:'Orbitron',sans-serif;font-size:0.85rem;font-weight:700;
+color:var(--accent);margin-bottom:0.2rem;letter-spacing:1px;
 }
-.agent-title{
-font-family:'Share Tech Mono',monospace;font-size:0.65rem;
-color:var(--text2);margin-bottom:0.2rem;font-style:italic;
+.agent-alias{
+font-family:'Rajdhani',sans-serif;font-size:0.75rem;
+color:var(--text2);font-style:italic;margin-bottom:0.3rem;
 }
-.agent-role{font-size:0.75rem;color:var(--text2)}
+.agent-role{font-size:0.8rem;color:var(--text)}
 
-/* ===== SECTION 8: TECHNOLOGY ===== */
-.radar-container{
-position:relative;width:100%;max-width:350px;
-aspect-ratio:1;margin:1rem auto;
+/* ===== テック ===== */
+.tech-item{
+display:flex;align-items:flex-start;gap:1rem;padding:1rem;
+border-left:2px solid var(--border);transition:border-color 0.3s;
 }
-.progress-row{
-display:flex;align-items:center;gap:1rem;margin-bottom:1rem;
-}
-.progress-label{
-font-family:'Share Tech Mono',monospace;font-size:0.8rem;
-color:var(--text2);min-width:40px;
-}
-.progress-bar{
-flex:1;height:8px;border-radius:4px;
-background:rgba(255,255,255,0.06);overflow:hidden;
-}
-.progress-fill{
-height:100%;border-radius:4px;
-transition:width 1.5s cubic-bezier(0.16,1,0.3,1);
-}
-.progress-name{
-font-size:0.85rem;color:var(--text);min-width:120px;
-}
+.tech-item:hover{border-color:var(--accent)}
+.tech-icon{font-size:1.5rem;flex-shrink:0;filter:drop-shadow(0 0 6px var(--accent))}
+.tech-name{font-family:'Orbitron',sans-serif;font-size:0.9rem;font-weight:700;color:#fff;margin-bottom:0.2rem}
+.tech-desc{font-size:0.85rem;color:var(--text2)}
 
-/* ===== SECTION 9: GTM ===== */
-.pipeline{
-display:flex;align-items:center;gap:0;margin:2rem 0;
-flex-wrap:wrap;justify-content:center;
+/* ===== GTM ===== */
+.gtm-card{padding:1.2rem}
+.gtm-num{
+font-family:'Orbitron',sans-serif;font-size:2rem;font-weight:900;
+color:var(--accent);opacity:0.3;margin-bottom:0.3rem;
 }
-.pipe-stage{
-padding:1rem 1.5rem;text-align:center;
-position:relative;flex:1;min-width:100px;
-}
-.pipe-stage::after{
-content:'';position:absolute;right:-10px;top:50%;
-border:8px solid transparent;border-left:10px solid var(--accent);
-transform:translateY(-50%);
-}
-.pipe-stage:last-child::after{display:none}
-.pipe-val{
-font-family:'Share Tech Mono',monospace;font-size:2rem;
-color:var(--accent);font-weight:700;
-text-shadow:0 0 10px rgba(0,180,255,0.5),0 0 20px rgba(0,180,255,0.3);
-}
-.pipe-label{font-size:0.8rem;color:var(--text2)}
+.gtm-title{font-family:'Orbitron',sans-serif;font-size:0.9rem;font-weight:700;color:#fff;margin-bottom:0.3rem}
 
-.channel-list{
-display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-gap:0.8rem;margin:1.5rem 0;
-}
-.channel-item{
-padding:0.8rem 1rem;display:flex;align-items:center;gap:0.8rem;
-font-size:0.85rem;
-}
-.channel-icon{font-size:1.2rem}
-
-/* ===== SECTION 10: RISKS ===== */
-.risk-row{
-display:flex;align-items:center;gap:1rem;
-padding:1rem;border-bottom:1px solid rgba(0,180,255,0.05);
-}
-.risk-name{flex:1;font-size:0.9rem}
-.risk-level{width:120px}
-.risk-bar{
-height:6px;border-radius:3px;background:rgba(255,255,255,0.06);
-overflow:hidden;
-}
-.risk-fill{height:100%;border-radius:3px}
+/* ===== リスク ===== */
+.risk-item{padding:1.2rem}
 .risk-label{
 font-family:'Share Tech Mono',monospace;font-size:0.7rem;
-color:var(--text2);margin-top:0.2rem;text-align:right;
+color:var(--error);letter-spacing:1px;margin-bottom:0.3rem;
 }
-
-.moat-grid{
-display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:1rem;margin:2rem 0;
-}
-.moat-card{padding:1.2rem;text-align:center}
-.moat-icon{font-size:2rem;margin-bottom:0.5rem}
-.moat-title{
-font-family:'Orbitron',sans-serif;font-size:0.85rem;
-font-weight:700;color:var(--accent);margin-bottom:0.3rem;
-}
-.moat-desc{font-size:0.8rem;color:var(--text2)}
-
-/* ===== Footer ===== */
-footer{
-text-align:center;padding:3rem 1.5rem;
+.risk-title{font-family:'Orbitron',sans-serif;font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:0.3rem}
+.risk-counter{
+font-family:'Share Tech Mono',monospace;font-size:0.8rem;
+color:var(--success);margin-top:0.5rem;padding-top:0.5rem;
 border-top:1px solid var(--border);
 }
-footer p{font-size:0.8rem;color:var(--text2)}
-footer .foot-logo{
-font-family:'Orbitron',sans-serif;font-size:1.2rem;font-weight:900;
-color:var(--accent);margin-bottom:0.5rem;
-}
-.footer-classified{
-font-family:'Share Tech Mono',monospace;font-size:0.7rem;
-color:var(--error);letter-spacing:3px;text-transform:uppercase;
-margin-top:1rem;padding:0.5rem 1rem;
-border:1px solid rgba(255,71,87,0.3);
-display:inline-block;
-animation:classifiedPulse 3s ease-in-out infinite;
-}
-@keyframes classifiedPulse{
-0%,100%{opacity:0.7;border-color:rgba(255,71,87,0.3)}
-50%{opacity:1;border-color:rgba(255,71,87,0.6)}
-}
 
-/* ===== レスポンシブ ===== */
-@media(max-width:768px){
-section{padding:3rem 0}
-.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
-.unit-eco{flex-direction:column}
-.nav-links a{font-size:0.65rem;padding:0.3rem 0.4rem}
-.hero-stats{gap:1rem}
-.pipeline{flex-direction:column}
-.pipe-stage::after{
-right:50%;top:auto;bottom:-14px;
-border:8px solid transparent;border-top:10px solid var(--accent);
-transform:translateX(50%);
+/* ===== フッター ===== */
+footer{
+padding:3rem 0;text-align:center;
+border-top:1px solid var(--border);
+background:rgba(6,9,24,0.5);
 }
-.position-map{max-width:300px}
-.map-dot{width:45px;height:45px;font-size:0.5rem}
-.hex-grid{grid-template-columns:repeat(auto-fit,minmax(110px,1fr))}
-.plan-table{font-size:0.8rem}
-.plan-table th,.plan-table td{padding:0.6rem 0.4rem}
-.particles .particle{display:none}
-.particles .particle:nth-child(-n+15){display:block}
-}
-@media(max-width:400px){
-.container{padding:0 1rem}
-.hero-title{font-size:2.5rem}
-}
-
-/* ===== ゴーストテキスト（数値の背後） ===== */
-.ghost-num{position:relative;display:inline-block}
-.ghost-num::before{
-content:attr(data-ghost);
-position:absolute;left:3px;top:3px;
-font:inherit;color:inherit;opacity:0.12;
-filter:blur(2px);pointer-events:none;z-index:-1;
-}
-.ghost-num::after{
-content:attr(data-ghost);
-position:absolute;left:-2px;top:-2px;
-font:inherit;color:inherit;opacity:0.08;
-filter:blur(3px);pointer-events:none;z-index:-1;
-}
-
-/* ===== EXECUTIVE SUMMARY ===== */
-.exec-summary{padding:4rem 0;position:relative}
-.exec-tagline{
-font-family:'Orbitron',sans-serif;font-size:clamp(1rem,2.5vw,1.5rem);
-font-weight:700;color:#fff;text-align:center;
-max-width:800px;margin:0 auto 2.5rem;line-height:1.6;
-}
-.exec-tagline .highlight{
+.footer-logo{
+font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:900;
 background:linear-gradient(135deg,var(--accent),var(--secondary));
 -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+margin-bottom:0.5rem;
 }
-.exec-metrics{
-display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-gap:1.5rem;max-width:800px;margin:0 auto;
-}
-.exec-metric-card{
-text-align:center;padding:1.5rem 1rem;
-border:1px solid var(--border);border-radius:16px;
-background:var(--glass);backdrop-filter:blur(12px);
-position:relative;overflow:hidden;
-transition:all 0.4s;
-}
-.exec-metric-card::before{
-content:'';position:absolute;inset:0;
-background:radial-gradient(circle at 50% 0%,rgba(0,180,255,0.1),transparent 70%);
-pointer-events:none;
-}
-.exec-metric-card:hover{
-border-color:rgba(0,180,255,0.5);
-box-shadow:0 0 40px rgba(0,180,255,0.15);
-transform:translateY(-4px);
-}
-.exec-metric-val{
-font-family:'Share Tech Mono',monospace;font-size:2rem;font-weight:700;
-display:block;margin-bottom:0.3rem;
-}
-.exec-metric-label{font-size:0.8rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px}
+.footer-text{color:var(--text2);font-size:0.85rem}
 
-/* ===== TRACTION ===== */
-.traction-grid{
-display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-gap:1rem;
-}
-.traction-item{
-text-align:center;padding:1.5rem 0.8rem;
-border:1px solid var(--border);border-radius:12px;
-background:var(--glass);backdrop-filter:blur(8px);
-transition:all 0.4s;position:relative;overflow:hidden;
-}
-.traction-item::after{
-content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
-background:linear-gradient(90deg,var(--accent),var(--secondary));
-transform:scaleX(0);transition:transform 0.4s;
-}
-.traction-item:hover::after{transform:scaleX(1)}
-.traction-item:hover{transform:translateY(-3px);border-color:rgba(0,180,255,0.4)}
-.traction-val{
-font-family:'Share Tech Mono',monospace;font-size:1.8rem;font-weight:700;
-display:block;margin-bottom:0.2rem;
-}
-.traction-label{font-size:0.8rem;color:var(--text2)}
-.traction-sub{font-size:0.7rem;color:var(--text2);margin-top:0.3rem;opacity:0.7}
+/* ===== Canvas チャート ===== */
+canvas{width:100%;max-width:600px;margin:1rem auto;display:block}
 
-/* ===== PITCH DECK ===== */
-.pitch-scroll{
-display:flex;gap:1rem;overflow-x:auto;
-padding:1rem 0.5rem 1.5rem;
-scrollbar-width:thin;scrollbar-color:rgba(0,180,255,0.3) transparent;
--webkit-overflow-scrolling:touch;
-scroll-snap-type:x mandatory;
+/* ===== Financials テーブル ===== */
+.fin-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.85rem}
+.fin-table th{
+font-family:'Share Tech Mono',monospace;font-size:0.7rem;
+color:var(--accent);letter-spacing:1px;text-align:left;padding:0.7rem;
+border-bottom:1px solid var(--border);
 }
-.pitch-scroll::-webkit-scrollbar{height:4px}
-.pitch-scroll::-webkit-scrollbar-track{background:rgba(255,255,255,0.03);border-radius:2px}
-.pitch-scroll::-webkit-scrollbar-thumb{background:rgba(0,180,255,0.3);border-radius:2px}
-.pitch-card{
-min-width:200px;max-width:220px;flex-shrink:0;
-padding:1.2rem;border-radius:12px;
-border:1px solid var(--border);
-background:var(--glass);backdrop-filter:blur(10px);
-scroll-snap-align:start;
-transition:all 0.4s;position:relative;overflow:hidden;
+.fin-table td{padding:0.7rem;border-bottom:1px solid rgba(0,180,255,0.07);color:var(--text)}
+.fin-table tr:hover td{background:rgba(0,180,255,0.03)}
+
+/* ===== Traction ===== */
+.traction-stat{text-align:center;padding:1.2rem}
+.traction-num{
+font-family:'Orbitron',sans-serif;font-size:2rem;font-weight:900;
+color:var(--accent);
 }
-.pitch-card::before{
-content:'';position:absolute;top:0;left:0;right:0;height:2px;
-background:linear-gradient(90deg,var(--accent),var(--purple));
+.traction-label{font-size:0.8rem;color:var(--text2);margin-top:0.3rem}
+
+/* ===== モバイル対応 ===== */
+@media(max-width:768px){
+.nav-links{gap:0.1rem}
+.nav-links a{font-size:0.6rem;padding:0.3rem 0.35rem}
+section{padding:3rem 0}
+.hero-metrics{gap:1rem}
+.tam-ring.outer{width:220px;height:220px}
+.tam-ring.mid{width:160px;height:160px}
+.tam-ring.inner{width:100px;height:100px}
+.layer-item{padding:1.2rem}
+.grid-3{grid-template-columns:1fr}
 }
-.pitch-card:hover{
-border-color:rgba(0,180,255,0.5);
-box-shadow:0 0 30px rgba(0,180,255,0.12);
-transform:translateY(-3px);
-}
-.pitch-num{
-font-family:'Orbitron',sans-serif;font-size:0.65rem;
-color:var(--accent);margin-bottom:0.5rem;letter-spacing:2px;
-}
-.pitch-title{
-font-family:'Orbitron',sans-serif;font-size:0.85rem;
-font-weight:700;color:#fff;margin-bottom:0.5rem;
-}
-.pitch-desc{font-size:0.8rem;color:var(--text2);line-height:1.5}
-.pitch-hint{
-text-align:center;font-size:0.75rem;color:var(--text2);
-margin-top:0.5rem;font-family:'Share Tech Mono',monospace;
-animation:float 3s ease-in-out infinite;
+@media(max-width:480px){
+.hero-title{font-size:2.5rem}
+.nav-links a{font-size:0.55rem;padding:0.25rem 0.3rem}
+.hero-metric .value{font-size:1.5rem}
 }
 
-/* ===== フッターmarquee ===== */
-.agent-marquee-wrap{
-overflow:hidden;margin:1.5rem 0;position:relative;
+/* ===== カウントアップアニメーション ===== */
+@keyframes countUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== パルスボーダー ===== */
+.pulse-border{
+animation:pulseBorder 3s ease-in-out infinite;
 }
-.agent-marquee-wrap::before,.agent-marquee-wrap::after{
-content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;
+@keyframes pulseBorder{
+0%,100%{border-color:var(--border)}
+50%{border-color:rgba(0,180,255,0.5);box-shadow:0 0 20px rgba(0,180,255,0.1)}
 }
-.agent-marquee-wrap::before{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
-.agent-marquee-wrap::after{right:0;background:linear-gradient(90deg,transparent,var(--bg))}
-.agent-marquee{
-display:flex;gap:0;white-space:nowrap;
-animation:marqueeScroll 20s linear infinite;
-font-family:'Orbitron',sans-serif;font-size:0.7rem;
-letter-spacing:2px;color:var(--accent);
+
+/* ===== ワーカー層 ===== */
+.worker-tier{
+display:flex;align-items:center;gap:1rem;padding:1rem;
+border-left:3px solid var(--accent);margin-bottom:1rem;
+background:var(--glass);border-radius:0 8px 8px 0;
 }
-.agent-marquee span{
-padding:0 1rem;
-text-shadow:0 0 8px rgba(0,180,255,0.4);
+.worker-tier .tier-name{
+font-family:'Orbitron',sans-serif;font-size:0.85rem;font-weight:700;color:#fff;
+min-width:80px;
 }
-@keyframes marqueeScroll{
-0%{transform:translateX(0)}
-100%{transform:translateX(-50%)}
-}
+.worker-tier .tier-desc{font-size:0.85rem;color:var(--text2)}
 </style>
 </head>
 <body>
-
-<!-- スキャンラインオーバーレイ -->
+<canvas id="bgCanvas"></canvas>
 <div class="scanline-overlay"></div>
 
-<!-- CSSパーティクル -->
-<div class="particles" id="particles"></div>
-
-<!-- ===== ナビゲーション ===== -->
+<!-- ===== NAV ===== -->
 <nav>
 <div class="nav-inner">
 <div class="nav-logo">JUDGEMENT</div>
 <div class="nav-links">
-<a href="#hero">TOP</a>
-<a href="#exec">EXEC</a>
+<a href="#hero">HOME</a>
+<a href="#summary">SUMMARY</a>
 <a href="#vision">VISION</a>
-<a href="#business">BIZ</a>
+<a href="#model">MODEL</a>
 <a href="#market">MARKET</a>
-<a href="#financial">FINANCE</a>
+<a href="#products">PRODUCTS</a>
+<a href="#financials">FINANCIALS</a>
 <a href="#roadmap">ROADMAP</a>
 <a href="#org">ORG</a>
 <a href="#tech">TECH</a>
 <a href="#gtm">GTM</a>
 <a href="#traction">TRACTION</a>
-<a href="#risks">RISK</a>
-<a href="#pitch">PITCH</a>
+<a href="#risks">RISKS</a>
 </div>
 </div>
 </nav>
 
 <!-- ===== SECTION 1: HERO ===== -->
 <section id="hero">
-<div class="container" style="text-align:center">
-<div class="hero-badge fade-in">
-<span class="pulse"></span>
-Phase 2.1 進行中
+<div class="container" style="position:relative;z-index:1">
+<div class="hero-badge fade-in"><span class="pulse"></span> SYSTEM ONLINE</div>
+<h1 class="hero-title fade-in">JUDGEMENT</h1>
+<p class="hero-subtitle fade-in">Human Decision Infrastructure</p>
+<p class="hero-concept fade-in">// HUMAN_DECISIONS &rarr; VERIFIABLE_DATA &rarr; DECISION_MODELS</p>
+<div class="hero-metrics fade-in">
+<div class="hero-metric"><div class="value" data-count="3">3</div><div class="label">REVENUE LAYERS</div></div>
+<div class="hero-metric"><div class="value" data-count="9">9</div><div class="label">AI AGENTS</div></div>
+<div class="hero-metric"><div class="value">ARR</div><div class="label">1-5</div></div>
+<div class="hero-metric"><div class="value" data-count="90">90</div><div class="label">DAY SPRINT</div></div>
 </div>
-<h1 class="hero-title fade-in">JUDGEMENT<span class="glitch-3" aria-hidden="true">JUDGEMENT</span></h1>
-<p class="hero-tagline fade-in">Powering AI with Human Judgment</p>
-<p class="hero-philosophy fade-in">
-AIは生成できる。<br>しかし<strong>決めるのは人間だ。</strong>
-</p>
-<div class="hero-stats fade-in">
-<div class="hero-stat">
-<span class="hero-stat-value countup" data-target="11">0</span>
-<span class="hero-stat-label">AI部門</span>
+<div class="hero-scroll">
+<span>SCROLL DOWN</span>
+<div class="scroll-arrow"></div>
 </div>
-<div class="hero-stat">
-<span class="hero-stat-value countup" data-target="9">0</span>
-<span class="hero-stat-label">Agent</span>
-</div>
-<div class="hero-stat">
-<span class="hero-stat-value countup" data-target="200">0</span>
-<span class="hero-stat-label">Expert目標</span>
-</div>
-<div class="hero-stat">
-<span class="hero-stat-value">$<span class="countup" data-target="0">0</span></span>
-<span class="hero-stat-label">運営コスト</span>
-</div>
-</div>
-<div class="scroll-hint">▽ SCROLL</div>
 </div>
 </section>
 
 <div class="section-divider"></div>
 
-<!-- ===== EXECUTIVE SUMMARY ===== -->
-<section id="exec" class="exec-summary">
+<!-- ===== SECTION 2: EXECUTIVE SUMMARY ===== -->
+<section id="summary">
 <div class="container">
-<div class="section-label fade-in">EXECUTIVE SUMMARY</div>
-<h2 class="section-title fade-in">ONE LINE</h2>
-<p class="exec-tagline fade-in">
-<span class="highlight">人間の判断力</span>をインフラ化し、<br>
-すべてのAIの品質を担保する<span class="highlight">世界唯一のプラットフォーム</span>
+<p class="section-label fade-in">&#9672; EXECUTIVE SUMMARY</p>
+<h2 class="section-title fade-in">Human Decision Infrastructure</h2>
+<p class="section-desc fade-in">
+人間の判断を、検証可能なデータとモデルに変えるインフラ。<br>
+受託から始め、データを蓄積し、APIで継続課金に転換する3層収益モデル。
 </p>
-<div class="exec-metrics fade-in">
-<div class="exec-metric-card">
-<span class="exec-metric-val ghost-num" data-ghost="1兆円" style="color:var(--accent)">1兆円</span>
-<span class="exec-metric-label">TAM (AI評価市場)</span>
+<div class="grid-4 fade-in">
+<div class="glass" style="text-align:center">
+<div style="font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:900;color:var(--accent)">&#9671;</div>
+<div style="font-family:'Orbitron',sans-serif;font-size:0.85rem;font-weight:700;color:#fff;margin:0.5rem 0">Decision Ops</div>
+<div style="font-size:0.8rem;color:var(--text2)">企業の判断タスクを受託し短期売上化</div>
 </div>
-<div class="exec-metric-card">
-<span class="exec-metric-val ghost-num" data-ghost="100%" style="color:var(--success)">100%</span>
-<span class="exec-metric-label">Phase 1 完了率</span>
+<div class="glass" style="text-align:center">
+<div style="font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:900;color:var(--secondary)">&#11042;</div>
+<div style="font-family:'Orbitron',sans-serif;font-size:0.85rem;font-weight:700;color:#fff;margin:0.5rem 0">Decision Dataset</div>
+<div style="font-size:0.8rem;color:var(--text2)">実行データを匿名化・構造化して販売</div>
 </div>
-<div class="exec-metric-card">
-<span class="exec-metric-val ghost-num" data-ghost="30,000+" style="color:var(--secondary)">30,000+</span>
-<span class="exec-metric-label">技術資産 (行)</span>
+<div class="glass" style="text-align:center">
+<div style="font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:900;color:var(--purple)">&#9674;</div>
+<div style="font-family:'Orbitron',sans-serif;font-size:0.85rem;font-weight:700;color:#fff;margin:0.5rem 0">Decision API</div>
+<div style="font-size:0.8rem;color:var(--text2)">判断ロジックをAPI化して継続課金</div>
 </div>
-<div class="exec-metric-card">
-<span class="exec-metric-val ghost-num" data-ghost="9" style="color:var(--purple)">9</span>
-<span class="exec-metric-label">AI Agents</span>
+<div class="glass" style="text-align:center">
+<div style="font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:900;color:var(--success)">&#10022;</div>
+<div style="font-family:'Orbitron',sans-serif;font-size:0.85rem;font-weight:700;color:#fff;margin:0.5rem 0">ARR 1-5 Oku</div>
+<div style="font-size:0.8rem;color:var(--text2)">12ヶ月目標: 年間売上1-5億円</div>
 </div>
 </div>
 </div>
@@ -1062,58 +531,50 @@ AIは生成できる。<br>しかし<strong>決めるのは人間だ。</strong>
 
 <div class="section-divider"></div>
 
-<!-- ===== SECTION 2: VISION & MISSION ===== -->
+<!-- ===== SECTION 3: VISION ===== -->
 <section id="vision">
 <div class="container">
-<div class="section-label fade-in">SECTION 02</div>
-<h2 class="section-title fade-in">VISION & MISSION</h2>
-<div class="grid-2" style="margin-bottom:2rem">
-<div class="glass fade-in-left">
-<h3 style="font-family:'Orbitron',sans-serif;font-size:0.85rem;color:var(--accent);margin-bottom:0.5rem">◈ VISION</h3>
-<p style="font-size:1.1rem;color:#fff;font-weight:600">世界最大の<br>人間判断ネットワークを構築する</p>
-<p style="font-size:0.85rem;color:var(--text2);margin-top:0.5rem">あらゆるAIの品質を、人間の判断力で担保するグローバルインフラ</p>
+<p class="section-label fade-in">&#9673; VISION</p>
+<h2 class="section-title fade-in">判断データインフラの構築</h2>
+<p class="section-desc fade-in">
+AIが生成した回答を「正しい」と判断するのは、最終的に人間である。
+JUDGEMENTはその判断行為そのものをデータ化し、
+検証可能な形式で構造化することで、判断の品質を定量化する。
+</p>
+<div class="grid-2 fade-in">
+<div class="glass">
+<div style="font-family:'Orbitron',sans-serif;font-size:0.75rem;color:var(--accent);letter-spacing:2px;margin-bottom:0.5rem">&#9670; PROBLEM</div>
+<div style="font-size:1.1rem;color:#fff;font-weight:600;margin-bottom:0.5rem">AI出力の品質保証が破綻している</div>
+<p style="color:var(--text2);font-size:0.9rem">
+LLMの出力は確率的であり、正確性の担保には人間の判断が不可欠。
+しかし現在のクラウドソーシングモデルでは判断者の品質管理が不十分で、
+データの信頼性が保証されない。
+</p>
 </div>
-<div class="glass fade-in-right">
-<h3 style="font-family:'Orbitron',sans-serif;font-size:0.85rem;color:var(--purple);margin-bottom:0.5rem">◉ MISSION</h3>
-<p style="font-size:1.1rem;color:#fff;font-weight:600">人工知能を<br>訓練し、導く</p>
-<p style="font-size:0.85rem;color:var(--text2);margin-top:0.5rem">人間の専門知識と判断力でAIの精度・安全性・信頼性を向上させる</p>
-</div>
-</div>
-
-<h3 style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--accent);text-align:center;margin:2rem 0 1rem">△ 3層アーキテクチャ</h3>
-<div class="layer-diagram fade-in">
-<div class="layer-item">
-<div class="layer-name" style="color:var(--purple)">JUDGEMENT OS</div>
-<div class="layer-desc">意思決定インフラ / シミュレーション / Clone AI</div>
-</div>
-<div class="layer-item">
-<div class="layer-name" style="color:var(--accent)">JUDGEMENT Network</div>
-<div class="layer-desc">専門家ネットワーク / Trust Score / Reputation</div>
-</div>
-<div class="layer-item">
-<div class="layer-name" style="color:var(--success)">JUDGEMENT Game</div>
-<div class="layer-desc">評価クエスト / Expert獲得 / データ生成エンジン</div>
+<div class="glass">
+<div style="font-family:'Orbitron',sans-serif;font-size:0.75rem;color:var(--secondary);letter-spacing:2px;margin-bottom:0.5rem">&#9670; SOLUTION</div>
+<div style="font-size:1.1rem;color:#fff;font-weight:600;margin-bottom:0.5rem">判断を検証可能なデータに変換する</div>
+<p style="color:var(--text2);font-size:0.9rem">
+Trust Scoreで判断者の信頼度を定量化し、
+異常検知で不正を排除し、
+合意形成アルゴリズムで多数の判断を一つの検証済みデータに統合する。
+</p>
 </div>
 </div>
-
-<h3 style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--secondary);text-align:center;margin:2.5rem 0 1rem">▸ プロダクト進化</h3>
-<div class="evolution-cards fade-in">
-<div class="evo-card glass">
-<div class="evo-icon">◈</div>
-<div class="evo-title">評価データ</div>
-<div class="evo-desc">人間の判断を構造化データとして収集</div>
+<div class="glass fade-in" style="margin-top:1.5rem;text-align:center;padding:2rem">
+<div style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:var(--text2);margin-bottom:1rem">
+// JUDGEMENT DATA PIPELINE
 </div>
-<div class="evo-arrow">⟶</div>
-<div class="evo-card glass">
-<div class="evo-icon">◉</div>
-<div class="evo-title">モデル化</div>
-<div class="evo-desc">Preference Model / Trust Scoreで定量化</div>
-</div>
-<div class="evo-arrow">⟶</div>
-<div class="evo-card glass">
-<div class="evo-icon">⊕</div>
-<div class="evo-title">シミュレーション</div>
-<div class="evo-desc">Clone AI / Synthetic Populationで再現</div>
+<div style="font-family:'Orbitron',sans-serif;font-size:0.9rem;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0.8rem">
+<span style="color:var(--text)">Human Judgment</span>
+<span style="color:var(--accent)">&rarr;</span>
+<span style="color:var(--accent)">Trust Verification</span>
+<span style="color:var(--accent)">&rarr;</span>
+<span style="color:var(--secondary)">Structured Dataset</span>
+<span style="color:var(--accent)">&rarr;</span>
+<span style="color:var(--purple)">Decision Model</span>
+<span style="color:var(--accent)">&rarr;</span>
+<span style="color:var(--success)">API Delivery</span>
 </div>
 </div>
 </div>
@@ -1121,176 +582,109 @@ AIは生成できる。<br>しかし<strong>決めるのは人間だ。</strong>
 
 <div class="section-divider"></div>
 
-<!-- ===== SECTION 3: BUSINESS MODEL ===== -->
-<section id="business">
+<!-- ===== SECTION 4: BUSINESS MODEL ===== -->
+<section id="model">
 <div class="container">
-<div class="section-label fade-in">SECTION 03</div>
-<h2 class="section-title fade-in">BUSINESS MODEL</h2>
-<p class="section-desc fade-in">4つの収益エンジンが段階的に起動し、指数関数的な成長を実現</p>
-
-<div class="grid-4 fade-in">
-<div class="glass revenue-card">
-<span class="rev-tag">Phase 2</span>
-<span class="rev-icon">⬡</span>
-<div class="rev-title">データ販売</div>
-<div class="rev-price">20万〜100万円/月</div>
-<div class="rev-target">AI開発企業向け評価データセット</div>
+<p class="section-label fade-in">&#11043; BUSINESS MODEL</p>
+<h2 class="section-title fade-in">3層収益構造</h2>
+<p class="section-desc fade-in">
+受託で即時キャッシュフローを確保し、蓄積データを資産化し、APIで継続課金に転換する。
+各レイヤーが次のレイヤーの燃料となる自己強化型モデル。
+</p>
+<div class="layer-stack fade-in">
+<div class="layer-item" style="border-left:3px solid var(--accent)">
+<div class="layer-num">LAYER 01 &#9671; CASHFLOW ENGINE</div>
+<div class="layer-name">Decision Ops</div>
+<div class="layer-desc">企業からAI回答評価・要約品質チェック・広告比較等の判断タスクを受託。短期で売上を立てながら、判断データを蓄積する。</div>
+<div class="layer-revenue">&#10003; 初回受注 30万円/案件 &#8594; 月商150-600万円（6ヶ月目標）</div>
 </div>
-<div class="glass revenue-card">
-<span class="rev-tag">Phase 2</span>
-<span class="rev-icon">◆</span>
-<div class="rev-title">API</div>
-<div class="rev-price">5万〜50万円/月</div>
-<div class="rev-target">リアルタイム評価・Trust Score API</div>
+<div class="layer-item" style="border-left:3px solid var(--secondary)">
+<div class="layer-num">LAYER 02 &#11042; DATA ASSET</div>
+<div class="layer-name">Decision Dataset</div>
+<div class="layer-desc">Ops実行で蓄積された判断データを匿名化・構造化し、AIトレーニング用データセットとして販売。判断の品質メタデータ付きで差別化。</div>
+<div class="layer-revenue">&#10003; データライセンス収入 &#8594; ストック型収益</div>
 </div>
-<div class="glass revenue-card">
-<span class="rev-tag">Phase 3</span>
-<span class="rev-icon">▣</span>
-<div class="rev-title">SaaS</div>
-<div class="rev-price">20万〜250万円/月</div>
-<div class="rev-target">エンタープライズ品質管理プラットフォーム</div>
-</div>
-<div class="glass revenue-card">
-<span class="rev-tag">Phase 4</span>
-<span class="rev-icon">⊕</span>
-<div class="rev-title">Simulation</div>
-<div class="rev-price">100万〜500万円/案件</div>
-<div class="rev-target">Clone AI / Synthetic Population</div>
+<div class="layer-item" style="border-left:3px solid var(--purple)">
+<div class="layer-num">LAYER 03 &#9674; RECURRING REVENUE</div>
+<div class="layer-name">Decision API / Decision Model</div>
+<div class="layer-desc">蓄積データから構築した判断モデルをAPI提供。企業はAPIコールで判断品質スコアを取得でき、月額課金で継続利用。</div>
+<div class="layer-revenue">&#10003; API月額課金 &#8594; ARR 1-5億円（12ヶ月目標）</div>
 </div>
 </div>
-
-<h3 style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--accent);text-align:center;margin:3rem 0 1.5rem">◎ ユニットエコノミクス</h3>
-<div class="unit-eco fade-in">
-<div class="eco-block">
-<div class="eco-value" style="color:var(--error)">&#165;<span class="countup" data-target="5">0</span>万</div>
-<div class="eco-label">コスト/月</div>
+<div class="glass fade-in" style="margin-top:2rem;text-align:center;padding:1.5rem">
+<div style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--text2);margin-bottom:0.5rem">FLYWHEEL EFFECT</div>
+<div style="font-family:'Orbitron',sans-serif;font-size:0.85rem;display:flex;flex-wrap:wrap;justify-content:center;gap:0.5rem;color:var(--text)">
+<span>Ops受託</span><span style="color:var(--accent)">&#8594;</span>
+<span>データ蓄積</span><span style="color:var(--accent)">&#8594;</span>
+<span>モデル精度向上</span><span style="color:var(--accent)">&#8594;</span>
+<span>API価値増大</span><span style="color:var(--accent)">&#8594;</span>
+<span>顧客増加</span><span style="color:var(--accent)">&#8594;</span>
+<span style="color:var(--success)">更なるOps受託</span>
 </div>
-<div class="eco-op">⟶</div>
-<div class="eco-block">
-<div class="eco-value" style="color:var(--accent)">&#165;<span class="countup" data-target="40">0</span>万</div>
-<div class="eco-label">売上/月</div>
-</div>
-<div class="eco-op">=</div>
-<div class="eco-block">
-<div class="eco-value" style="color:var(--success)">&#165;<span class="countup" data-target="35">0</span>万</div>
-<div class="eco-label">粗利/月</div>
-</div>
-<div class="eco-op">▸</div>
-<div class="eco-block">
-<div class="eco-value" style="color:var(--warning)"><span class="countup" data-target="70">0</span>-85%</div>
-<div class="eco-label">粗利率</div>
-</div>
-</div>
-
-<h3 style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--secondary);text-align:center;margin:3rem 0 1rem">⬢ 料金プラン</h3>
-<div class="glass fade-in" style="overflow-x:auto">
-<table class="plan-table">
-<thead>
-<tr>
-<th>PLAN</th><th>月額</th><th>Expert数</th><th>評価件数</th><th>API</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><span class="plan-name">Starter</span></td>
-<td class="plan-price">&#165;200,000</td>
-<td>〜50名</td><td>5,000件/月</td><td>10,000 calls</td>
-</tr>
-<tr>
-<td><span class="plan-name">Growth</span> <span class="plan-badge popular">POPULAR</span></td>
-<td class="plan-price">&#165;800,000</td>
-<td>〜200名</td><td>25,000件/月</td><td>100,000 calls</td>
-</tr>
-<tr>
-<td><span class="plan-name">Business</span></td>
-<td class="plan-price">&#165;2,500,000</td>
-<td>〜1,000名</td><td>100,000件/月</td><td>Unlimited</td>
-</tr>
-<tr>
-<td><span class="plan-name">Enterprise</span></td>
-<td class="plan-price">&#165;8,000,000+</td>
-<td>カスタム</td><td>カスタム</td><td>Unlimited + SLA</td>
-</tr>
-</tbody>
-</table>
 </div>
 </div>
 </section>
 
 <div class="section-divider"></div>
 
-<!-- ===== SECTION 4: MARKET & COMPETITORS ===== -->
+<!-- ===== SECTION 5: MARKET ===== -->
 <section id="market">
 <div class="container">
-<div class="section-label fade-in">SECTION 04</div>
-<h2 class="section-title fade-in">MARKET & COMPETITORS</h2>
-
-<div class="grid-2" style="align-items:center;margin-bottom:3rem">
-<div class="fade-in-left">
-<h3 style="font-family:'Orbitron',sans-serif;font-size:1rem;color:var(--accent);margin-bottom:1rem">◈ AI評価市場規模</h3>
-<div class="market-size-display">
-<div class="market-circle">
-<span class="market-val">5,000億<br><small style="font-size:0.5em">〜1兆円</small></span>
-<span class="market-unit">2026年推定</span>
-</div>
-</div>
-<p style="font-size:0.85rem;color:var(--text2);text-align:center;margin-top:1rem">
-RLHF・データラベリング・AI安全性評価<br>年間成長率 25-35%
+<p class="section-label fade-in">&#9673; MARKET</p>
+<h2 class="section-title fade-in">市場規模と競合</h2>
+<p class="section-desc fade-in">
+データラベリング・AIトレーニングデータ市場は急拡大中。
+人間の判断品質を定量化するインフラは未だ存在しない。
 </p>
+<div class="grid-2 fade-in">
+<div class="glass" style="display:flex;align-items:center;justify-content:center">
+<div class="tam-circle">
+<div class="tam-ring outer">
+<div class="tam-label">TAM</div>
+<div class="tam-val" style="color:var(--accent)">$15B</div>
+<div class="tam-ring mid">
+<div class="tam-label">SAM</div>
+<div class="tam-val" style="color:var(--secondary)">$2B</div>
+<div class="tam-ring inner">
+<div class="tam-label">SOM</div>
+<div class="tam-val" style="color:var(--success)">$50M</div>
 </div>
-<div class="fade-in-right">
-<h3 style="font-family:'Orbitron',sans-serif;font-size:1rem;color:var(--warning);margin-bottom:1rem">⬢ 主要競合</h3>
-<div class="grid-2" style="gap:0.8rem">
-<div class="glass competitor-card">
-<div class="comp-header">
-<span class="comp-name">Scale AI</span>
-<span class="comp-val">$29B</span>
 </div>
-<div class="stars">★★★★★</div>
-<div class="threat-bar"><div class="threat-bar-fill" style="width:0%;background:var(--error)" data-width="90%"></div></div>
-<div class="comp-diff">差別化: 専門家品質 vs 大量処理</div>
 </div>
-<div class="glass competitor-card">
-<div class="comp-header">
-<span class="comp-name">Surge AI</span>
-<span class="comp-val">$15-25B</span>
 </div>
-<div class="stars">★★★★☆</div>
-<div class="threat-bar"><div class="threat-bar-fill" style="width:0%;background:var(--warning)" data-width="75%"></div></div>
-<div class="comp-diff">差別化: Trust Score vs 固定品質</div>
 </div>
-<div class="glass competitor-card">
-<div class="comp-header">
-<span class="comp-name">Appen</span>
-<span class="comp-val">$300M</span>
+<div>
+<div class="glass" style="margin-bottom:1rem">
+<div style="font-family:'Orbitron',sans-serif;font-size:0.75rem;color:var(--accent);letter-spacing:1px;margin-bottom:0.5rem">&#9670; TAM - $15B</div>
+<div style="font-size:0.9rem;color:var(--text)">グローバルAIトレーニングデータ市場（2026年推計）</div>
 </div>
-<div class="stars">★★★☆☆</div>
-<div class="threat-bar"><div class="threat-bar-fill" style="width:0%;background:var(--success)" data-width="50%"></div></div>
-<div class="comp-diff">差別化: ゲーミフィケーション vs レガシー</div>
+<div class="glass" style="margin-bottom:1rem">
+<div style="font-family:'Orbitron',sans-serif;font-size:0.75rem;color:var(--secondary);letter-spacing:1px;margin-bottom:0.5rem">&#9670; SAM - $2B</div>
+<div style="font-size:0.9rem;color:var(--text)">日本語・アジア圏の判断データ需要</div>
 </div>
-<div class="glass competitor-card">
-<div class="comp-header">
-<span class="comp-name">AWS / GCP</span>
-<span class="comp-val">巨大</span>
-</div>
-<div class="stars">★★★☆☆</div>
-<div class="threat-bar"><div class="threat-bar-fill" style="width:0%;background:var(--warning)" data-width="60%"></div></div>
-<div class="comp-diff">差別化: 専門性 vs 汎用ツール</div>
-</div>
+<div class="glass">
+<div style="font-family:'Orbitron',sans-serif;font-size:0.75rem;color:var(--success);letter-spacing:1px;margin-bottom:0.5rem">&#9670; SOM - $50M</div>
+<div style="font-size:0.9rem;color:var(--text)">初期3年で獲得可能な市場規模</div>
 </div>
 </div>
 </div>
 
-<h3 style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--secondary);text-align:center;margin:2rem 0 1rem">◎ ポジショニングマップ</h3>
-<div class="fade-in">
-<div class="position-map">
-<span class="axis-label y-label">▲ 品質</span>
-<span class="axis-label x-label">コスト ▸</span>
-<div class="map-dot judgement" style="bottom:80%;left:15%">JUDGE<br>MENT</div>
-<div class="map-dot" style="bottom:75%;left:70%;background:rgba(255,71,87,0.2);border:1px solid var(--error);color:var(--error)">Scale<br>AI</div>
-<div class="map-dot" style="bottom:65%;left:55%;background:rgba(255,184,0,0.15);border:1px solid var(--warning);color:var(--warning)">Surge<br>AI</div>
-<div class="map-dot" style="bottom:35%;left:40%;background:rgba(255,255,255,0.08);border:1px solid var(--text2);color:var(--text2)">Appen</div>
-<div class="map-dot" style="bottom:45%;left:80%;background:rgba(255,255,255,0.08);border:1px solid var(--text2);color:var(--text2)">AWS</div>
+<h3 style="font-family:'Orbitron',sans-serif;font-size:1.1rem;color:#fff;margin:2.5rem 0 1rem;font-weight:700" class="fade-in">&#9670; 競合分析</h3>
+<div class="grid-3 fade-in">
+<div class="glass">
+<div style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--error);margin-bottom:0.5rem">Scale AI</div>
+<div style="font-size:0.85rem;color:var(--text2);margin-bottom:0.5rem">$7.3B評価。大規模ラベリング。</div>
+<div style="font-size:0.8rem;color:var(--text)">&#9654; JUDGEMENTの優位: 判断品質の定量化・Trust Scoreによる検証可能性</div>
+</div>
+<div class="glass">
+<div style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--warning);margin-bottom:0.5rem">Surge AI</div>
+<div style="font-size:0.85rem;color:var(--text2);margin-bottom:0.5rem">エキスパート特化型ラベリング。</div>
+<div style="font-size:0.8rem;color:var(--text)">&#9654; JUDGEMENTの優位: 3層ワーカーモデル + 異常検知による品質保証</div>
+</div>
+<div class="glass">
+<div style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--purple);margin-bottom:0.5rem">Appen</div>
+<div style="font-size:0.85rem;color:var(--text2);margin-bottom:0.5rem">グローバル100万人ワーカー。</div>
+<div style="font-size:0.8rem;color:var(--text)">&#9654; JUDGEMENTの優位: データ資産化 + API化による継続収益モデル</div>
 </div>
 </div>
 </div>
@@ -1298,136 +692,182 @@ RLHF・データラベリング・AI安全性評価<br>年間成長率 25-35%
 
 <div class="section-divider"></div>
 
-<!-- ===== SECTION 5: FINANCIAL PROJECTIONS ===== -->
-<section id="financial">
+<!-- ===== SECTION 6: PRODUCTS ===== -->
+<section id="products">
 <div class="container">
-<div class="section-label fade-in">SECTION 05</div>
-<h2 class="section-title fade-in">FINANCIAL PROJECTIONS</h2>
+<p class="section-label fade-in">&#9674; PRODUCTS</p>
+<h2 class="section-title fade-in">3つのプロダクト</h2>
+<p class="section-desc fade-in">
+受託 &#8594; データ &#8594; APIの段階的展開で、各フェーズの売上を確保しながらプロダクトを進化させる。
+</p>
+<div class="grid-3 fade-in">
+<div class="glass product-card">
+<span class="product-icon">&#9671;</span>
+<div class="product-name">Decision Ops</div>
+<div class="product-price">30万円〜/案件</div>
+<ul style="text-align:left;font-size:0.85rem;color:var(--text2);list-style:none;padding:0">
+<li style="margin-bottom:0.4rem">&#9655; AI回答品質評価パッケージ: 30万円</li>
+<li style="margin-bottom:0.4rem">&#9655; 要約品質チェックパッケージ: 20万円</li>
+<li style="margin-bottom:0.4rem">&#9655; 広告クリエイティブ比較: 25万円</li>
+<li style="margin-bottom:0.4rem">&#9655; カスタム判断タスク設計</li>
+<li>&#9655; Trust Scoreベース品質保証</li>
+</ul>
+<div style="margin-top:1rem;padding-top:0.8rem;border-top:1px solid var(--border)">
+<div style="font-size:0.75rem;color:var(--text2)">WORKER MODEL</div>
+<div class="worker-tier" style="margin-top:0.5rem;padding:0.5rem;font-size:0.8rem">
+<span class="tier-name" style="min-width:auto;font-size:0.75rem">L1: 汎用</span>
+<span style="color:var(--accent)">&#8594;</span>
+<span class="tier-name" style="min-width:auto;font-size:0.75rem">L2: 認定</span>
+<span style="color:var(--accent)">&#8594;</span>
+<span class="tier-name" style="min-width:auto;font-size:0.75rem">L3: 専門家</span>
+</div>
+</div>
+</div>
+<div class="glass product-card">
+<span class="product-icon" style="color:var(--secondary)">&#11042;</span>
+<div class="product-name">Decision Dataset</div>
+<div class="product-price">ライセンス課金</div>
+<ul style="text-align:left;font-size:0.85rem;color:var(--text2);list-style:none;padding:0">
+<li style="margin-bottom:0.4rem">&#9655; AI回答品質判断データセット</li>
+<li style="margin-bottom:0.4rem">&#9655; 要約精度評価データセット</li>
+<li style="margin-bottom:0.4rem">&#9655; 広告効果比較データセット</li>
+<li style="margin-bottom:0.4rem">&#9655; Trust Score付きメタデータ</li>
+<li>&#9655; 匿名化・構造化済みフォーマット</li>
+</ul>
+<div style="margin-top:1rem;padding-top:0.8rem;border-top:1px solid var(--border);font-size:0.8rem;color:var(--text2)">
+&#10003; 判断者の信頼度スコア付き<br>
+&#10003; 異常値フラグ付き<br>
+&#10003; 合意度メトリクス付き
+</div>
+</div>
+<div class="glass product-card">
+<span class="product-icon" style="color:var(--purple)">&#9674;</span>
+<div class="product-name">Decision API</div>
+<div class="product-price">月額課金 / 従量課金</div>
+<ul style="text-align:left;font-size:0.85rem;color:var(--text2);list-style:none;padding:0">
+<li style="margin-bottom:0.4rem">&#9655; 判断品質スコアAPI</li>
+<li style="margin-bottom:0.4rem">&#9655; 判断者信頼度API</li>
+<li style="margin-bottom:0.4rem">&#9655; 異常検知API</li>
+<li style="margin-bottom:0.4rem">&#9655; 合意形成API</li>
+<li>&#9655; Decision Model推論API</li>
+</ul>
+<div style="margin-top:1rem;padding-top:0.8rem;border-top:1px solid var(--border);font-size:0.8rem;color:var(--text2)">
+&#10003; RESTful + GraphQL<br>
+&#10003; SDK提供（Python/JS）<br>
+&#10003; 99.9% SLA
+</div>
+</div>
+</div>
+</div>
+</section>
 
-<div class="grid-2 fade-in">
-<div class="chart-container">
-<div class="chart-title">◈ Phase別 売上予測</div>
-<canvas id="revenueChart" height="280"></canvas>
-</div>
-<div class="chart-container">
-<div class="chart-title">◉ 投資計画 (1,000万円配分)</div>
-<canvas id="investChart" height="280"></canvas>
-</div>
-</div>
+<div class="section-divider"></div>
 
-<h3 style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--success);text-align:center;margin:3rem 0 1rem">▣ ゼロコスト運営 (現在)</h3>
-<div class="zero-cost-grid fade-in">
-<div class="glass zero-cost-item">
-<div class="zc-name">ホスティング</div>
-<div class="zc-price">$0</div>
-<div class="zc-service">Vercel Free</div>
+<!-- ===== SECTION 7: FINANCIALS ===== -->
+<section id="financials">
+<div class="container">
+<p class="section-label fade-in">&#9672; FINANCIALS</p>
+<h2 class="section-title fade-in">収益ロードマップ</h2>
+<p class="section-desc fade-in">
+受託からデータ、APIへと収益構造を段階的にシフト。12ヶ月でARR 1-5億円を目指す。
+</p>
+<div class="glass fade-in">
+<canvas id="revenueChart" height="300"></canvas>
 </div>
-<div class="glass zero-cost-item">
-<div class="zc-name">データベース</div>
-<div class="zc-price">$0</div>
-<div class="zc-service">Supabase Free</div>
-</div>
-<div class="glass zero-cost-item">
-<div class="zc-name">認証</div>
-<div class="zc-price">$0</div>
-<div class="zc-service">NextAuth</div>
-</div>
-<div class="glass zero-cost-item">
-<div class="zc-name">CI/CD</div>
-<div class="zc-price">$0</div>
-<div class="zc-service">GitHub Actions</div>
-</div>
-<div class="glass zero-cost-item">
-<div class="zc-name">監視</div>
-<div class="zc-price">$0</div>
-<div class="zc-service">Sentry Free</div>
-</div>
-<div class="glass zero-cost-item">
-<div class="zc-name">AI開発</div>
-<div class="zc-price">$0</div>
-<div class="zc-service">Claude Code</div>
-</div>
-</div>
-
-<h3 style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--accent);text-align:center;margin:3rem 0 1rem">✦ Phase 2 月次KPI目標</h3>
-<div class="glass fade-in" style="overflow-x:auto">
-<table class="kpi-table">
+<table class="fin-table fade-in" style="margin-top:1.5rem">
 <thead>
-<tr><th>MONTH</th><th>契約社数</th><th>月間売上</th><th>Expert数</th><th>評価件数</th></tr>
+<tr>
+<th>PHASE</th>
+<th>PERIOD</th>
+<th>PRIMARY REVENUE</th>
+<th>TARGET</th>
+<th>WORKERS</th>
+</tr>
 </thead>
 <tbody>
-<tr><td>Month 4</td><td class="kpi-val">3社</td><td class="kpi-val">&#165;600,000</td><td>50</td><td>5,000</td></tr>
-<tr><td>Month 5</td><td class="kpi-val">10社</td><td class="kpi-val">&#165;1,600,000</td><td>100</td><td>15,000</td></tr>
-<tr><td>Month 6</td><td class="kpi-val">20社</td><td class="kpi-val">&#165;3,000,000</td><td>200</td><td>40,000</td></tr>
+<tr>
+<td style="color:var(--accent);font-family:'Orbitron',sans-serif;font-size:0.8rem">PHASE 1</td>
+<td>0-3ヶ月</td>
+<td>Decision Ops 受託</td>
+<td style="color:var(--success)">30-150万円/月</td>
+<td>300-1,000人</td>
+</tr>
+<tr>
+<td style="color:var(--secondary);font-family:'Orbitron',sans-serif;font-size:0.8rem">PHASE 2</td>
+<td>3-6ヶ月</td>
+<td>Ops拡大 + Dataset販売開始</td>
+<td style="color:var(--success)">150-600万円/月</td>
+<td>1,000-5,000人</td>
+</tr>
+<tr>
+<td style="color:var(--purple);font-family:'Orbitron',sans-serif;font-size:0.8rem">PHASE 3</td>
+<td>6-12ヶ月</td>
+<td>API提供開始 + 全層稼働</td>
+<td style="color:var(--success)">500-1,500万円/月</td>
+<td>5,000-20,000人</td>
+</tr>
 </tbody>
 </table>
+<div class="grid-3 fade-in" style="margin-top:1.5rem">
+<div class="glass" style="text-align:center">
+<div style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--accent);letter-spacing:1px;margin-bottom:0.3rem">90DAY TARGET</div>
+<div style="font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:900;color:var(--accent)">1-3</div>
+<div style="font-size:0.8rem;color:var(--text2)">初回受注社数</div>
+</div>
+<div class="glass" style="text-align:center">
+<div style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--secondary);letter-spacing:1px;margin-bottom:0.3rem">6M TARGET</div>
+<div style="font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:900;color:var(--secondary)">10-50万</div>
+<div style="font-size:0.8rem;color:var(--text2)">月間判断件数</div>
+</div>
+<div class="glass" style="text-align:center">
+<div style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--purple);letter-spacing:1px;margin-bottom:0.3rem">12M TARGET</div>
+<div style="font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:900;color:var(--purple)">1-5</div>
+<div style="font-size:0.8rem;color:var(--text2)">ARR（億円）</div>
+</div>
 </div>
 </div>
 </section>
 
 <div class="section-divider"></div>
 
-<!-- ===== SECTION 6: ROADMAP ===== -->
+<!-- ===== SECTION 8: ROADMAP ===== -->
 <section id="roadmap">
 <div class="container">
-<div class="section-label fade-in">SECTION 06</div>
-<h2 class="section-title fade-in">ROADMAP</h2>
-<p class="section-desc fade-in">5つのPhaseで段階的にスケール。現在Phase 2.1進行中</p>
-
-<div class="timeline">
-<div class="timeline-item fade-in-left">
-<div class="timeline-dot" style="background:var(--success)"></div>
-<div class="glass timeline-card">
-<div class="timeline-phase">PHASE 0</div>
-<div class="timeline-title">基盤構築</div>
-<div class="timeline-desc">アーキテクチャ設計、AI Agent組織構築、技術スタック選定、MVP開発</div>
-<div class="timeline-kpi">KPI: システム稼働率 99%</div>
-<span class="timeline-status status-done">● COMPLETED</span>
+<p class="section-label fade-in">&#10022; ROADMAP</p>
+<h2 class="section-title fade-in">90日アクションプラン</h2>
+<p class="section-desc fade-in">
+5フェーズで初回受注・データ蓄積・API基盤構築を並行して推進する。
+</p>
+<div class="timeline fade-in">
+<div class="timeline-item">
+<div class="timeline-phase">PHASE 01 / DAY 1-14</div>
+<div class="timeline-title">基盤構築 + 初回営業</div>
+<div class="timeline-desc">プラットフォームMVPデプロイ、営業資料作成、ターゲット企業20社リストアップ、初回アプローチ開始</div>
+<div class="timeline-metric">&#10003; ワーカー100人登録 / 営業20社アプローチ</div>
 </div>
+<div class="timeline-item">
+<div class="timeline-phase">PHASE 02 / DAY 15-30</div>
+<div class="timeline-title">初回受注 + パイロット実行</div>
+<div class="timeline-desc">AI回答評価パッケージでパイロット案件を獲得・実行。Trust Scoreの初期校正を実施。</div>
+<div class="timeline-metric">&#10003; 初回受注1-3社 / 売上30-90万円</div>
 </div>
-
-<div class="timeline-item fade-in-right">
-<div class="timeline-dot" style="background:var(--success)"></div>
-<div class="glass timeline-card">
-<div class="timeline-phase">PHASE 1</div>
-<div class="timeline-title">本番デプロイ</div>
-<div class="timeline-desc">CI/CD構築、Vercelデプロイ、Sentry監視、認証システム、DB構築完了</div>
-<div class="timeline-kpi">KPI: 全コンポーネント稼働確認</div>
-<span class="timeline-status status-done">● COMPLETED</span>
+<div class="timeline-item">
+<div class="timeline-phase">PHASE 03 / DAY 31-60</div>
+<div class="timeline-title">Ops拡大 + データ蓄積</div>
+<div class="timeline-desc">複数案件の並行実行体制を構築。ワーカー認定プログラム開始。判断データの構造化パイプライン稼働。</div>
+<div class="timeline-metric">&#10003; ワーカー300-500人 / 月間5万件判断</div>
 </div>
+<div class="timeline-item">
+<div class="timeline-phase">PHASE 04 / DAY 61-75</div>
+<div class="timeline-title">Dataset構築 + API設計</div>
+<div class="timeline-desc">蓄積データの匿名化・品質検証完了。Decision DatasetのMVP版構築。API仕様策定。</div>
+<div class="timeline-metric">&#10003; Dataset MVP完成 / API仕様確定</div>
 </div>
-
-<div class="timeline-item fade-in-left">
-<div class="timeline-dot active"></div>
-<div class="glass timeline-card" style="border-color:var(--accent);box-shadow:0 0 20px rgba(0,180,255,0.15)">
-<div class="timeline-phase" style="color:var(--secondary)">PHASE 2 ◀ NOW</div>
-<div class="timeline-title">MFA & 初期顧客獲得</div>
-<div class="timeline-desc">MFA実装、Expert 200名獲得、初期顧客3-20社、データ販売・API提供開始</div>
-<div class="timeline-kpi">KPI: 売上 5千万〜1億円/年</div>
-<span class="timeline-status status-active">◐ IN PROGRESS</span>
-</div>
-</div>
-
-<div class="timeline-item fade-in-right">
-<div class="timeline-dot"></div>
-<div class="glass timeline-card">
-<div class="timeline-phase">PHASE 3</div>
-<div class="timeline-title">スケール & SaaS化</div>
-<div class="timeline-desc">エンタープライズSaaS、Expert 5,000名、大手顧客100社、Trust Score標準化</div>
-<div class="timeline-kpi">KPI: ARR 5〜20億円</div>
-<span class="timeline-status status-upcoming">○ UPCOMING</span>
-</div>
-</div>
-
-<div class="timeline-item fade-in-left">
-<div class="timeline-dot"></div>
-<div class="glass timeline-card">
-<div class="timeline-phase">PHASE 4</div>
-<div class="timeline-title">グローバル展開</div>
-<div class="timeline-desc">Clone AI / Synthetic Population API、グローバル市場参入、IPO準備</div>
-<div class="timeline-kpi">KPI: ARR 100億円+</div>
-<span class="timeline-status status-upcoming">○ UPCOMING</span>
-</div>
+<div class="timeline-item">
+<div class="timeline-phase">PHASE 05 / DAY 76-90</div>
+<div class="timeline-title">API Alpha + スケール準備</div>
+<div class="timeline-desc">Decision API Alpha版をクローズドβ提供。6ヶ月目標に向けたスケール計画策定。</div>
+<div class="timeline-metric">&#10003; API Alpha稼働 / 月商150万円達成</div>
 </div>
 </div>
 </div>
@@ -1435,228 +875,146 @@ RLHF・データラベリング・AI安全性評価<br>年間成長率 25-35%
 
 <div class="section-divider"></div>
 
-<!-- ===== SECTION 7: ORGANIZATION ===== -->
+<!-- ===== SECTION 9: ORGANIZATION ===== -->
 <section id="org">
 <div class="container">
-<div class="section-label fade-in">SECTION 07</div>
-<h2 class="section-title fade-in">ORGANIZATION</h2>
-<p class="section-desc fade-in">11部門 + 9 AI Agentによる自律型開発組織。人間1名 + AI Agentで全開発をカバー</p>
-
-<h3 style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--accent);margin-bottom:1rem">⬡ 11部門</h3>
-<div class="hex-grid fade-in">
-<div class="hex-card">
-<div class="hex-icon">◈</div>
-<div class="hex-name">STRATEGY</div>
-<div class="hex-role">戦略立案</div>
-</div>
-<div class="hex-card">
-<div class="hex-icon">▣</div>
-<div class="hex-name">PRODUCT</div>
-<div class="hex-role">プロダクト設計</div>
-</div>
-<div class="hex-card">
-<div class="hex-icon">⬡</div>
-<div class="hex-name">DATA</div>
-<div class="hex-role">データ基盤</div>
-</div>
-<div class="hex-card">
-<div class="hex-icon">◉</div>
-<div class="hex-name">AI MODELS</div>
-<div class="hex-role">モデル開発</div>
-</div>
-<div class="hex-card">
-<div class="hex-icon">⬢</div>
-<div class="hex-name">QUALITY</div>
-<div class="hex-role">品質保証</div>
-</div>
-<div class="hex-card">
-<div class="hex-icon">✦</div>
-<div class="hex-name">NETWORK</div>
-<div class="hex-role">Expert獲得</div>
-</div>
-<div class="hex-card">
-<div class="hex-icon">◆</div>
-<div class="hex-name">ENTERPRISE</div>
-<div class="hex-role">法人営業</div>
-</div>
-<div class="hex-card">
-<div class="hex-icon">◎</div>
-<div class="hex-name">MARKETPLACE</div>
-<div class="hex-role">マケプレ運営</div>
-</div>
-<div class="hex-card">
-<div class="hex-icon">⊕</div>
-<div class="hex-name">PLATFORM</div>
-<div class="hex-role">基盤開発</div>
-</div>
-<div class="hex-card">
-<div class="hex-icon">△</div>
-<div class="hex-name">GOVERNANCE</div>
-<div class="hex-role">ガバナンス</div>
-</div>
-<div class="hex-card">
-<div class="hex-icon">▲</div>
-<div class="hex-name">OPERATIONS</div>
-<div class="hex-role">運用管理</div>
-</div>
-</div>
-
-<h3 style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--purple);margin:2rem 0 1rem">◉ 9 AI Agents</h3>
-<div class="agent-grid fade-in">
-<div class="glass agent-card">
-<div class="agent-icon" style="color:#00B4FF">◈</div>
-<div>
-<div class="agent-name" style="color:#00B4FF">ARCHON</div>
-<div class="agent-title">設計宇宙を統べる創造の支配者</div>
-<div class="agent-role">[Product]</div>
-</div>
-</div>
-<div class="glass agent-card">
-<div class="agent-icon" style="color:#00E8FF">⬡</div>
-<div>
-<div class="agent-name" style="color:#00E8FF">STYX</div>
-<div class="agent-title">無限のデータ流を飲み干す冥河の番人</div>
-<div class="agent-role">[Data]</div>
-</div>
-</div>
-<div class="glass agent-card">
-<div class="agent-icon" style="color:#7B2FFF">◉</div>
-<div>
-<div class="agent-name" style="color:#7B2FFF">ORACLE</div>
-<div class="agent-title">確率の霧を貫く予言演算の神眼</div>
-<div class="agent-role">[AI/Model]</div>
-</div>
-</div>
-<div class="glass agent-card">
-<div class="agent-icon" style="color:#00D9A3">⬢</div>
-<div>
-<div class="agent-name" style="color:#00D9A3">AEGIS</div>
-<div class="agent-title">腐敗を焼き尽くす不壊の盾の守護神</div>
-<div class="agent-role">[Trust]</div>
-</div>
-</div>
-<div class="glass agent-card">
-<div class="agent-icon" style="color:#FF6B35">✦</div>
-<div>
-<div class="agent-name" style="color:#FF6B35">NEXUS</div>
-<div class="agent-title">無限増殖を司る接続点の覇者</div>
-<div class="agent-role">[Growth]</div>
-</div>
-</div>
-<div class="glass agent-card">
-<div class="agent-icon" style="color:#FFB800">◆</div>
-<div>
-<div class="agent-name" style="color:#FFB800">HERALD</div>
-<div class="agent-title">すべての門を開かせる黄金の舌を持つ使者</div>
-<div class="agent-role">[Sales]</div>
-</div>
-</div>
-<div class="glass agent-card">
-<div class="agent-icon" style="color:#FF4757">▣</div>
-<div>
-<div class="agent-name" style="color:#FF4757">KRONOS</div>
-<div class="agent-title">価値と時間の方程式を書き換える経済の原理</div>
-<div class="agent-role">[Economics]</div>
-</div>
-</div>
-<div class="glass agent-card">
-<div class="agent-icon" style="color:#A8B2C8">◎</div>
-<div>
-<div class="agent-name" style="color:#A8B2C8">SENTINEL</div>
-<div class="agent-title">眠らぬ鉄の意志で稼働し続ける永久機関の守り手</div>
-<div class="agent-role">[Ops]</div>
-</div>
-</div>
-<div class="glass agent-card">
-<div class="agent-icon" style="color:#9B59B6">⊕</div>
-<div>
-<div class="agent-name" style="color:#9B59B6">VOID</div>
-<div class="agent-title">未知の深淵を独り歩む知識の漂泊者</div>
-<div class="agent-role">[Research]</div>
-</div>
-</div>
-</div>
-
-<div class="glass fade-in" style="margin-top:2rem;text-align:center;padding:2rem">
-<h4 style="font-family:'Orbitron',sans-serif;font-size:0.85rem;color:var(--accent);margin-bottom:0.5rem">◈ AI Agent 自動開発モデル</h4>
-<p style="font-size:0.9rem;color:var(--text2)">
-Discord Bot経由でタスクを投入 ⟶ Claude Code CLIが並列処理 ⟶ 自動コミット&レビュー<br>
-<span style="color:var(--success);font-family:'Share Tech Mono',monospace;font-size:0.85rem">人間の意思決定 + AIの実行力 = 24時間稼働の開発チーム</span>
+<p class="section-label fade-in">&#9674; ORGANIZATION</p>
+<h2 class="section-title fade-in">9 AI Agents</h2>
+<p class="section-desc fade-in">
+JUDGEMENTの運営を支える9体の自律エージェント。各エージェントは特定の責務を持ち、協調して意思決定インフラを運営する。
 </p>
+<div class="grid-3 fade-in">
+<div class="glass agent-card">
+<span class="agent-symbol">&#9672;</span>
+<div class="agent-name">ARCHON</div>
+<div class="agent-alias">The Sovereign Architect</div>
+<div class="agent-role">戦略統括・全体設計</div>
+</div>
+<div class="glass agent-card">
+<span class="agent-symbol" style="color:var(--error)">&#9670;</span>
+<div class="agent-name">STYX</div>
+<div class="agent-alias">The Oath Keeper</div>
+<div class="agent-role">品質保証・Trust Score管理</div>
+</div>
+<div class="glass agent-card">
+<span class="agent-symbol" style="color:var(--purple)">&#9673;</span>
+<div class="agent-name">ORACLE</div>
+<div class="agent-alias">The Data Prophet</div>
+<div class="agent-role">データ分析・予測モデル</div>
+</div>
+<div class="glass agent-card">
+<span class="agent-symbol" style="color:var(--warning)">&#11043;</span>
+<div class="agent-name">AEGIS</div>
+<div class="agent-alias">The Shield Bearer</div>
+<div class="agent-role">セキュリティ・異常検知</div>
+</div>
+<div class="glass agent-card">
+<span class="agent-symbol" style="color:var(--success)">&#9674;</span>
+<div class="agent-name">NEXUS</div>
+<div class="agent-alias">The Network Weaver</div>
+<div class="agent-role">エージェント間連携・API設計</div>
+</div>
+<div class="glass agent-card">
+<span class="agent-symbol" style="color:var(--secondary)">&#10022;</span>
+<div class="agent-name">HERALD</div>
+<div class="agent-alias">The Voice of Truth</div>
+<div class="agent-role">マーケティング・コミュニケーション</div>
+</div>
+<div class="glass agent-card">
+<span class="agent-symbol" style="color:#FF6B9D">&#9671;</span>
+<div class="agent-name">KRONOS</div>
+<div class="agent-alias">The Time Lord</div>
+<div class="agent-role">スケジュール・プロジェクト管理</div>
+</div>
+<div class="glass agent-card">
+<span class="agent-symbol" style="color:#6BFFB8">&#11042;</span>
+<div class="agent-name">SENTINEL</div>
+<div class="agent-alias">The Watchful Eye</div>
+<div class="agent-role">監視・アラート・運用保守</div>
+</div>
+<div class="glass agent-card">
+<span class="agent-symbol" style="color:#999">&#9678;</span>
+<div class="agent-name">VOID</div>
+<div class="agent-alias">The Silent Observer</div>
+<div class="agent-role">実験・探索・未知領域開拓</div>
+</div>
 </div>
 </div>
 </section>
 
 <div class="section-divider"></div>
 
-<!-- ===== SECTION 8: TECHNOLOGY ASSETS ===== -->
+<!-- ===== SECTION 10: TECHNOLOGY ===== -->
 <section id="tech">
 <div class="container">
-<div class="section-label fade-in">SECTION 08</div>
-<h2 class="section-title fade-in">TECHNOLOGY ASSETS</h2>
-
-<div class="grid-2" style="margin-bottom:2rem">
-<div class="glass fade-in-left">
-<h3 style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--accent);margin-bottom:1.5rem">◈ Trust Score Engine</h3>
-<div class="radar-container">
-<canvas id="radarChart" width="350" height="350"></canvas>
-</div>
-<p style="font-size:0.8rem;color:var(--text2);text-align:center;margin-top:0.5rem">5要素の複合スコアで評価者の信頼性を定量化</p>
-</div>
-<div class="glass fade-in-right">
-<h3 style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--purple);margin-bottom:1.5rem">◉ Human Reputation System</h3>
-<div style="padding:1rem 0">
-<div class="progress-row">
-<span class="progress-name">L1 Novice</span>
-<div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--text2)" data-width="100%"></div></div>
-<span class="progress-label">100%</span>
-</div>
-<div class="progress-row">
-<span class="progress-name">L2 Contributor</span>
-<div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--success)" data-width="85%"></div></div>
-<span class="progress-label">85%</span>
-</div>
-<div class="progress-row">
-<span class="progress-name">L3 Specialist</span>
-<div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--accent)" data-width="60%"></div></div>
-<span class="progress-label">60%</span>
-</div>
-<div class="progress-row">
-<span class="progress-name">L4 Expert</span>
-<div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--warning)" data-width="30%"></div></div>
-<span class="progress-label">30%</span>
-</div>
-<div class="progress-row">
-<span class="progress-name">L5 Master</span>
-<div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--purple)" data-width="10%"></div></div>
-<span class="progress-label">10%</span>
-</div>
-</div>
-<p style="font-size:0.8rem;color:var(--text2)">評価実績・正確性・一貫性に基づく5段階レピュテーション。上位レベルほど報酬と影響力が増大</p>
-</div>
-</div>
-
+<p class="section-label fade-in">&#9670; TECHNOLOGY</p>
+<h2 class="section-title fade-in">技術基盤</h2>
+<p class="section-desc fade-in">
+検証可能な判断データを生成するための技術スタック。信頼性と拡張性を両立する設計。
+</p>
 <div class="grid-2 fade-in">
-<div class="glass" style="text-align:center;padding:2rem">
-<div style="font-size:2.5rem;margin-bottom:0.8rem">⊕</div>
-<h4 style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--accent);margin-bottom:0.5rem">Clone AI</h4>
-<p style="font-size:0.85rem;color:var(--text2)">
-個人の判断パターンを学習し、デジタルツインとして再現。<br>
-本人不在でも一貫した評価が可能に
-</p>
-<div style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--success);margin-top:0.8rem">
-Phase 4 ▸ 個人の意思決定モデルをAPI化
+<div>
+<h3 style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--accent);margin-bottom:1rem;letter-spacing:1px">&#9670; CORE STACK</h3>
+<div class="tech-item">
+<span class="tech-icon">&#9671;</span>
+<div><div class="tech-name">Next.js 15 + TypeScript</div><div class="tech-desc">フルスタックフレームワーク。SSR/SSG対応。App Router。</div></div>
+</div>
+<div class="tech-item">
+<span class="tech-icon">&#11042;</span>
+<div><div class="tech-name">Supabase (PostgreSQL)</div><div class="tech-desc">認証・DB・リアルタイム。12テーブル設計。RLS対応。</div></div>
+</div>
+<div class="tech-item">
+<span class="tech-icon">&#9674;</span>
+<div><div class="tech-name">Prisma ORM</div><div class="tech-desc">型安全なDB操作。マイグレーション管理。</div></div>
+</div>
+<div class="tech-item">
+<span class="tech-icon">&#10022;</span>
+<div><div class="tech-name">Vercel + GitHub Actions</div><div class="tech-desc">CI/CD自動化。Lint/TypeCheck/Test/Build/E2E/Deploy。</div></div>
 </div>
 </div>
-<div class="glass" style="text-align:center;padding:2rem">
-<div style="font-size:2.5rem;margin-bottom:0.8rem">◎</div>
-<h4 style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--purple);margin-bottom:0.5rem">Synthetic Population</h4>
-<p style="font-size:0.85rem;color:var(--text2)">
-数千人分のClone AIを集約し、仮想的な母集団を構築。<br>
-市場調査・政策シミュレーションに活用
-</p>
-<div style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--success);margin-top:0.8rem">
-Phase 4 ▸ 大規模意思決定シミュレーション
+<div>
+<h3 style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--secondary);margin-bottom:1rem;letter-spacing:1px">&#9670; DECISION ENGINE</h3>
+<div class="glass" style="margin-bottom:1rem">
+<div style="font-family:'Orbitron',sans-serif;font-size:0.8rem;color:var(--accent);margin-bottom:0.5rem">Trust Score - 7指標</div>
+<div style="font-size:0.85rem;color:var(--text2)">
+&#9655; 正確性スコア &#9655; 一貫性スコア &#9655; 速度スコア<br>
+&#9655; 合意率 &#9655; 専門性レベル &#9655; 信頼度推移<br>
+&#9655; 総合Trust Score（加重平均）
+</div>
+</div>
+<div class="glass" style="margin-bottom:1rem">
+<div style="font-family:'Orbitron',sans-serif;font-size:0.8rem;color:var(--error);margin-bottom:0.5rem">異常検知 - 6パターン</div>
+<div style="font-size:0.85rem;color:var(--text2)">
+&#9655; ランダム回答検知 &#9655; 速度異常 &#9655; パターン反復<br>
+&#9655; 共謀検知 &#9655; ボット検知 &#9655; 品質急変検知
+</div>
+</div>
+<div class="glass">
+<div style="font-family:'Orbitron',sans-serif;font-size:0.8rem;color:var(--purple);margin-bottom:0.5rem">合意形成アルゴリズム</div>
+<div style="font-size:0.85rem;color:var(--text2)">
+Trust Score加重投票による合意形成。信頼度の高い判断者の回答に重みを付与し、異常値を自動除外。
+</div>
+</div>
+</div>
+</div>
+<div class="glass fade-in" style="margin-top:1.5rem">
+<div style="font-family:'Orbitron',sans-serif;font-size:0.8rem;color:var(--accent);margin-bottom:0.8rem;letter-spacing:1px">&#9670; MVP SPECIFICATIONS</div>
+<div class="grid-4" style="text-align:center">
+<div>
+<div style="font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:900;color:var(--accent)">28</div>
+<div style="font-size:0.8rem;color:var(--text2)">機能</div>
+</div>
+<div>
+<div style="font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:900;color:var(--secondary)">36</div>
+<div style="font-size:0.8rem;color:var(--text2)">画面</div>
+</div>
+<div>
+<div style="font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:900;color:var(--purple)">12</div>
+<div style="font-size:0.8rem;color:var(--text2)">テーブル</div>
+</div>
+<div>
+<div style="font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:900;color:var(--success)">21</div>
+<div style="font-size:0.8rem;color:var(--text2)">API</div>
 </div>
 </div>
 </div>
@@ -1665,86 +1023,73 @@ Phase 4 ▸ 大規模意思決定シミュレーション
 
 <div class="section-divider"></div>
 
-<!-- ===== SECTION 9: GO-TO-MARKET ===== -->
+<!-- ===== SECTION 11: GO-TO-MARKET ===== -->
 <section id="gtm">
 <div class="container">
-<div class="section-label fade-in">SECTION 09</div>
-<h2 class="section-title fade-in">GO-TO-MARKET</h2>
-
-<h3 style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--accent);margin-bottom:1.5rem">◆ ターゲット顧客セグメント</h3>
+<p class="section-label fade-in">&#11043; GO-TO-MARKET</p>
+<h2 class="section-title fade-in">営業戦略</h2>
+<p class="section-desc fade-in">
+3つの初期パッケージで参入障壁を下げ、6つの訴求ポイントで受注を獲得する。
+</p>
+<h3 style="font-family:'Orbitron',sans-serif;font-size:0.95rem;color:var(--accent);margin-bottom:1rem" class="fade-in">&#9670; 営業パッケージ 3本</h3>
 <div class="grid-3 fade-in">
-<div class="glass" style="text-align:center;padding:1.5rem">
-<div style="font-size:2rem;margin-bottom:0.5rem">▲</div>
-<h4 style="font-family:'Orbitron',sans-serif;font-size:0.85rem;color:var(--accent);margin-bottom:0.5rem">AIスタートアップ</h4>
-<p style="font-size:0.85rem;color:var(--text2)">LLM/画像生成モデルの品質評価・RLHF用データが必要な企業</p>
-<div style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:var(--success);margin-top:0.8rem">Starter / Growth</div>
-</div>
-<div class="glass" style="text-align:center;padding:1.5rem">
-<div style="font-size:2rem;margin-bottom:0.5rem">⬢</div>
-<h4 style="font-family:'Orbitron',sans-serif;font-size:0.85rem;color:var(--warning);margin-bottom:0.5rem">エンタープライズ</h4>
-<p style="font-size:0.85rem;color:var(--text2)">社内AIの品質管理・コンプライアンス評価を必要とする大手企業</p>
-<div style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:var(--success);margin-top:0.8rem">Business / Enterprise</div>
-</div>
-<div class="glass" style="text-align:center;padding:1.5rem">
-<div style="font-size:2rem;margin-bottom:0.5rem">◉</div>
-<h4 style="font-family:'Orbitron',sans-serif;font-size:0.85rem;color:var(--purple);margin-bottom:0.5rem">研究機関</h4>
-<p style="font-size:0.85rem;color:var(--text2)">AI安全性研究・倫理評価データセットを必要とする大学・研究所</p>
-<div style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:var(--success);margin-top:0.8rem">Starter / カスタム</div>
+<div class="glass">
+<div style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--accent);letter-spacing:1px;margin-bottom:0.3rem">PACKAGE 01</div>
+<div style="font-family:'Orbitron',sans-serif;font-size:1rem;color:#fff;margin-bottom:0.3rem">AI回答評価</div>
+<div style="font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:900;color:var(--warning);margin-bottom:0.5rem">30万円</div>
+<div style="font-size:0.85rem;color:var(--text2)">
+LLM出力の正確性・有用性・安全性を人間が多角評価。Trust Scoreベースの品質保証付き。
 </div>
 </div>
-
-<h3 style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--secondary);text-align:center;margin:3rem 0 1rem">▸ 営業パイプライン</h3>
-<div class="pipeline fade-in">
-<div class="glass pipe-stage">
-<div class="pipe-val countup" data-target="14">0</div>
-<div class="pipe-label">リード</div>
+<div class="glass">
+<div style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--secondary);letter-spacing:1px;margin-bottom:0.3rem">PACKAGE 02</div>
+<div style="font-family:'Orbitron',sans-serif;font-size:1rem;color:#fff;margin-bottom:0.3rem">要約品質チェック</div>
+<div style="font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:900;color:var(--warning);margin-bottom:0.5rem">20万円</div>
+<div style="font-size:0.85rem;color:var(--text2)">
+AI要約の網羅性・忠実性・可読性を専門判断者が評価。比較採点・自由記述フィードバック付き。
 </div>
-<div class="glass pipe-stage">
-<div class="pipe-val countup" data-target="3">0</div>
-<div class="pipe-label">アプローチ</div>
 </div>
-<div class="glass pipe-stage">
-<div class="pipe-val countup" data-target="3">0</div>
-<div class="pipe-label">商談</div>
+<div class="glass">
+<div style="font-family:'Orbitron',sans-serif;font-size:0.7rem;color:var(--purple);letter-spacing:1px;margin-bottom:0.3rem">PACKAGE 03</div>
+<div style="font-family:'Orbitron',sans-serif;font-size:1rem;color:#fff;margin-bottom:0.3rem">広告クリエイティブ比較</div>
+<div style="font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:900;color:var(--warning);margin-bottom:0.5rem">25万円</div>
+<div style="font-size:0.85rem;color:var(--text2)">
+複数の広告クリエイティブを人間が比較評価。訴求力・信頼性・購買意欲の3軸で定量化。
 </div>
-<div class="glass pipe-stage" style="border-color:var(--success)">
-<div class="pipe-val countup" data-target="0">0</div>
-<div class="pipe-label">受注</div>
 </div>
 </div>
 
-<div class="grid-2 fade-in" style="margin-top:2rem">
-<div class="glass" style="padding:1.5rem">
-<h4 style="font-family:'Orbitron',sans-serif;font-size:0.85rem;color:var(--accent);margin-bottom:1rem">✦ Expert 200名獲得戦略</h4>
-<div style="font-size:0.85rem;color:var(--text2);line-height:2">
-▸ Phase 1: 知人ネットワーク (20名)<br>
-▸ Phase 2: SNS/コミュニティ (80名)<br>
-▸ Phase 3: リファラルプログラム (100名)<br>
-<span style="color:var(--success);font-family:'Share Tech Mono',monospace">目標: 3ヶ月で200名達成</span>
+<h3 style="font-family:'Orbitron',sans-serif;font-size:0.95rem;color:var(--secondary);margin:2.5rem 0 1rem" class="fade-in">&#9670; 刺さる訴求 6つ</h3>
+<div class="grid-3 fade-in">
+<div class="glass gtm-card">
+<div class="gtm-num">01</div>
+<div class="gtm-title">判断品質の可視化</div>
+<div style="font-size:0.85rem;color:var(--text2)">Trust Scoreで判断者の品質を定量化。「誰が判断したか」が数値で見える。</div>
 </div>
+<div class="glass gtm-card">
+<div class="gtm-num">02</div>
+<div class="gtm-title">不正の自動排除</div>
+<div style="font-size:0.85rem;color:var(--text2)">6パターンの異常検知で不正回答を自動除外。人間のチェック工数を90%削減。</div>
 </div>
-<div class="glass" style="padding:1.5rem">
-<h4 style="font-family:'Orbitron',sans-serif;font-size:0.85rem;color:var(--success);margin-bottom:1rem">◎ ゼロコストチャネル</h4>
-<div class="channel-list" style="grid-template-columns:1fr">
-<div class="channel-item" style="padding:0.4rem 0">
-<span class="channel-icon">◆</span> Discord コミュニティ運営
+<div class="glass gtm-card">
+<div class="gtm-num">03</div>
+<div class="gtm-title">コスト構造の透明性</div>
+<div style="font-size:0.85rem;color:var(--text2)">パッケージ価格制で予算管理が容易。追加コストなし。</div>
 </div>
-<div class="channel-item" style="padding:0.4rem 0">
-<span class="channel-icon">◈</span> note / Zenn 技術記事発信
+<div class="glass gtm-card">
+<div class="gtm-num">04</div>
+<div class="gtm-title">データ資産の副産物</div>
+<div style="font-size:0.85rem;color:var(--text2)">受託案件のデータは匿名化してDatasetに。クライアントはデータ利用権の割引を享受。</div>
 </div>
-<div class="channel-item" style="padding:0.4rem 0">
-<span class="channel-icon">◉</span> Podcast / YouTube解説
+<div class="glass gtm-card">
+<div class="gtm-num">05</div>
+<div class="gtm-title">スケーラビリティ</div>
+<div style="font-size:0.85rem;color:var(--text2)">3層ワーカーモデルで、案件規模に応じて柔軟にスケール。1,000件〜100万件まで対応。</div>
 </div>
-<div class="channel-item" style="padding:0.4rem 0">
-<span class="channel-icon">✦</span> 勉強会・ミートアップ登壇
-</div>
-<div class="channel-item" style="padding:0.4rem 0">
-<span class="channel-icon">▹</span> コールドメール営業
-</div>
-<div class="channel-item" style="padding:0.4rem 0">
-<span class="channel-icon">▲</span> Product Hunt ローンチ
-</div>
-</div>
+<div class="glass gtm-card">
+<div class="gtm-num">06</div>
+<div class="gtm-title">API化への道筋</div>
+<div style="font-size:0.85rem;color:var(--text2)">Ops利用企業はDecision APIの優先アクセス権を取得。データ蓄積に貢献した分だけ割引。</div>
 </div>
 </div>
 </div>
@@ -1752,60 +1097,58 @@ Phase 4 ▸ 大規模意思決定シミュレーション
 
 <div class="section-divider"></div>
 
-<!-- ===== TRACTION ===== -->
+<!-- ===== SECTION 12: TRACTION ===== -->
 <section id="traction">
 <div class="container">
-<div class="section-label fade-in">TRACTION</div>
-<h2 class="section-title fade-in">PROVEN EXECUTION</h2>
-<p class="section-desc fade-in">Phase 1で証明した実行力。ゼロコストで構築した本番稼働システム</p>
-
-<div class="traction-grid fade-in">
-<div class="traction-item">
-<span class="traction-val ghost-num" data-ghost="100%" style="color:var(--success)">100%</span>
-<span class="traction-label">技術基盤完成</span>
-<span class="traction-sub">本番稼働中</span>
+<p class="section-label fade-in">&#9673; TRACTION</p>
+<h2 class="section-title fade-in">現在の進捗</h2>
+<p class="section-desc fade-in">
+Phase 1本番稼働済み。全システムが稼働中であり、即座にDecision Ops受託を開始できる状態。
+</p>
+<div class="grid-4 fade-in">
+<div class="glass traction-stat">
+<div class="traction-num">15+</div>
+<div class="traction-label">設計ドキュメント完成</div>
 </div>
-<div class="traction-item">
-<span class="traction-val ghost-num" data-ghost="1,090" style="color:var(--accent)">
-<span class="countup" data-target="1090">0</span>
-</span>
-<span class="traction-label">タスク完了</span>
-<span class="traction-sub">AI Agent実行</span>
+<div class="glass traction-stat">
+<div class="traction-num">1,090</div>
+<div class="traction-label">タスク実績</div>
 </div>
-<div class="traction-item">
-<span class="traction-val ghost-num" data-ghost="53" style="color:var(--secondary)">
-<span class="countup" data-target="53">0</span>
-</span>
-<span class="traction-label">スキル蓄積</span>
-<span class="traction-sub">再利用可能</span>
+<div class="glass traction-stat">
+<div class="traction-num">11/11</div>
+<div class="traction-label">E2Eテスト成功</div>
 </div>
-<div class="traction-item">
-<span class="traction-val ghost-num" data-ghost="11" style="color:var(--purple)">
-<span class="countup" data-target="11">0</span>
-</span>
-<span class="traction-label">AI部門稼働</span>
-<span class="traction-sub">自律型組織</span>
+<div class="glass traction-stat">
+<div class="traction-num">100%</div>
+<div class="traction-label">Phase 1 完了率</div>
 </div>
-<div class="traction-item">
-<span class="traction-val ghost-num" data-ghost="6" style="color:var(--warning)">
-<span class="countup" data-target="6">0</span>
-</span>
-<span class="traction-label">CI/CDステージ</span>
-<span class="traction-sub">自動パイプライン</span>
 </div>
-<div class="traction-item">
-<span class="traction-val ghost-num" data-ghost="11" style="color:var(--accent)">
-<span class="countup" data-target="11">0</span>
-</span>
-<span class="traction-label">E2Eテスト</span>
-<span class="traction-sub">品質保証</span>
+<div class="grid-2 fade-in" style="margin-top:1.5rem">
+<div class="glass">
+<div style="font-family:'Orbitron',sans-serif;font-size:0.8rem;color:var(--accent);margin-bottom:0.8rem;letter-spacing:1px">&#9670; 完成済みシステム</div>
+<ul style="font-size:0.85rem;color:var(--text2);list-style:none;padding:0">
+<li style="margin-bottom:0.3rem">&#10003; Next.js 15 + Prisma + NextAuth 本番アプリ</li>
+<li style="margin-bottom:0.3rem">&#10003; Supabase PostgreSQL データベース</li>
+<li style="margin-bottom:0.3rem">&#10003; メール/Google OAuth 認証</li>
+<li style="margin-bottom:0.3rem">&#10003; GitHub Actions CI/CDパイプライン</li>
+<li style="margin-bottom:0.3rem">&#10003; Playwright E2Eテスト（11シナリオ）</li>
+<li style="margin-bottom:0.3rem">&#10003; Sentry監視 + Alert Rules</li>
+<li style="margin-bottom:0.3rem">&#10003; Vercel本番デプロイ</li>
+<li>&#10003; メール配信統合</li>
+</ul>
 </div>
-<div class="traction-item">
-<span class="traction-val ghost-num" data-ghost="78" style="color:var(--success)">
-<span class="countup" data-target="78">0</span><span style="font-size:0.6em">/100</span>
-</span>
-<span class="traction-label">セキュリティ</span>
-<span class="traction-sub">スコア</span>
+<div class="glass">
+<div style="font-family:'Orbitron',sans-serif;font-size:0.8rem;color:var(--secondary);margin-bottom:0.8rem;letter-spacing:1px">&#9670; 完成済みドキュメント</div>
+<ul style="font-size:0.85rem;color:var(--text2);list-style:none;padding:0">
+<li style="margin-bottom:0.3rem">&#10003; プロダクト要件定義書（PRD）</li>
+<li style="margin-bottom:0.3rem">&#10003; MFA Phase 2 仕様書（1,800行）</li>
+<li style="margin-bottom:0.3rem">&#10003; 技術設計書（1,400行）</li>
+<li style="margin-bottom:0.3rem">&#10003; API設計 + バージョニング戦略</li>
+<li style="margin-bottom:0.3rem">&#10003; Trust Score仕様</li>
+<li style="margin-bottom:0.3rem">&#10003; 異常検知設計</li>
+<li style="margin-bottom:0.3rem">&#10003; クローズドβテスト計画（450行）</li>
+<li>&#10003; デプロイメント運用ガイド</li>
+</ul>
 </div>
 </div>
 </div>
@@ -1813,99 +1156,63 @@ Phase 4 ▸ 大規模意思決定シミュレーション
 
 <div class="section-divider"></div>
 
-<!-- ===== SECTION 10: RISKS & MOATS ===== -->
+<!-- ===== SECTION 13: RISKS ===== -->
 <section id="risks">
 <div class="container">
-<div class="section-label fade-in">SECTION 10</div>
-<h2 class="section-title fade-in">RISKS & MOATS</h2>
-
-<div class="grid-2">
-<div class="fade-in-left">
-<h3 style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--error);margin-bottom:1rem">▼ リスク分析</h3>
-<div class="glass" style="padding:0.5rem 1rem">
-<div class="risk-row">
-<span class="risk-name">Scale AI等の既存大手参入</span>
-<div class="risk-level">
-<div class="risk-bar"><div class="risk-fill" style="width:0%;background:var(--error)" data-width="85%"></div></div>
-<div class="risk-label">HIGH</div>
+<p class="section-label fade-in">&#9670; RISKS</p>
+<h2 class="section-title fade-in">リスクと対策</h2>
+<p class="section-desc fade-in">
+5つの主要リスクを特定し、それぞれに具体的な対策を準備している。
+</p>
+<div class="grid-2 fade-in" style="gap:1.5rem">
+<div class="glass risk-item">
+<div class="risk-label">RISK 01 &#9670; HIGH</div>
+<div class="risk-title">ワーカー品質のばらつき</div>
+<div style="font-size:0.85rem;color:var(--text2)">
+判断者の品質にばらつきがあると、データの信頼性が低下する。クラウドソーシング型サービスの根本的課題。
+</div>
+<div class="risk-counter">
+&#9670; 対策: Trust Scoreによる3層認定制度。L1汎用 &#8594; L2認定 &#8594; L3専門家。低スコア者は自動的にタスクから除外。異常検知6パターンで不正を即時排除。
 </div>
 </div>
-<div class="risk-row">
-<span class="risk-name">Expert獲得の遅延</span>
-<div class="risk-level">
-<div class="risk-bar"><div class="risk-fill" style="width:0%;background:var(--warning)" data-width="70%"></div></div>
-<div class="risk-label">MID-HIGH</div>
+<div class="glass risk-item">
+<div class="risk-label">RISK 02 &#9670; HIGH</div>
+<div class="risk-title">初期受注の困難さ</div>
+<div style="font-size:0.85rem;color:var(--text2)">
+実績のないスタートアップがエンタープライズ案件を受注するのは難易度が高い。信頼構築に時間がかかる。
+</div>
+<div class="risk-counter">
+&#9670; 対策: 初回無料パイロット提供で参入障壁を下げる。パッケージ価格制（20-30万円）で意思決定を簡素化。小規模案件から実績を積み上げる。
 </div>
 </div>
-<div class="risk-row">
-<span class="risk-name">顧客獲得コスト増大</span>
-<div class="risk-level">
-<div class="risk-bar"><div class="risk-fill" style="width:0%;background:var(--warning)" data-width="60%"></div></div>
-<div class="risk-label">MEDIUM</div>
+<div class="glass risk-item">
+<div class="risk-label">RISK 03 &#9670; MEDIUM</div>
+<div class="risk-title">Scale AI等の大手参入</div>
+<div style="font-size:0.85rem;color:var(--text2)">
+資金力のある競合が類似サービスを展開した場合、価格・規模で太刀打ちできない可能性。
+</div>
+<div class="risk-counter">
+&#9670; 対策: 日本語特化 + 判断品質の定量化（Trust Score）で差別化。大手は「量」、JUDGEMENTは「検証可能な品質」で勝負。ニッチ市場での先行者利益を確保。
 </div>
 </div>
-<div class="risk-row">
-<span class="risk-name">AI自動評価の進化</span>
-<div class="risk-level">
-<div class="risk-bar"><div class="risk-fill" style="width:0%;background:var(--warning)" data-width="55%"></div></div>
-<div class="risk-label">MEDIUM</div>
+<div class="glass risk-item">
+<div class="risk-label">RISK 04 &#9670; MEDIUM</div>
+<div class="risk-title">データプライバシー規制</div>
+<div style="font-size:0.85rem;color:var(--text2)">
+判断データの匿名化・販売に関する法規制が強化される可能性。GDPR・個人情報保護法への対応コスト。
+</div>
+<div class="risk-counter">
+&#9670; 対策: 設計段階からPrivacy by Design。完全匿名化パイプライン構築済み。法務顧問の早期確保。データ利用規約の明確化。
 </div>
 </div>
-<div class="risk-row">
-<span class="risk-name">データプライバシー規制</span>
-<div class="risk-level">
-<div class="risk-bar"><div class="risk-fill" style="width:0%;background:var(--success)" data-width="40%"></div></div>
-<div class="risk-label">LOW-MID</div>
+<div class="glass risk-item" style="grid-column:1/-1;max-width:600px">
+<div class="risk-label">RISK 05 &#9670; LOW</div>
+<div class="risk-title">AI自動化による判断の陳腐化</div>
+<div style="font-size:0.85rem;color:var(--text2)">
+AIの判断能力が向上し、人間の判断が不要になるリスク。LLMの自己評価能力の進化。
 </div>
-</div>
-<div class="risk-row" style="border-bottom:none">
-<span class="risk-name">技術的負債の蓄積</span>
-<div class="risk-level">
-<div class="risk-bar"><div class="risk-fill" style="width:0%;background:var(--success)" data-width="35%"></div></div>
-<div class="risk-label">LOW</div>
-</div>
-</div>
-</div>
-</div>
-
-<div class="fade-in-right">
-<h3 style="font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--success);margin-bottom:1rem">▲ 5つの競争優位性 (MOAT)</h3>
-<div class="moat-grid" style="grid-template-columns:1fr">
-<div class="glass moat-card" style="text-align:left;display:flex;gap:1rem;align-items:flex-start">
-<div class="moat-icon">⬢</div>
-<div>
-<div class="moat-title">Trust Score Network Effect</div>
-<div class="moat-desc">評価者が増えるほどスコア精度が向上し、新規参入者が追いつけないデータ堀を形成</div>
-</div>
-</div>
-<div class="glass moat-card" style="text-align:left;display:flex;gap:1rem;align-items:flex-start">
-<div class="moat-icon">✦</div>
-<div>
-<div class="moat-title">Expert Community</div>
-<div class="moat-desc">ドメイン専門家の独占的コミュニティ。競合にはない「判断の質」を担保</div>
-</div>
-</div>
-<div class="glass moat-card" style="text-align:left;display:flex;gap:1rem;align-items:flex-start">
-<div class="moat-icon">◈</div>
-<div>
-<div class="moat-title">Proprietary Dataset</div>
-<div class="moat-desc">累積される独自評価データは複製不可能。時間とともに価値が指数的に増大</div>
-</div>
-</div>
-<div class="glass moat-card" style="text-align:left;display:flex;gap:1rem;align-items:flex-start">
-<div class="moat-icon">◉</div>
-<div>
-<div class="moat-title">Zero-Cost Operations</div>
-<div class="moat-desc">AI Agent組織による超低コスト運営。競合の1/100のコストで同品質を実現</div>
-</div>
-</div>
-<div class="glass moat-card" style="text-align:left;display:flex;gap:1rem;align-items:flex-start">
-<div class="moat-icon">⊕</div>
-<div>
-<div class="moat-title">Clone AI Technology</div>
-<div class="moat-desc">人間の判断パターンをモデル化する独自技術。市場に存在しない新カテゴリを創造</div>
-</div>
-</div>
+<div class="risk-counter">
+&#9670; 対策: 「AIが判断する」のではなく「AIの判断を検証する」ポジション。AI精度が上がるほど検証需要も増加する構造。Decision Modelは人間判断データで訓練されるため、データの価値は蓄積的に増大。
 </div>
 </div>
 </div>
@@ -1914,412 +1221,265 @@ Phase 4 ▸ 大規模意思決定シミュレーション
 
 <div class="section-divider"></div>
 
-<!-- ===== PITCH DECK ===== -->
-<section id="pitch">
-<div class="container">
-<div class="section-label fade-in">PITCH DECK</div>
-<h2 class="section-title fade-in">INVESTOR SLIDES</h2>
-<p class="section-desc fade-in">12スライド構成の投資家向けピッチ概要</p>
-
-<div class="pitch-scroll fade-in">
-<div class="pitch-card">
-<div class="pitch-num">SLIDE I</div>
-<div class="pitch-title" style="color:var(--error)">Problem</div>
-<div class="pitch-desc">AIの品質評価は人手依存で非効率。Scale AI等は品質より量を優先し、専門性の担保が困難</div>
-</div>
-<div class="pitch-card">
-<div class="pitch-num">SLIDE II</div>
-<div class="pitch-title" style="color:var(--accent)">Solution</div>
-<div class="pitch-desc">専門家ネットワーク + Trust Scoreで「判断の質」を定量化・担保するプラットフォーム</div>
-</div>
-<div class="pitch-card">
-<div class="pitch-num">SLIDE III</div>
-<div class="pitch-title" style="color:var(--secondary)">Product</div>
-<div class="pitch-desc">JUDGEMENT Game → Network → OSの3層構造。ゲーミフィケーションで専門家を獲得・維持</div>
-</div>
-<div class="pitch-card">
-<div class="pitch-num">SLIDE IV</div>
-<div class="pitch-title" style="color:var(--warning)">Market</div>
-<div class="pitch-desc">TAM 1兆円。RLHF・データラベリング・AI安全性評価市場。年間成長率25-35%</div>
-</div>
-<div class="pitch-card">
-<div class="pitch-num">SLIDE V</div>
-<div class="pitch-title" style="color:var(--success)">Business Model</div>
-<div class="pitch-desc">データ販売 → API → SaaS → Simulationの4段階収益エンジン。粗利率70-85%</div>
-</div>
-<div class="pitch-card">
-<div class="pitch-num">SLIDE VI</div>
-<div class="pitch-title" style="color:var(--accent)">Unit Economics</div>
-<div class="pitch-desc">月コスト5万→売上40万。LTV/CAC > 5x。ゼロコスト運営で極限まで効率化</div>
-</div>
-<div class="pitch-card">
-<div class="pitch-num">SLIDE VII</div>
-<div class="pitch-title" style="color:var(--purple)">Moat</div>
-<div class="pitch-desc">Trust Score NW効果 + 独自データセット + Expert Community + Clone AI技術 + ゼロコスト運営</div>
-</div>
-<div class="pitch-card">
-<div class="pitch-num">SLIDE VIII</div>
-<div class="pitch-title" style="color:var(--secondary)">Roadmap</div>
-<div class="pitch-desc">Phase 1完了 → Phase 2 MFA&初期顧客 → Phase 3 SaaS化 → Phase 4 グローバル展開</div>
-</div>
-<div class="pitch-card">
-<div class="pitch-num">SLIDE IX</div>
-<div class="pitch-title" style="color:var(--warning)">Team</div>
-<div class="pitch-desc">Founder 1名 + 9 AI Agent自律型組織。人間の意思決定 + AIの実行力で24時間開発</div>
-</div>
-<div class="pitch-card">
-<div class="pitch-num">SLIDE X</div>
-<div class="pitch-title" style="color:var(--success)">Traction</div>
-<div class="pitch-desc">1,090タスク完了 / 53スキル蓄積 / 11部門稼働 / CI/CD 6ステージ / セキュリティ78点</div>
-</div>
-<div class="pitch-card">
-<div class="pitch-num">SLIDE XI</div>
-<div class="pitch-title" style="color:var(--accent)">Funding</div>
-<div class="pitch-desc">シード 1,000万円。開発40% / マーケ25% / インフラ15% / 人件費10% / 予備10%</div>
-</div>
-<div class="pitch-card">
-<div class="pitch-num">SLIDE XII</div>
-<div class="pitch-title" style="color:var(--purple)">Vision</div>
-<div class="pitch-desc">世界最大の人間判断ネットワーク。AIが生成し、人間が決める ── その意思決定インフラを創る</div>
-</div>
-</div>
-<div class="pitch-hint">◁ スワイプして閲覧 ▷</div>
-</div>
-</section>
-
-<!-- ===== Footer ===== -->
+<!-- ===== FOOTER ===== -->
 <footer>
-<div class="foot-logo">JUDGEMENT</div>
-<p>Human Decision OS ─── Powering AI with Human Judgment</p>
-<div class="agent-marquee-wrap">
-<div class="agent-marquee">
-<span>ARCHON</span><span>═</span><span>STYX</span><span>═</span><span>ORACLE</span><span>═</span><span>AEGIS</span><span>═</span><span>NEXUS</span><span>═</span><span>HERALD</span><span>═</span><span>KRONOS</span><span>═</span><span>SENTINEL</span><span>═</span><span>VOID</span><span>═══</span>
-<span>ARCHON</span><span>═</span><span>STYX</span><span>═</span><span>ORACLE</span><span>═</span><span>AEGIS</span><span>═</span><span>NEXUS</span><span>═</span><span>HERALD</span><span>═</span><span>KRONOS</span><span>═</span><span>SENTINEL</span><span>═</span><span>VOID</span><span>═══</span>
+<div class="container">
+<div class="footer-logo">JUDGEMENT</div>
+<div style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:var(--accent);margin-bottom:0.5rem">
+Human Decision Infrastructure
 </div>
+<div class="footer-text">
+&#9671; Human Decisions &#8594; Verifiable Data &#8594; Decision Models &#9671;
 </div>
-<p style="margin-top:0.5rem;font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--accent)">
+<div style="font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--text2);margin-top:1rem">
 &#169; 2026 JUDGEMENT. All rights reserved.
-</p>
-<div class="footer-classified">
-═══ JUDGEMENT CONFIDENTIAL ─── AUTHORIZED ACCESS ONLY ═══
+</div>
 </div>
 </footer>
 
-<!-- ===== JavaScript ===== -->
 <script>
-// ===== CSSパーティクル生成（40個 + 流れ星） =====
-(function(){
-  const container = document.getElementById('particles');
-  const count = window.innerWidth < 768 ? 15 : 40;
-  const colors = ['rgba(0,180,255,0.6)','rgba(0,232,255,0.5)','rgba(139,92,246,0.5)','rgba(0,255,178,0.4)','rgba(255,255,255,0.4)'];
-  for(let i=0;i<count;i++){
-    const p = document.createElement('div');
-    p.className='particle';
-    const isShooting = i < 5;
-    const size = isShooting ? Math.random()*2+2 : Math.random()*2.5+0.5;
-    const dur = isShooting ? Math.random()*6+4 : Math.random()*15+10;
-    const anim = isShooting ? 'shootingStar' : 'particleFloat';
-    p.style.cssText=`
-      width:${size}px;height:${isShooting?1:size}px;
-      left:${Math.random()*100}%;
-      top:${Math.random()*100+100}%;
-      background:${colors[Math.floor(Math.random()*colors.length)]};
-      box-shadow:0 0 ${size*3}px ${colors[Math.floor(Math.random()*colors.length)]}${isShooting?','+size*6+'px 0 '+size*2+'px rgba(255,255,255,0.3)':''};
-      animation:${anim} ${dur}s linear infinite;
-      animation-delay:${Math.random()*15}s;
-      ${isShooting?'border-radius:0;':'border-radius:50%;'}
-    `;
-    container.appendChild(p);
-  }
-  // 流れ星キーフレームを動的に追加
-  const style = document.createElement('style');
-  style.textContent=`
-    @keyframes shootingStar{
-      0%{transform:translateY(0) translateX(0);opacity:0}
-      5%{opacity:1}
-      85%{opacity:0.8}
-      100%{transform:translateY(-80vh) translateX(120px);opacity:0}
-    }
-  `;
-  document.head.appendChild(style);
-})();
+// ===== WebGL風 Canvas パーティクル背景 =====
+const canvas = document.getElementById('bgCanvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+let connections = [];
+let mouseX = 0, mouseY = 0;
 
-// ===== IntersectionObserver: フェードインアニメーション =====
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+
+class Particle {
+  constructor() {
+    this.reset();
+  }
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.vx = (Math.random() - 0.5) * 0.5;
+    this.vy = (Math.random() - 0.5) * 0.5;
+    this.size = Math.random() * 2 + 0.5;
+    this.alpha = Math.random() * 0.5 + 0.1;
+    this.color = Math.random() > 0.7 ? '#00E8FF' : Math.random() > 0.5 ? '#8B5CF6' : '#00B4FF';
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    // マウスとの相互作用
+    const dx = mouseX - this.x;
+    const dy = mouseY - this.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < 150) {
+      this.vx -= dx * 0.00005;
+      this.vy -= dy * 0.00005;
+    }
+    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.globalAlpha = this.alpha;
+    ctx.fill();
+    // グロー
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.globalAlpha = this.alpha * 0.15;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+}
+
+const particleCount = Math.min(80, Math.floor(window.innerWidth * 0.05));
+for (let i = 0; i < particleCount; i++) {
+  particles.push(new Particle());
+}
+
+function drawConnections() {
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 150) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = '#00B4FF';
+        ctx.globalAlpha = (1 - dist / 150) * 0.15;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+    }
+  }
+}
+
+function animateBg() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => { p.update(); p.draw(); });
+  drawConnections();
+  requestAnimationFrame(animateBg);
+}
+animateBg();
+
+// ===== スクロールフェードイン =====
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       entry.target.classList.add('visible');
-      entry.target.querySelectorAll('[data-width]').forEach(el => {
-        setTimeout(() => { el.style.width = el.dataset.width; }, 200);
-      });
     }
   });
 }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-document.querySelectorAll('.fade-in,.fade-in-left,.fade-in-right').forEach(el => observer.observe(el));
+document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right').forEach(el => {
+  observer.observe(el);
+});
 
-// ===== カウントアップアニメーション =====
-const countObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting && !entry.target.dataset.counted) {
-      entry.target.dataset.counted = 'true';
-      const target = parseInt(entry.target.dataset.target);
-      const duration = 2000;
-      const start = performance.now();
-      const tick = (now) => {
-        const elapsed = now - start;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        entry.target.textContent = Math.floor(eased * target).toLocaleString();
-        if (progress < 1) requestAnimationFrame(tick);
-        else entry.target.textContent = target.toLocaleString();
-      };
-      requestAnimationFrame(tick);
-    }
-  });
-}, { threshold: 0.5 });
-
-document.querySelectorAll('.countup').forEach(el => countObserver.observe(el));
-
-// ===== ナビゲーション アクティブ状態 =====
+// ===== アクティブナビ =====
 const sections = document.querySelectorAll('section[id]');
 const navLinks = document.querySelectorAll('.nav-links a');
-const navObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      navLinks.forEach(a => a.classList.remove('active'));
-      const link = document.querySelector(`.nav-links a[href="#${entry.target.id}"]`);
-      if (link) link.classList.add('active');
-    }
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop - 100;
+    if (scrollY >= sectionTop) current = section.getAttribute('id');
   });
-}, { threshold: 0.3, rootMargin: '-80px 0px -50% 0px' });
-sections.forEach(s => navObserver.observe(s));
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+  });
+});
 
-// ===== Canvas: 売上予測バーチャート =====
+// ===== 収益チャート (Canvas) =====
 function drawRevenueChart() {
-  const canvas = document.getElementById('revenueChart');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const dpr = window.devicePixelRatio || 1;
-  const rect = canvas.parentElement.getBoundingClientRect();
-  const w = rect.width - 48;
-  const h = 280;
-  canvas.width = w * dpr;
-  canvas.height = h * dpr;
-  canvas.style.width = w + 'px';
-  canvas.style.height = h + 'px';
-  ctx.scale(dpr, dpr);
+  const c = document.getElementById('revenueChart');
+  if (!c) return;
+  const parent = c.parentElement;
+  c.width = parent.clientWidth - 48;
+  c.height = 300;
+  const cx = c.getContext('2d');
+  const w = c.width, h = c.height;
+  const pad = { top: 40, right: 20, bottom: 50, left: 60 };
+  const cw = w - pad.left - pad.right;
+  const ch = h - pad.top - pad.bottom;
 
-  const data = [
-    { label: 'Phase 1', value: 0.5, max: 1, color: '#00FFB2' },
-    { label: 'Phase 2', value: 10, max: 20, color: '#00B4FF' },
-    { label: 'Phase 3', value: 50, max: 100, color: '#00E8FF' },
-    { label: 'Phase 4', value: 100, max: 200, color: '#8B5CF6' },
-  ];
+  // データ: 月別売上(万円)
+  const months = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12'];
+  const ops =     [10, 30, 80, 150, 250, 350, 400, 420, 440, 450, 460, 470];
+  const dataset =  [0,  0,  0,  0,  20,  80, 150, 200, 250, 300, 350, 400];
+  const api =      [0,  0,  0,  0,   0,   0,  20,  50, 100, 200, 350, 630];
+  const maxVal = 1500;
 
-  const maxVal = 200;
-  const barW = Math.min(60, (w - 80) / data.length - 20);
-  const chartH = h - 70;
-  const startX = 50;
-
-  ctx.strokeStyle = 'rgba(0,180,255,0.15)';
-  ctx.lineWidth = 1;
-  ctx.font = '11px "Share Tech Mono", monospace';
-  ctx.fillStyle = '#8892b0';
-  for (let i = 0; i <= 4; i++) {
-    const y = 20 + (chartH / 4) * i;
-    ctx.beginPath(); ctx.moveTo(startX, y); ctx.lineTo(w, y); ctx.stroke();
-    const val = maxVal - (maxVal / 4) * i;
-    ctx.textAlign = 'right';
-    ctx.fillText(val + '\u5104', startX - 8, y + 4);
+  // グリッド
+  cx.strokeStyle = 'rgba(0,180,255,0.08)';
+  cx.lineWidth = 1;
+  for (let i = 0; i <= 5; i++) {
+    const y = pad.top + (ch / 5) * i;
+    cx.beginPath();
+    cx.moveTo(pad.left, y);
+    cx.lineTo(w - pad.right, y);
+    cx.stroke();
+    cx.fillStyle = '#8892b0';
+    cx.font = '10px "Share Tech Mono", monospace';
+    cx.textAlign = 'right';
+    cx.fillText(Math.round(maxVal - (maxVal / 5) * i) + '', pad.left - 8, y + 4);
   }
 
-  const gap = (w - startX - 20) / data.length;
-  data.forEach((d, i) => {
-    const x = startX + gap * i + (gap - barW) / 2;
-    const barH1 = (d.value / maxVal) * chartH;
-    const barH2 = (d.max / maxVal) * chartH;
-    const y1 = 20 + chartH - barH1;
-    const y2 = 20 + chartH - barH2;
-
-    ctx.fillStyle = d.color + '30';
-    ctx.beginPath();
-    ctx.roundRect(x, y2, barW, barH2, [4, 4, 0, 0]);
-    ctx.fill();
-
-    ctx.fillStyle = d.color;
-    ctx.shadowColor = d.color;
-    ctx.shadowBlur = 10;
-    ctx.beginPath();
-    ctx.roundRect(x, y1, barW, barH1, [4, 4, 0, 0]);
-    ctx.fill();
-    ctx.shadowBlur = 0;
-
-    ctx.fillStyle = '#e0e6ff';
-    ctx.textAlign = 'center';
-    ctx.font = '11px "Share Tech Mono", monospace';
-    ctx.fillText(d.label, x + barW / 2, 20 + chartH + 18);
-
-    ctx.fillStyle = d.color;
-    ctx.font = '10px "Share Tech Mono", monospace';
-    ctx.fillText(d.value + '-' + d.max + '\u5104', x + barW / 2, y2 - 6);
-  });
-}
-
-// ===== Canvas: 投資配分ドーナツチャート =====
-function drawInvestChart() {
-  const canvas = document.getElementById('investChart');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const dpr = window.devicePixelRatio || 1;
-  const rect = canvas.parentElement.getBoundingClientRect();
-  const w = rect.width - 48;
-  const h = 280;
-  canvas.width = w * dpr;
-  canvas.height = h * dpr;
-  canvas.style.width = w + 'px';
-  canvas.style.height = h + 'px';
-  ctx.scale(dpr, dpr);
-
-  const data = [
-    { label: '\u958B\u767A', pct: 40, color: '#00B4FF' },
-    { label: '\u30DE\u30FC\u30B1', pct: 25, color: '#8B5CF6' },
-    { label: '\u30A4\u30F3\u30D5\u30E9', pct: 15, color: '#00E8FF' },
-    { label: '\u4EBA\u4EF6\u8CBB', pct: 10, color: '#FFB800' },
-    { label: '\u4E88\u5099', pct: 10, color: '#00FFB2' },
-  ];
-
-  const cx = w / 2;
-  const cy = h / 2 - 5;
-  const r = Math.min(cx, cy) - 40;
-  const innerR = r * 0.55;
-  let startAngle = -Math.PI / 2;
-
-  data.forEach(d => {
-    const angle = (d.pct / 100) * Math.PI * 2;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, startAngle, startAngle + angle);
-    ctx.arc(cx, cy, innerR, startAngle + angle, startAngle, true);
-    ctx.closePath();
-    ctx.fillStyle = d.color;
-    ctx.shadowColor = d.color;
-    ctx.shadowBlur = 8;
-    ctx.fill();
-    ctx.shadowBlur = 0;
-
-    const midAngle = startAngle + angle / 2;
-    const lx = cx + Math.cos(midAngle) * (r + 20);
-    const ly = cy + Math.sin(midAngle) * (r + 20);
-    ctx.fillStyle = '#e0e6ff';
-    ctx.font = '11px "Rajdhani", sans-serif';
-    ctx.textAlign = Math.cos(midAngle) > 0 ? 'left' : 'right';
-    ctx.fillText(d.label + ' ' + d.pct + '%', lx, ly);
-
-    startAngle += angle;
+  // X軸ラベル
+  cx.fillStyle = '#8892b0';
+  cx.textAlign = 'center';
+  cx.font = '10px "Share Tech Mono", monospace';
+  months.forEach((m, i) => {
+    const x = pad.left + (cw / (months.length - 1)) * i;
+    cx.fillText(m, x, h - pad.bottom + 20);
   });
 
-  ctx.fillStyle = '#e0e6ff';
-  ctx.textAlign = 'center';
-  ctx.font = '700 20px "Share Tech Mono", monospace';
-  ctx.fillText('1,000\u4E07', cx, cy - 2);
-  ctx.font = '12px "Rajdhani", sans-serif';
-  ctx.fillStyle = '#8892b0';
-  ctx.fillText('\u5FC5\u8981\u8CC7\u91D1', cx, cy + 18);
-}
+  // Y軸ラベル
+  cx.save();
+  cx.translate(12, pad.top + ch / 2);
+  cx.rotate(-Math.PI / 2);
+  cx.fillStyle = '#8892b0';
+  cx.font = '10px "Share Tech Mono", monospace';
+  cx.textAlign = 'center';
+  cx.fillText('REVENUE (MAN YEN)', 0, 0);
+  cx.restore();
 
-// ===== Canvas: レーダーチャート (Trust Score) =====
-function drawRadarChart() {
-  const canvas = document.getElementById('radarChart');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const dpr = window.devicePixelRatio || 1;
-  const size = Math.min(canvas.parentElement.offsetWidth, 350);
-  canvas.width = size * dpr;
-  canvas.height = size * dpr;
-  canvas.style.width = size + 'px';
-  canvas.style.height = size + 'px';
-  ctx.scale(dpr, dpr);
-
-  const labels = ['\u6B63\u78BA\u6027', '\u4E00\u8CAB\u6027', '\u901F\u5EA6', '\u5C02\u9580\u6027', '\u4FE1\u983C\u5EA6'];
-  const values = [0.88, 0.82, 0.75, 0.90, 0.85];
-  const cx = size / 2;
-  const cy = size / 2;
-  const r = size / 2 - 40;
-  const n = labels.length;
-
-  for (let ring = 1; ring <= 5; ring++) {
-    const rr = (r / 5) * ring;
-    ctx.beginPath();
-    for (let i = 0; i <= n; i++) {
-      const angle = (Math.PI * 2 / n) * i - Math.PI / 2;
-      const x = cx + Math.cos(angle) * rr;
-      const y = cy + Math.sin(angle) * rr;
-      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  // 積み上げエリア
+  function drawArea(data, bottom, color, alpha) {
+    cx.beginPath();
+    cx.moveTo(pad.left, pad.top + ch - (bottom[0] / maxVal) * ch);
+    for (let i = 0; i < data.length; i++) {
+      const x = pad.left + (cw / (data.length - 1)) * i;
+      const y = pad.top + ch - ((bottom[i] + data[i]) / maxVal) * ch;
+      if (i === 0) cx.moveTo(x, y); else cx.lineTo(x, y);
     }
-    ctx.strokeStyle = 'rgba(0,180,255,0.1)';
-    ctx.lineWidth = 1;
-    ctx.stroke();
+    for (let i = data.length - 1; i >= 0; i--) {
+      const x = pad.left + (cw / (data.length - 1)) * i;
+      const y = pad.top + ch - (bottom[i] / maxVal) * ch;
+      cx.lineTo(x, y);
+    }
+    cx.closePath();
+    cx.fillStyle = color.replace('1)', alpha + ')');
+    cx.fill();
   }
 
-  for (let i = 0; i < n; i++) {
-    const angle = (Math.PI * 2 / n) * i - Math.PI / 2;
-    ctx.beginPath();
-    ctx.moveTo(cx, cy);
-    ctx.lineTo(cx + Math.cos(angle) * r, cy + Math.sin(angle) * r);
-    ctx.strokeStyle = 'rgba(0,180,255,0.15)';
-    ctx.stroke();
+  function drawLine(data, bottom, color) {
+    cx.beginPath();
+    cx.strokeStyle = color;
+    cx.lineWidth = 2;
+    cx.shadowColor = color;
+    cx.shadowBlur = 8;
+    for (let i = 0; i < data.length; i++) {
+      const x = pad.left + (cw / (data.length - 1)) * i;
+      const y = pad.top + ch - ((bottom[i] + data[i]) / maxVal) * ch;
+      if (i === 0) cx.moveTo(x, y); else cx.lineTo(x, y);
+    }
+    cx.stroke();
+    cx.shadowBlur = 0;
   }
 
-  ctx.beginPath();
-  values.forEach((v, i) => {
-    const angle = (Math.PI * 2 / n) * i - Math.PI / 2;
-    const x = cx + Math.cos(angle) * r * v;
-    const y = cy + Math.sin(angle) * r * v;
-    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-  });
-  ctx.closePath();
-  ctx.fillStyle = 'rgba(0,180,255,0.2)';
-  ctx.fill();
-  ctx.strokeStyle = '#00B4FF';
-  ctx.lineWidth = 2;
-  ctx.shadowColor = '#00B4FF';
-  ctx.shadowBlur = 8;
-  ctx.stroke();
-  ctx.shadowBlur = 0;
+  const bottom1 = ops.map(() => 0);
+  const bottom2 = ops.map((v, i) => v);
+  const bottom3 = ops.map((v, i) => v + dataset[i]);
 
-  values.forEach((v, i) => {
-    const angle = (Math.PI * 2 / n) * i - Math.PI / 2;
-    const x = cx + Math.cos(angle) * r * v;
-    const y = cy + Math.sin(angle) * r * v;
-    ctx.beginPath();
-    ctx.arc(x, y, 4, 0, Math.PI * 2);
-    ctx.fillStyle = '#00B4FF';
-    ctx.fill();
+  drawArea(ops, bottom1, 'rgba(0,180,255,1)', 0.2);
+  drawArea(dataset, bottom2, 'rgba(0,232,255,1)', 0.2);
+  drawArea(api, bottom3, 'rgba(139,92,246,1)', 0.2);
+  drawLine(ops, bottom1, '#00B4FF');
+  drawLine(dataset, bottom2, '#00E8FF');
+  drawLine(api, bottom3, '#8B5CF6');
 
-    const lx = cx + Math.cos(angle) * (r + 22);
-    const ly = cy + Math.sin(angle) * (r + 22);
-    ctx.fillStyle = '#e0e6ff';
-    ctx.textAlign = 'center';
-    ctx.font = '12px "Rajdhani", sans-serif';
-    ctx.fillText(labels[i], lx, ly);
-    ctx.font = '10px "Share Tech Mono", monospace';
-    ctx.fillStyle = '#00B4FF';
-    ctx.fillText(Math.round(v * 100) + '%', lx, ly + 14);
+  // 凡例
+  const legends = [
+    { label: 'Decision Ops', color: '#00B4FF' },
+    { label: 'Decision Dataset', color: '#00E8FF' },
+    { label: 'Decision API', color: '#8B5CF6' },
+  ];
+  let lx = pad.left;
+  legends.forEach(l => {
+    cx.fillStyle = l.color;
+    cx.fillRect(lx, 8, 12, 12);
+    cx.fillStyle = '#e0e6ff';
+    cx.font = '11px "Rajdhani", sans-serif';
+    cx.textAlign = 'left';
+    cx.fillText(l.label, lx + 16, 18);
+    lx += cx.measureText(l.label).width + 36;
   });
 }
 
-// ===== チャート描画 & リサイズ =====
-function drawAllCharts() {
-  drawRevenueChart();
-  drawInvestChart();
-  drawRadarChart();
-}
-
+// チャート描画タイミング
 const chartObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting && !entry.target.dataset.drawn) {
       entry.target.dataset.drawn = 'true';
-      drawAllCharts();
+      drawRevenueChart();
     }
   });
 }, { threshold: 0.1 });
@@ -2328,12 +1488,21 @@ document.querySelectorAll('canvas').forEach(c => chartObserver.observe(c));
 let resizeTimer;
 window.addEventListener('resize', () => {
   clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(drawAllCharts, 200);
+  resizeTimer = setTimeout(drawRevenueChart, 200);
 });
+window.addEventListener('load', () => setTimeout(drawRevenueChart, 500));
 
-window.addEventListener('load', () => {
-  setTimeout(drawAllCharts, 500);
-});
+// ===== グリッチ定期実行（ランダムにHEROタイトルをグリッチ） =====
+function triggerGlitch() {
+  const title = document.querySelector('.hero-title');
+  if (!title) return;
+  title.style.animation = 'none';
+  void title.offsetWidth;
+  title.style.animation = '';
+}
+setInterval(() => {
+  if (Math.random() > 0.7) triggerGlitch();
+}, 3000);
 </script>
 </body>
 </html>
