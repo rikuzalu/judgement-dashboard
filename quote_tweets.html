@@ -3,837 +3,342 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>X投稿ダッシュボード — 2026-03-17</title>
+<title>X投稿ダッシュボード</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  background: #0a0a0a;
-  color: #e0e0e0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
-  padding: 16px;
-  min-height: 100vh;
-}
-
-/* ヘッダー */
-.header { text-align: center; padding: 24px 0 16px; border-bottom: 1px solid rgba(0,180,255,0.15); margin-bottom: 20px; }
-.header h1 { font-size: 22px; color: #fff; margin-bottom: 6px; }
-.header .sub { font-size: 13px; color: rgba(255,255,255,0.4); }
-.stats { margin-top: 10px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
-.stat { display: flex; align-items: center; gap: 5px; font-size: 12px; color: rgba(255,255,255,0.5); }
-.stat-num { font-size: 18px; font-weight: 800; background: linear-gradient(135deg, #00B4FF, #00E8FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.stat-num.green { background: linear-gradient(135deg, #28c840, #20a836); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-/* コントロール行 */
-.controls { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
-.filter-btn, .toggle-btn {
-  padding: 5px 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 16px; color: rgba(255,255,255,0.5); font-size: 11px; cursor: pointer; transition: all 0.2s;
-}
-.filter-btn:hover, .filter-btn.active { background: rgba(0,180,255,0.12); border-color: rgba(0,180,255,0.3); color: #00B4FF; }
-.toggle-btn { background: rgba(40,200,64,0.06); border-color: rgba(40,200,64,0.15); color: rgba(40,200,64,0.6); }
-.toggle-btn:hover, .toggle-btn.active { background: rgba(40,200,64,0.15); border-color: rgba(40,200,64,0.3); color: #28c840; }
-.spacer { flex: 1; }
-.posted-count { font-size: 11px; color: rgba(255,255,255,0.3); }
-.posted-count strong { color: #28c840; }
-
-/* カテゴリ */
-.category { margin-bottom: 32px; }
-.category-title {
-  font-size: 16px; font-weight: 700; color: #fff; padding: 10px 14px;
-  background: rgba(0,180,255,0.06); border-left: 3px solid #00B4FF; border-radius: 0 8px 8px 0; margin-bottom: 12px;
-}
-.category-title .tag { font-size: 10px; color: #00B4FF; background: rgba(0,180,255,0.12); padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
-.category-title .views-tag { font-size: 10px; color: #ff6b6b; background: rgba(255,107,107,0.12); padding: 2px 8px; border-radius: 10px; margin-left: 4px; }
-
-/* カード */
-.card {
-  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 12px; padding: 16px; margin-bottom: 14px; transition: all 0.3s;
-}
-.card:hover { border-color: rgba(0,180,255,0.2); }
-.card.posted { opacity: 0.25; transform: scale(0.98); }
-.card.hiding { display: none; }
-
-/* カード上部 */
-.card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-.card-author { font-size: 13px; font-weight: 600; color: #00B4FF; }
-.card-views { font-size: 10px; color: #ff6b6b; background: rgba(255,107,107,0.1); padding: 2px 8px; border-radius: 10px; }
-.card-original { font-size: 11px; color: rgba(255,255,255,0.35); line-height: 1.5; margin-bottom: 6px; }
-.card-url { display: inline-block; font-size: 10px; color: rgba(0,180,255,0.5); text-decoration: none; word-break: break-all; margin-bottom: 10px; }
-.card-url:hover { color: #00B4FF; }
-
-/* タブ（引用リプライ / リプライ） */
-.tab-row { display: flex; gap: 0; margin-bottom: 8px; }
-.tab-btn {
-  padding: 6px 14px; font-size: 11px; cursor: pointer; transition: all 0.2s;
-  border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.02);
-}
-.tab-btn:first-child { border-radius: 8px 0 0 8px; }
-.tab-btn:last-child { border-radius: 0 8px 8px 0; }
-.tab-btn.active { background: rgba(0,180,255,0.1); border-color: rgba(0,180,255,0.3); color: #00B4FF; }
-.tab-btn.reply-tab.active { background: rgba(138,43,226,0.1); border-color: rgba(138,43,226,0.3); color: #B44AFF; }
-
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-
-/* テキストブロック */
-.text-block {
-  font-size: 13px; line-height: 1.8; color: #fff; white-space: pre-wrap;
-  background: rgba(0,180,255,0.04); border: 1px solid rgba(0,180,255,0.08);
-  border-radius: 8px; padding: 14px; position: relative; cursor: pointer; transition: background 0.2s;
-}
-.text-block:hover { background: rgba(0,180,255,0.08); }
-.text-block.reply-text { background: rgba(138,43,226,0.04); border-color: rgba(138,43,226,0.08); }
-.text-block.reply-text:hover { background: rgba(138,43,226,0.08); }
-.text-block::after {
-  content: 'CLICK TO COPY'; position: absolute; top: 6px; right: 10px;
-  font-size: 9px; color: rgba(255,255,255,0.2); letter-spacing: 1px; pointer-events: none;
-}
-.text-block:hover::after { color: rgba(255,255,255,0.5); }
-.text-block.copied { background: rgba(40,200,64,0.08) !important; border-color: rgba(40,200,64,0.2) !important; }
-.text-block.copied::after { content: 'COPIED!'; color: #28c840; }
-
-.char-count { text-align: right; font-size: 10px; color: rgba(255,255,255,0.2); margin-top: 4px; }
-
-/* チェックボックス */
-.check-row { display: flex; align-items: center; gap: 6px; margin-top: 10px; }
-.check-label { display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; font-size: 11px; color: rgba(255,255,255,0.3); }
-.check-label input { display: none; }
-.cb-ui {
-  width: 18px; height: 18px; border-radius: 5px; border: 2px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; transition: all 0.2s;
-}
-.check-label input:checked + .cb-ui { border-color: #28c840; background: rgba(40,200,64,0.15); }
-.check-label input:checked + .cb-ui::after { content: '\2713'; color: #28c840; font-size: 12px; font-weight: 700; }
-.check-label input:checked ~ .cb-text { color: #28c840; }
-
-/* トースト */
-.toast {
-  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
-  background: #28c840; color: #fff; padding: 10px 20px; border-radius: 8px;
-  font-size: 13px; font-weight: 600; opacity: 0; transition: all 0.3s; z-index: 1000; pointer-events: none;
-}
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-@media (max-width: 600px) {
-  body { padding: 10px; }
-  .text-block { font-size: 12px; padding: 12px; }
-}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;padding:12px;min-height:100vh}
+.hdr{text-align:center;padding:20px 0 12px;border-bottom:1px solid rgba(0,180,255,.15);margin-bottom:16px}
+.hdr h1{font-size:20px;color:#fff;margin-bottom:4px}
+.hdr .sub{font-size:12px;color:rgba(255,255,255,.35)}
+.stats{margin-top:8px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+.st{display:flex;align-items:center;gap:4px;font-size:11px;color:rgba(255,255,255,.45)}
+.sn{font-size:17px;font-weight:800;background:linear-gradient(135deg,#00B4FF,#00E8FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sn.g{background:linear-gradient(135deg,#28c840,#20a836);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.ctrl{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.fb,.tb{padding:4px 10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;color:rgba(255,255,255,.45);font-size:10px;cursor:pointer;transition:all .2s}
+.fb:hover,.fb.on{background:rgba(0,180,255,.12);border-color:rgba(0,180,255,.3);color:#00B4FF}
+.tb{background:rgba(40,200,64,.06);border-color:rgba(40,200,64,.12);color:rgba(40,200,64,.5)}
+.tb:hover,.tb.on{background:rgba(40,200,64,.15);border-color:rgba(40,200,64,.3);color:#28c840}
+.sp{flex:1}.pc{font-size:10px;color:rgba(255,255,255,.25)}
+.pc strong{color:#28c840}
+.cat{margin-bottom:28px}
+.ct{font-size:15px;font-weight:700;color:#fff;padding:8px 12px;background:rgba(0,180,255,.06);border-left:3px solid #00B4FF;border-radius:0 6px 6px 0;margin-bottom:10px}
+.ct .tg{font-size:9px;color:#00B4FF;background:rgba(0,180,255,.12);padding:1px 6px;border-radius:8px;margin-left:6px}
+.ct .vt{font-size:9px;color:#ff6b6b;background:rgba(255,107,107,.12);padding:1px 6px;border-radius:8px;margin-left:3px}
+.cd{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:14px;margin-bottom:12px;transition:all .3s}
+.cd:hover{border-color:rgba(0,180,255,.2)}
+.cd.done{opacity:.2;transform:scale(.98)}.cd.hid{display:none}
+.ct2{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.au{font-size:12px;font-weight:600;color:#00B4FF}
+.vw{font-size:9px;color:#ff6b6b;background:rgba(255,107,107,.08);padding:1px 6px;border-radius:8px}
+.og{font-size:10px;color:rgba(255,255,255,.3);line-height:1.5;margin-bottom:4px}
+.ul{display:inline-block;font-size:9px;color:rgba(0,180,255,.45);text-decoration:none;word-break:break-all;margin-bottom:8px}
+.ul:hover{color:#00B4FF}
+.tr{display:flex;gap:0;margin-bottom:6px}
+.tn{padding:4px 10px;font-size:10px;cursor:pointer;transition:all .2s;border:1px solid rgba(255,255,255,.06);color:rgba(255,255,255,.35);background:rgba(255,255,255,.02)}
+.tn:first-child{border-radius:6px 0 0 6px}.tn:last-child{border-radius:0 6px 6px 0}
+.tn.on{background:rgba(0,180,255,.1);border-color:rgba(0,180,255,.25);color:#00B4FF}
+.tn.rp.on{background:rgba(138,43,226,.1);border-color:rgba(138,43,226,.25);color:#B44AFF}
+.tc{display:none}.tc.on{display:block}
+/* パターン選択 */
+.ps{display:flex;gap:4px;margin-bottom:6px}
+.pb{width:24px;height:24px;border-radius:50%;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:rgba(255,255,255,.3);font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.pb:hover{border-color:rgba(0,180,255,.3);color:#00B4FF}
+.pb.on{background:rgba(0,180,255,.15);border-color:#00B4FF;color:#00B4FF}
+.pb.rp.on{background:rgba(138,43,226,.15);border-color:#B44AFF;color:#B44AFF}
+.pt{display:none}.pt.on{display:block}
+.tx{font-size:12px;line-height:1.8;color:#fff;white-space:pre-wrap;background:rgba(0,180,255,.04);border:1px solid rgba(0,180,255,.06);border-radius:6px;padding:12px;position:relative;cursor:pointer;transition:background .2s}
+.tx:hover{background:rgba(0,180,255,.08)}
+.tx.rt{background:rgba(138,43,226,.04);border-color:rgba(138,43,226,.06)}
+.tx.rt:hover{background:rgba(138,43,226,.08)}
+.tx::after{content:'COPY';position:absolute;top:4px;right:8px;font-size:8px;color:rgba(255,255,255,.15);letter-spacing:1px;pointer-events:none}
+.tx:hover::after{color:rgba(255,255,255,.4)}
+.tx.cp{background:rgba(40,200,64,.08)!important;border-color:rgba(40,200,64,.15)!important}
+.tx.cp::after{content:'COPIED!';color:#28c840}
+.cc{text-align:right;font-size:9px;color:rgba(255,255,255,.15);margin-top:2px}
+.ck{display:flex;align-items:center;gap:5px;margin-top:8px}
+.cl{display:flex;align-items:center;gap:5px;cursor:pointer;user-select:none;font-size:10px;color:rgba(255,255,255,.25)}
+.cl input{display:none}
+.cu{width:16px;height:16px;border-radius:4px;border:2px solid rgba(255,255,255,.1);background:rgba(255,255,255,.02);display:flex;align-items:center;justify-content:center;transition:all .2s}
+.cl input:checked+.cu{border-color:#28c840;background:rgba(40,200,64,.12)}
+.cl input:checked+.cu::after{content:'\2713';color:#28c840;font-size:11px;font-weight:700}
+.cl input:checked~.cx{color:#28c840}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(16px);background:#28c840;color:#fff;padding:8px 18px;border-radius:6px;font-size:12px;font-weight:600;opacity:0;transition:all .3s;z-index:1000;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:600px){body{padding:8px}.tx{font-size:11px;padding:10px}}
 </style>
 </head>
 <body>
-
-<div class="header">
-  <h1>X投稿ダッシュボード</h1>
-  <div class="sub">10万表示以上のバズ投稿 — 引用リプライ & リプライ</div>
-  <div class="stats">
-    <div class="stat"><span class="stat-num" id="remainCount">-</span> 残り</div>
-    <div class="stat"><span class="stat-num green" id="doneCount">0</span> 投稿済み</div>
-  </div>
+<div class="hdr">
+<h1>X投稿ダッシュボード</h1>
+<div class="sub">10万+ views バズ投稿 — 引用RT & リプライ × 3パターン | 12時間更新</div>
+<div class="stats">
+<div class="st"><span class="sn" id="rc">-</span>残り</div>
+<div class="st"><span class="sn g" id="dc">0</span>投稿済み</div>
+<div class="st"><span class="sn" id="tc2">-</span>投稿</div>
+</div>
+</div>
+<div class="ctrl">
+<button class="fb on" onclick="fl('all')">ALL</button>
+<button class="fb" onclick="fl('kp')">Karpathy</button>
+<button class="fb" onclick="fl('mn')">Manus</button>
+<button class="fb" onclick="fl('cc')">Claude Code</button>
+<button class="fb" onclick="fl('cd')">Codex/Devin</button>
+<button class="fb" onclick="fl('oc')">OpenClaw</button>
+<button class="fb" onclick="fl('mk')">Market</button>
+<span class="sp"></span>
+<button class="tb on" id="hpb" onclick="thp()">投稿済み非表示</button>
 </div>
 
-<div class="controls">
-  <button class="filter-btn active" onclick="filterCards('all')">ALL</button>
-  <button class="filter-btn" onclick="filterCards('karpathy')">Karpathy</button>
-  <button class="filter-btn" onclick="filterCards('manus')">Manus</button>
-  <button class="filter-btn" onclick="filterCards('claudecode')">Claude Code</button>
-  <button class="filter-btn" onclick="filterCards('market')">Market</button>
-  <span class="spacer"></span>
-  <button class="toggle-btn active" id="hidePostedBtn" onclick="toggleHidePosted()">投稿済み非表示</button>
-  <span class="posted-count" id="postedCount"></span>
-</div>
-
-<!-- ==================== Karpathy ==================== -->
-<div class="category" data-cat="karpathy">
-  <div class="category-title">Karpathy — autoresearch & AgentHub <span class="tag">MEGA VIRAL</span> <span class="views-tag">5M+ views</span></div>
-
-  <div class="card" data-cat="karpathy" data-id="k1">
-    <div class="card-top">
-      <span class="card-author">Andrej Karpathy</span>
-      <span class="card-views">数百万 views</span>
-    </div>
-    <div class="card-original">autoresearchの次のステップ：SETI@homeスタイルの大規模非同期エージェントコラボ。1人のPhD学生ではなく研究コミュニティを再現する。</div>
-    <a class="card-url" href="https://x.com/karpathy/status/2030705271627284816" target="_blank">x.com/karpathy/status/2030705271627284816</a>
-
-    <div class="tab-row">
-      <div class="tab-btn active" onclick="switchTab(this,'qt')">引用リプライ</div>
-      <div class="tab-btn reply-tab" onclick="switchTab(this,'rp')">リプライ</div>
-    </div>
-    <div class="tab-content active" data-tab="qt">
-      <div class="text-block" onclick="copyText(this)">「1人の天才を模倣するんじゃない。
-コミュニティを模倣するんだ」
-
-これ、AIエージェント時代の本質。
-
-"優秀な個"より"連携する組織"。
-
-1体のAIをどれだけ賢くしても限界がある。
-でも複数体が非同期で連携したら
-人間の組織と同じ構造が生まれる。
-
-「マネジメント」のスキルが
-AIに対しても必要になる時代、来てる。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="tab-content" data-tab="rp">
-      <div class="text-block reply-text" onclick="copyText(this)">SETI@homeの例え、完璧すぎる。
-
-分散してるけど全体として1つの目的に向かう。
-まさにエージェント群のあるべき姿。
-
-今のマルチエージェントの課題って
-「どう連携させるか」の設計論が
-まだ確立してないことだと思うんですが、
-この方向性がスタンダードになりそうですね。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="check-row">
-      <label class="check-label"><input type="checkbox" onchange="onCheck(this)"><span class="cb-ui"></span><span class="cb-text">投稿済み</span></label>
-    </div>
-  </div>
-
-  <div class="card" data-cat="karpathy" data-id="k2">
-    <div class="card-top">
-      <span class="card-author">Greg Isenberg</span>
-      <span class="card-views">数百万 views</span>
-    </div>
-    <div class="card-original">「karpathy just broke the internet with something called auto research — AIリサーチエージェントが24/7実験を回してくれる」</div>
-    <a class="card-url" href="https://x.com/gregisenberg/status/2031870162702381515" target="_blank">x.com/gregisenberg/status/2031870162702381515</a>
-
-    <div class="tab-row">
-      <div class="tab-btn active" onclick="switchTab(this,'qt')">引用リプライ</div>
-      <div class="tab-btn reply-tab" onclick="switchTab(this,'rp')">リプライ</div>
-    </div>
-    <div class="tab-content active" data-tab="qt">
-      <div class="text-block" onclick="copyText(this)">「寝てる間に100回実験して、
-勝ちパターンだけ残してくれる」
-
-これ、研究だけの話じゃない。
-
-マーケティングのA/Bテスト、
-LPの最適化、価格戦略の検証——
-
-あらゆるビジネスの意思決定が
-「人間が考える」から
-「AIが実験して人間が判断する」に変わる。
-
-この構造変化、ガチでやばい。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="tab-content" data-tab="rp">
-      <div class="text-block reply-text" onclick="copyText(this)">「broke the internet」は大げさじゃないですね。
-
-これの本質は
-「人間がゴールを設定して、AIが手段を最適化する」
-という役割分担が明確になったこと。
-
-LPの改善、広告の最適化、
-モデルのチューニング...
-
-「何を改善するか」を定義できる人が
-一番価値を持つ時代に入った。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="check-row">
-      <label class="check-label"><input type="checkbox" onchange="onCheck(this)"><span class="cb-ui"></span><span class="cb-text">投稿済み</span></label>
-    </div>
-  </div>
-
-  <div class="card" data-cat="karpathy" data-id="k3">
-    <div class="card-top">
-      <span class="card-author">Andrej Karpathy</span>
-      <span class="card-views">100万+ views</span>
-    </div>
-    <div class="card-original">autoresearchをパッケージ化。630行のコードでGPU1枚、人間がプロンプトを磨き、AIがトレーニングコードを最適化する。週末に「mini-viral」</div>
-    <a class="card-url" href="https://x.com/karpathy/status/2030371219518931079" target="_blank">x.com/karpathy/status/2030371219518931079</a>
-
-    <div class="tab-row">
-      <div class="tab-btn active" onclick="switchTab(this,'qt')">引用リプライ</div>
-      <div class="tab-btn reply-tab" onclick="switchTab(this,'rp')">リプライ</div>
-    </div>
-    <div class="tab-content active" data-tab="qt">
-      <div class="text-block" onclick="copyText(this)">630行。GPU1枚。
-
-これだけで
-AIが自分で実験を回し続けて、
-勝ちパターンを見つけてくれる。
-
-「AIが人間の代わりに研究する」じゃなくて、
-「人間が方向を決めて、AIが手を動かす」。
-
-この役割分担が美しい。
-
-2026年の最重要スキルは
-「何を最適化すべきか」を定義する力。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="tab-content" data-tab="rp">
-      <div class="text-block reply-text" onclick="copyText(this)">630行に収まるってのが
-本当にすごい。
-
-複雑さは価値じゃない。
-シンプルさこそが再現性を生む。
-
-これを自分のドメインに応用する人が
-今週末から爆発的に増えそうですね。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="check-row">
-      <label class="check-label"><input type="checkbox" onchange="onCheck(this)"><span class="cb-ui"></span><span class="cb-text">投稿済み</span></label>
-    </div>
-  </div>
-</div>
-
-<!-- ==================== Meta x Manus ==================== -->
-<div class="category" data-cat="manus">
-  <div class="category-title">Meta x Manus AI — $2B買収 <span class="tag">BIG NEWS</span> <span class="views-tag">1M+ views</span></div>
-
-  <div class="card" data-cat="manus" data-id="m1">
-    <div class="card-top">
-      <span class="card-author">Deedy Das</span>
-      <span class="card-views">100万+ views</span>
-    </div>
-    <div class="card-original">「Meta just bought Manus for >$1B. 消費者AIアプリで$100M+ ARR達成は8社のみ。Meta AIにはプロダクトがない。最も安く、最もAlignedな買収」</div>
-    <a class="card-url" href="https://x.com/deedydas/status/2005798365733478490" target="_blank">x.com/deedydas/status/2005798365733478490</a>
-
-    <div class="tab-row">
-      <div class="tab-btn active" onclick="switchTab(this,'qt')">引用リプライ</div>
-      <div class="tab-btn reply-tab" onclick="switchTab(this,'rp')">リプライ</div>
-    </div>
-    <div class="tab-content active" data-tab="qt">
-      <div class="text-block" onclick="copyText(this)">この一覧がすごい。
-
-$100M+ ARRの消費者AIアプリ、
-まだ世界に8社しかない。
-
-Perplexity $20B
-ElevenLabs $6.6B
-Lovable $6.6B
-Replit $3B+
-Manus $500M（→Meta買収）
-
-つまりAIの「作る」側は飽和してきたけど、
-「使う側のプロダクト」はまだ8社。
-
-ここにチャンスがある。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="tab-content" data-tab="rp">
-      <div class="text-block reply-text" onclick="copyText(this)">「Meta AIにはプロダクトがない」
-これが全てを物語ってますよね。
-
-30億人のユーザーベースがあっても、
-AIプロダクトがなければ意味がない。
-
-Manusを買ったのは
-「技術」じゃなくて「プロダクト力」を買った。
-
-AI時代でも結局、
-ユーザー体験を作れるチームが勝つ。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="check-row">
-      <label class="check-label"><input type="checkbox" onchange="onCheck(this)"><span class="cb-ui"></span><span class="cb-text">投稿済み</span></label>
-    </div>
-  </div>
-
-  <div class="card" data-cat="manus" data-id="m2">
-    <div class="card-top">
-      <span class="card-author">Greg Isenberg</span>
-      <span class="card-views">100万+ views</span>
-    </div>
-    <div class="card-original">「Manus AI sold for $1-2B to Meta. Manusはディストリビューションを最優先投資として扱い、クリエイターに重課金してアテンションを獲得した」</div>
-    <a class="card-url" href="https://x.com/gregisenberg/status/2006016564751908885" target="_blank">x.com/gregisenberg/status/2006016564751908885</a>
-
-    <div class="tab-row">
-      <div class="tab-btn active" onclick="switchTab(this,'qt')">引用リプライ</div>
-      <div class="tab-btn reply-tab" onclick="switchTab(this,'rp')">リプライ</div>
-    </div>
-    <div class="tab-content active" data-tab="qt">
-      <div class="text-block" onclick="copyText(this)">Manusの勝因、技術じゃなくて
-「配信戦略」だったの面白すぎる。
-
-クリエイターに「使ってもらう」ことに
-本気で投資した。
-
-AI時代のスタートアップの勝ちパターン：
-1. プロダクトを作る
-2. インフルエンサーに使わせる
-3. バイラルで一気に拡散
-4. ARRで買収される
-
-技術力 < 配信力。
-この逆転、もっと議論されるべき。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="tab-content" data-tab="rp">
-      <div class="text-block reply-text" onclick="copyText(this)">「distribution as a first-class expense」
-この表現、刺さる。
-
-多くのスタートアップが
-プロダクト開発に全リソースを注いで
-配信を後回しにする。
-
-Manusは逆。
-最初からクリエイターマーケティングに投資した。
-
-AI時代は「作れる」が当たり前になったから、
-「届けられる」が最大の差別化になる。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="check-row">
-      <label class="check-label"><input type="checkbox" onchange="onCheck(this)"><span class="cb-ui"></span><span class="cb-text">投稿済み</span></label>
-    </div>
-  </div>
-
-  <div class="card" data-cat="manus" data-id="m3">
-    <div class="card-top">
-      <span class="card-author">Financial Times</span>
-      <span class="card-views">500万+ views</span>
-    </div>
-    <div class="card-original">「MetaによるManus買収は、米テック大手が中国ルーツのAIプラットフォームを獲得する稀な例。米中AI競争の火種になる可能性」</div>
-    <a class="card-url" href="https://x.com/FT/status/2006017711768256575" target="_blank">x.com/FT/status/2006017711768256575</a>
-
-    <div class="tab-row">
-      <div class="tab-btn active" onclick="switchTab(this,'qt')">引用リプライ</div>
-      <div class="tab-btn reply-tab" onclick="switchTab(this,'rp')">リプライ</div>
-    </div>
-    <div class="tab-content active" data-tab="qt">
-      <div class="text-block" onclick="copyText(this)">この買収、テック視点だけで見ちゃダメ。
-
-地政学の話。
-
-中国ルーツのAIスタートアップを
-米テック大手が買収する。
-
-AI競争が国家間の問題になってる中で、
-Metaがこれをやったのはかなりのリスクテイク。
-
-「技術に国境はない」のか、
-「AIには国境がある」のか。
-
-この問いの答えが、
-2026年の後半に見えてくるはず。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="tab-content" data-tab="rp">
-      <div class="text-block reply-text" onclick="copyText(this)">地政学リスクを超えてでも
-買収に踏み切ったということは、
-それだけ「AIエージェント」の価値が
-高いということ。
-
-10日で合意という速さも含めて、
-AIエージェント市場の争奪戦が
-どれだけ熾烈か伝わりますね。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="check-row">
-      <label class="check-label"><input type="checkbox" onchange="onCheck(this)"><span class="cb-ui"></span><span class="cb-text">投稿済み</span></label>
-    </div>
-  </div>
-</div>
-
-<!-- ==================== Claude Code ==================== -->
-<div class="category" data-cat="claudecode">
-  <div class="category-title">Claude Code — Googleエンジニア告白 & 覇権争い <span class="tag">540万+ views</span></div>
-
-  <div class="card" data-cat="claudecode" data-id="c1">
-    <div class="card-top">
-      <span class="card-author">Jaana Dogan (Google Principal Engineer)</span>
-      <span class="card-views">540万 views</span>
-    </div>
-    <div class="card-original">「冗談じゃなくてこれ笑えない。Googleで1年かけて作った分散エージェントオーケストレーター、Claude Codeに説明したら1時間で生成された」</div>
-    <a class="card-url" href="https://x.com/rakyll/status/2007239758158975130" target="_blank">x.com/rakyll/status/2007239758158975130</a>
-
-    <div class="tab-row">
-      <div class="tab-btn active" onclick="switchTab(this,'qt')">引用リプライ</div>
-      <div class="tab-btn reply-tab" onclick="switchTab(this,'rp')">リプライ</div>
-    </div>
-    <div class="tab-content active" data-tab="qt">
-      <div class="text-block" onclick="copyText(this)">Googleのプリンシパルエンジニアが
-「1年かかったものがClaude Codeで1時間」
-と告白した。540万回表示。
-
-でも本人が後で補足してる。
-「1年間の知見があったから、
-3段落の説明で伝えられた」と。
-
-つまり重要なのは
-「AIが速い」じゃなくて、
-「人間の知見 × AIの実行速度」の掛け算。
-
-経験の価値は消えない。むしろ増す。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="tab-content" data-tab="rp">
-      <div class="text-block reply-text" onclick="copyText(this)">これ、後の補足が本質だと思います。
-
-「1年間学んで、パターンを見つけて、
-それを3段落で説明したら1時間で出来た」
-
-つまりAIは「実装」を高速化するけど、
-「何を作るべきか」を見極める力は
-人間の経験からしか生まれない。
-
-AIに仕事を奪われる人と
-AIで仕事が加速する人の違いは、
-この「知見」の有無ですね。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="check-row">
-      <label class="check-label"><input type="checkbox" onchange="onCheck(this)"><span class="cb-ui"></span><span class="cb-text">投稿済み</span></label>
-    </div>
-  </div>
-
-  <div class="card" data-cat="claudecode" data-id="c2">
-    <div class="card-top">
-      <span class="card-author">Miles Deutscher</span>
-      <span class="card-views">100万+ views</span>
-    </div>
-    <div class="card-original">「Claude Code is going mega viral on X. 情報が多すぎるから、本当に価値のある1%だけをフィルターした記事を書いた」</div>
-    <a class="card-url" href="https://x.com/milesdeutscher/status/2012237674409796036" target="_blank">x.com/milesdeutscher/status/2012237674409796036</a>
-
-    <div class="tab-row">
-      <div class="tab-btn active" onclick="switchTab(this,'qt')">引用リプライ</div>
-      <div class="tab-btn reply-tab" onclick="switchTab(this,'rp')">リプライ</div>
-    </div>
-    <div class="tab-content active" data-tab="qt">
-      <div class="text-block" onclick="copyText(this)">Claude Codeが「mega viral」になって
-情報が多すぎるから
-1%だけフィルターした、と。
-
-これ自体が2026年の構造を象徴してる。
-
-AIツールが爆速で進化して、
-情報量が処理能力を超える。
-
-「全部追う」のは無理。
-「何を無視するか」を判断できる人が勝つ。
-
-キュレーション力 = 最強スキル。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="tab-content" data-tab="rp">
-      <div class="text-block reply-text" onclick="copyText(this)">「1%だけフィルター」
-まさに今一番必要な仕事ですね。
-
-AI関連の情報量が爆発してるのに
-日本語で質の高いフィルタリングをしてる人が
-まだ圧倒的に少ない。
-
-この記事、英語読めない人にも
-共有したいレベル。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="check-row">
-      <label class="check-label"><input type="checkbox" onchange="onCheck(this)"><span class="cb-ui"></span><span class="cb-text">投稿済み</span></label>
-    </div>
-  </div>
-
-  <div class="card" data-cat="claudecode" data-id="c3">
-    <div class="card-top">
-      <span class="card-author">Andrej Karpathy</span>
-      <span class="card-views">数百万 views</span>
-    </div>
-    <div class="card-original">「CLIはレガシー技術だからこそAIエージェントがネイティブに使える。超エキサイティング」</div>
-    <a class="card-url" href="https://x.com/karpathy/status/2026360908398862478" target="_blank">x.com/karpathy/status/2026360908398862478</a>
-
-    <div class="tab-row">
-      <div class="tab-btn active" onclick="switchTab(this,'qt')">引用リプライ</div>
-      <div class="tab-btn reply-tab" onclick="switchTab(this,'rp')">リプライ</div>
-    </div>
-    <div class="tab-content active" data-tab="qt">
-      <div class="text-block" onclick="copyText(this)">「レガシー技術だからこそAIと相性がいい」
-
-この逆説、面白すぎる。
-
-GUIのきれいな画面は人間のためのもの。
-AIにはターミナルで十分。
-むしろターミナルの方が速い。
-
-「古い技術」が「最新のAI」の最適解になる。
-
-技術の進化って直線じゃなくて
-螺旋なんだなって実感する。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="tab-content" data-tab="rp">
-      <div class="text-block reply-text" onclick="copyText(this)">これ、UIデザインの常識が
-ひっくり返る瞬間ですね。
-
-「使いやすいUI」の定義が
-人間とAIで完全に違う。
-
-人間：ビジュアル、直感的、GUI
-AI：テキスト、構造化、CLI
-
-今後は「人間用UI」と「AI用UI」の
-両方を設計する必要が出てきそう。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="check-row">
-      <label class="check-label"><input type="checkbox" onchange="onCheck(this)"><span class="cb-ui"></span><span class="cb-text">投稿済み</span></label>
-    </div>
-  </div>
-</div>
-
-<!-- ==================== Market / Other ==================== -->
-<div class="category" data-cat="market">
-  <div class="category-title">マーケット & ビジョン <span class="tag">HIGH IMPACT</span></div>
-
-  <div class="card" data-cat="market" data-id="o1">
-    <div class="card-top">
-      <span class="card-author">Greg Isenberg</span>
-      <span class="card-views">500万+ views</span>
-    </div>
-    <div class="card-original">「2026年の夜も眠れない話... AI彼女/彼氏は$50B市場になる。深夜2時のApp Storeランキングを見ろ。2026年最も価値あるスキルは...」</div>
-    <a class="card-url" href="https://x.com/gregisenberg/status/1956703650744578091" target="_blank">x.com/gregisenberg/status/1956703650744578091</a>
-
-    <div class="tab-row">
-      <div class="tab-btn active" onclick="switchTab(this,'qt')">引用リプライ</div>
-      <div class="tab-btn reply-tab" onclick="switchTab(this,'rp')">リプライ</div>
-    </div>
-    <div class="tab-content active" data-tab="qt">
-      <div class="text-block" onclick="copyText(this)">「深夜2時のApp Storeを見ろ」
-
-これ、めちゃくちゃリアル。
-
-表では誰もAI彼女の話をしない。
-でも裏では$50B市場が育ってる。
-
-AIと人間の関係性が
-「ツール」から「パートナー」に変わってる。
-
-表で語られないものほど
-市場としてはデカくなる。
-これ、歴史が証明してる。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="tab-content" data-tab="rp">
-      <div class="text-block reply-text" onclick="copyText(this)">「nobody will talk about it publicly」
-ここが一番重要なポイントですよね。
-
-タブー視されてる市場ほど
-競合が少なくて成長余地がある。
-
-SNS、ポルノ、ギャンブル——
-「人に言えないサービス」は
-歴史的に巨大市場になってきた。
-
-AI彼女/彼氏はその最新版。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="check-row">
-      <label class="check-label"><input type="checkbox" onchange="onCheck(this)"><span class="cb-ui"></span><span class="cb-text">投稿済み</span></label>
-    </div>
-  </div>
-
-  <div class="card" data-cat="market" data-id="o2">
-    <div class="card-top">
-      <span class="card-author">OpenAI (公式)</span>
-      <span class="card-views">1000万+ views</span>
-    </div>
-    <div class="card-original">「Announcing The Stargate Project — $500Bを4年かけてAIインフラに投資。まず$100Bを即座に展開」</div>
-    <a class="card-url" href="https://x.com/OpenAI/status/1881830103858172059" target="_blank">x.com/OpenAI/status/1881830103858172059</a>
-
-    <div class="tab-row">
-      <div class="tab-btn active" onclick="switchTab(this,'qt')">引用リプライ</div>
-      <div class="tab-btn reply-tab" onclick="switchTab(this,'rp')">リプライ</div>
-    </div>
-    <div class="tab-content active" data-tab="qt">
-      <div class="text-block" onclick="copyText(this)">$500B。日本円で約75兆円。
-
-これ、日本の国家予算の半分以上を
-1社のAIインフラに投資するということ。
-
-スケールの桁が違いすぎて
-もはや「企業の投資」じゃなくて
-「国家プロジェクト」。
-
-AIは産業じゃない。
-新しい文明の基盤。
-
-この規模感を理解してる日本人、
-まだ少ないと思う。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="tab-content" data-tab="rp">
-      <div class="text-block reply-text" onclick="copyText(this)">$500B = 日本の国家予算の半分超。
-「immediately deploy $100B」の即座感もすごい。
-
-これが意味するのは
-AIインフラが電気・水道と同じ
-社会基盤になるということ。
-
-Stargateという名前の通り、
-「次の世界への入口」を
-本気で作ろうとしてる。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="check-row">
-      <label class="check-label"><input type="checkbox" onchange="onCheck(this)"><span class="cb-ui"></span><span class="cb-text">投稿済み</span></label>
-    </div>
-  </div>
-
-  <div class="card" data-cat="market" data-id="o3">
-    <div class="card-top">
-      <span class="card-author">Greg Isenberg</span>
-      <span class="card-views">数百万 views</span>
-    </div>
-    <div class="card-original">「2026 AI predictions — SaaSとエージェントが完全に融合。適応しないものは死ぬか二束三文で買われる。OpenClaw等のオープンソース」</div>
-    <a class="card-url" href="https://x.com/gregisenberg/status/1993309765426962612" target="_blank">x.com/gregisenberg/status/1993309765426962612</a>
-
-    <div class="tab-row">
-      <div class="tab-btn active" onclick="switchTab(this,'qt')">引用リプライ</div>
-      <div class="tab-btn reply-tab" onclick="switchTab(this,'rp')">リプライ</div>
-    </div>
-    <div class="tab-content active" data-tab="qt">
-      <div class="text-block" onclick="copyText(this)">「SaaSとエージェントが融合する。
-適応しないものは死ぬか二束三文で買われる」
-
-この予測、もう現実になりつつある。
-
-SaaSの価値は「機能」から
-「その機能を自律的に実行するエージェント」に移った。
-
-ダッシュボードを「見る」ツールから
-ダッシュボードを「見て判断して実行する」ツールへ。
-
-SaaS業界、地殻変動の真っ只中。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="tab-content" data-tab="rp">
-      <div class="text-block reply-text" onclick="copyText(this)">「adapt or die」がSaaS業界に
-これほど当てはまる時代はないですね。
-
-既存のSaaSが
-「エージェント機能を追加する」のか、
-新しいエージェントネイティブSaaSが
-「既存を置き換える」のか。
-
-個人的には後者が勝つと思ってます。
-既存のUI前提で作られたものに
-エージェントを後付けしても
-本来の力は発揮できない。</div>
-      <div class="char-count"></div>
-    </div>
-    <div class="check-row">
-      <label class="check-label"><input type="checkbox" onchange="onCheck(this)"><span class="cb-ui"></span><span class="cb-text">投稿済み</span></label>
-    </div>
-  </div>
-</div>
-
+<div id="cards"></div>
 <div class="toast" id="toast"></div>
 
 <script>
-const STORAGE_KEY = 'qt_posted_v2';
-let hidePosted = true;
+const SK='qt_v3';let hp=true;
+const D=[
+// === Karpathy ===
+{id:'kp1',cat:'kp',au:'Andrej Karpathy',vw:'数百万',og:'autoresearchの次のステップ：SETI@homeスタイルの大規模非同期エージェントコラボ。1人のPhDではなく研究コミュニティを再現する',url:'https://x.com/karpathy/status/2030705271627284816',
+qt:[
+`「1人の天才を模倣するんじゃない。\nコミュニティを模倣するんだ」\n\nこれ、AIエージェント時代の本質。\n\n"優秀な個"より"連携する組織"。\n\n1体のAIをどれだけ賢くしても限界がある。\nでも複数体が非同期で連携したら\n人間の組織と同じ構造が生まれる。\n\n「マネジメント」のスキルが\nAIに対しても必要になる時代、来てる。`,
+`SETI@homeを知ってる人なら\nこの例えの凄さがわかる。\n\n世界中の普通のPCが\n1つの目的のために分散処理する。\n\nKarpathyはこれを\nAIエージェントでやろうとしてる。\n\n1体のスーパーAIを作るより\n1000体の専門AIを連携させる方が\n結果的に強い。\n\n生物の進化と同じ構造。`,
+`この投稿、AIの歴史に残ると思う。\n\n「単体の知能」を追い求めた時代から\n「集合知としてのAI」へ。\n\nパラダイムシフトの瞬間を\nリアルタイムで見てる感覚。\n\n次の10年のAI開発の方向性が\nこの1ツイートに凝縮されてる。`],
+rp:[
+`SETI@homeの例え、完璧すぎる。\n\n分散してるけど全体として1つの目的に向かう。\nまさにエージェント群のあるべき姿。\n\n「どう連携させるか」の設計論が\nまだ確立してないのが課題ですが、\nこの方向性がスタンダードになりそうですね。`,
+`これ、研究だけじゃなくて\nビジネスにも完全に当てはまりますよね。\n\n営業、開発、マーケ、CS…\n専門エージェントが非同期で連携する。\n\n人間の組織論がそのまま\nAIの設計論になる時代。`,
+`「emulate a research community」\nこのフレーズ、刺さりました。\n\n単体AIの限界を超える方法が\n「もっと賢くする」じゃなくて\n「もっと連携させる」だったのは\n直感に反するけど正しい。`]},
 
-function getPosted() {
-  try { return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')); }
-  catch { return new Set(); }
+{id:'kp2',cat:'kp',au:'Greg Isenberg',vw:'数百万',og:'「karpathy just broke the internet with auto research — AIリサーチエージェントが24/7実験を回す」',url:'https://x.com/gregisenberg/status/2031870162702381515',
+qt:[
+`「寝てる間に100回実験して、\n勝ちパターンだけ残してくれる」\n\nこれ、研究だけの話じゃない。\n\nマーケのA/Bテスト、LPの最適化、\n価格戦略の検証——\n\nあらゆるビジネスの意思決定が\n「人間が考える」から\n「AIが実験して人間が判断する」に変わる。`,
+`「broke the internet」は\n大げさじゃない。\n\nこれまで：人間が仮説→実験→分析\n（1サイクル数日〜数週間）\n\nこれから：AIが仮説→実験→分析→改善\n（1サイクル5分、寝てる間に100回）\n\n意思決定の速度が\n100倍になるってこと。\n\n競争のルールが変わる。`,
+`Isenbergのこの投稿のおかげで\n技術者以外にもautoresearchが広まった。\n\n「研究を自動化する」って聞くと\n遠い話に聞こえるけど、\n\n「LPの改善を自動で回す」\n「広告のABテストを寝てる間に100回」\nって聞くと全員に刺さる。\n\n翻訳力って大事。`],
+rp:[
+`「broke the internet」は\n大げさじゃないですね。\n\n本質は\n「人間がゴールを設定して\nAIが手段を最適化する」\nという役割分担が明確になったこと。\n\n「何を改善するか」を定義できる人が\n最も価値を持つ時代に入った。`,
+`これのビジネス応用を\n真剣に考えるべきタイミングですよね。\n\nLP最適化、広告クリエイティブ、\nプライシング、UXフロー…\n\n全部「autoresearchパターン」で\n自動最適化できる。`,
+`Isenbergがこれを取り上げた時点で\nビジネス層への浸透が加速しましたね。\n\n技術系の人は前から知ってたけど、\n「マーケに使える」って翻訳されると\n一気にリーチが変わる。`]},
+
+{id:'kp3',cat:'kp',au:'Andrej Karpathy',vw:'100万+',og:'autoresearchパッケージ化。630行・GPU1枚。人間がプロンプトを磨き、AIがコードを最適化する',url:'https://x.com/karpathy/status/2030371219518931079',
+qt:[
+`630行。GPU1枚。\n\nこれだけでAIが自分で実験を回し続けて\n勝ちパターンを見つけてくれる。\n\n「何を最適化すべきか」を定義する力。\nこれが2026年の最重要スキル。`,
+`Karpathyが「週末に遊んでみて」と\nカジュアルに出したのがまた凄い。\n\n630行の中に\n人類のAI研究を変えるアイデアが入ってる。\n\n「小さく作って、大きく考える」の\n究極の体現。`,
+`たった630行なのに\nGPT-2レベルのモデルを\n1.8時間、$50以下で学習できる。\n\n「AI研究は大企業しかできない」\nっていう常識が完全に崩壊した瞬間。\n\n個人でもAI研究ができる時代。`],
+rp:[
+`630行に収まるのが\n本当にすごいですね。\n\n複雑さは価値じゃない。\nシンプルさこそが再現性を生む。`,
+`これを自分のドメインに応用する人が\n今週末から爆発的に増えそう。\n\n研究、マーケ、プロダクト開発…\n応用先が無限。`,
+`「週末に遊んでみて」のカジュアルさと\n中身のインパクトのギャップが\nKarpathyらしくて最高です。`]},
+
+// === Meta x Manus ===
+{id:'mn1',cat:'mn',au:'Deedy Das',vw:'100万+',og:'「Meta just bought Manus for >$1B. 消費者AI $100M+ ARRは8社のみ。Meta AIにはプロダクトがない。最も安くAlignedな買収」',url:'https://x.com/deedydas/status/2005798365733478490',
+qt:[
+`$100M+ ARRの消費者AIアプリ、\nまだ世界に8社しかない。\n\nPerplexity $20B\nElevenLabs $6.6B\nLovable $6.6B\nReplit $3B+\nManus $500M（→Meta買収）\n\n「作る側」は飽和してきたけど\n「使う側のプロダクト」はまだ8社。\n\nここにチャンスがある。`,
+`Deedy のこの分析が的確すぎる。\n\n「Meta AIにはプロダクトがない」\n\n30億人のユーザーベースがあっても\nAIプロダクトがなければ意味がない。\n\n技術じゃなくてプロダクト力を買った。\nAI時代でもUXが勝負を決める。`,
+`消費者AIで$100M ARR超え、\nたった8社。\n\nB2B SaaSならもっといるけど\n消費者向けはまだこれだけ。\n\nつまりまだ「AIの消費者革命」は\n始まったばかり。\n\n次の8社に入るチャンスは\nまだ十分ある。`],
+rp:[
+`「Meta AIにはプロダクトがない」\nこれが全てを物語ってますよね。\n\n30億人のユーザーベースがあっても\nAIプロダクトがなければ意味がない。\n\nManus買収は「技術」じゃなくて\n「プロダクト力」を買った。`,
+`この8社のリスト、\n定期的にウォッチしたい。\n\n次にここに入る会社が\nAI時代の勝者になる。`,
+`$100M ARR到達8社中、\n日本の会社がゼロなのが\n一番気になるポイントです。`]},
+
+{id:'mn2',cat:'mn',au:'Financial Times',vw:'500万+',og:'「MetaのManus買収は米テック大手が中国ルーツのAIを獲得する稀な例。米中AI競争の火種に」',url:'https://x.com/FT/status/2006017711768256575',
+qt:[
+`この買収、テック視点だけで見ちゃダメ。\n\n地政学の話。\n\n中国ルーツのAIスタートアップを\n米テック大手が買収する。\n\nAI競争が国家間の問題になってる中で\nMetaがこれをやったのはかなりのリスクテイク。\n\n「技術に国境はない」のか\n「AIには国境がある」のか。`,
+`FTがこう報じるということは\nワシントンも北京も注視してる。\n\n$2Bの買収が\n米中AI戦争の新たな火種になるかもしれない。\n\nAI企業の経営判断が\n国家安全保障の議論になる時代。\n\n2026年、異常すぎる。`,
+`10日で合意。$2-3B。\n中国ルーツ。\n\nこれだけの条件が揃って\nなお買収に踏み切ったということは\nAIエージェントの価値が\nそれだけ高いということ。\n\nリスクを上回るリターンがある\nとMetaは判断した。`],
+rp:[
+`地政学リスクを超えてでも\n買収に踏み切ったということは\nAIエージェントの価値がそれだけ高い。\n\n10日で合意という速さも含めて\n市場の争奪戦の熾烈さが伝わります。`,
+`この買収の行方を見てれば\n「AIに国境はあるか」の答えが\n2026年後半に見えてきそうですね。`,
+`FTの報道トーンが\n明らかに「地政学リスク」寄りなのが\n示唆的ですね。\n\n純粋なビジネスニュースじゃなくて\n国際政治の文脈で語られてる。`]},
+
+{id:'mn3',cat:'mn',au:'Greg Isenberg',vw:'100万+',og:'「Manusはdistributionを最優先投資として扱い、クリエイターに重課金してアテンションを獲得した」',url:'https://x.com/gregisenberg/status/2006016564751908885',
+qt:[
+`Manusの勝因、技術じゃなくて\n「配信戦略」だったの面白すぎる。\n\n技術力 < 配信力。\n\nAI時代は「作れる」が当たり前。\n「届けられる」が最大の差別化。\n\nこの逆転、もっと議論されるべき。`,
+`Manusのプレイブック：\n1. プロダクトを作る\n2. インフルエンサーに使わせる\n3. バイラルで一気に拡散\n4. $100M ARR最速達成\n5. Metaに$2Bで買収される\n\n全工程2年未満。\n\nAI時代のスタートアップ\nスピードランの教科書。`,
+`「distribution as a first-class expense」\n\nこの表現が全てを語ってる。\n\n多くのスタートアップが\n開発に全リソースを注いで配信を後回しにする。\n\nManusは逆。\n最初からクリエイターマーケに投資した。\n\nAI時代の正解、見えてきた。`],
+rp:[
+`distribution as first-class expense\n刺さりすぎる表現ですね。\n\nAIの時代は「作れる」が前提になったから\n「届けられる」が最大の差別化。`,
+`クリエイターに「使ってもらう」投資、\n日本のAIスタートアップでやってる会社\nほぼ見たことないですね。\n\nここにヒントがある。`,
+`技術力 vs 配信力の議論、\nAI業界全体で必要ですよね。\n\n「いいもの作れば売れる」は\n2026年では通用しない。`]},
+
+// === Claude Code ===
+{id:'cc1',cat:'cc',au:'Jaana Dogan (Google Principal Engineer)',vw:'540万',og:'「冗談じゃなくこれ笑えない。Googleで1年かけた分散エージェントオーケストレーター、Claude Codeに説明したら1時間で生成された」',url:'https://x.com/rakyll/status/2007239758158975130',
+qt:[
+`Googleのプリンシパルエンジニアが\n「1年→1時間」と告白。540万回表示。\n\nでも本人の補足が本質。\n「1年間の知見があったから\n3段落で伝えられた」\n\n重要なのは「AIが速い」じゃなくて\n「人間の知見×AIの実行速度」の掛け算。\n\n経験の価値は消えない。むしろ増す。`,
+`この投稿、2つの読み方がある。\n\n悲観：「1年の仕事が1時間で…」\n楽観：「1年の知見があれば1時間で形にできる」\n\n後者が正しい。\n\nAIは「実装」を高速化するけど\n「何を作るべきか」の判断力は\n人間の経験からしか生まれない。`,
+`540万回表示されたこの投稿、\n「AIに仕事を奪われる」文脈で\n読まれがちだけど、\n\n本人は「trivial to rebuild\nonce you have the knowledge」\nと言ってる。\n\n知識があれば再構築は簡単。\n知識を得るプロセスこそが価値。\n\nこの視点、もっと広まるべき。`],
+rp:[
+`後の補足が本質ですよね。\n\n「1年間学んで、パターンを見つけて、\n3段落で説明したら1時間でできた」\n\nAIに仕事を奪われる人と\nAIで仕事が加速する人の違いは\nこの「知見」の有無。`,
+`「It takes years to learn,\nthen building is trivial」\n\nこの一文が2026年の\nAI時代の本質を表してますね。\n\n学びの価値は下がるどころか\nむしろ爆上がりしてる。`,
+`Google内部でも\nClaude Codeが使われてるという事実が\n一番のインパクトかもしれません。\n\n競合のツールが\n自社より優れていると認める勇気。`]},
+
+{id:'cc2',cat:'cc',au:'Miles Deutscher',vw:'100万+',og:'「Claude Code is going MEGA VIRAL on X. 情報多すぎるから本当に価値ある1%だけフィルターした」',url:'https://x.com/milesdeutscher/status/2012237674409796036',
+qt:[
+`Claude Codeが「mega viral」になって\n情報が多すぎるから\n1%だけフィルターした、と。\n\nこれ自体が2026年の構造を象徴してる。\n\nAIツールが爆速で進化して\n情報量が処理能力を超える。\n\n「何を無視するか」を判断できる人が勝つ。\n\nキュレーション力 = 最強スキル。`,
+`「Don't read it all —\njust read this one article」\n\n情報過多時代の最適解。\n\nAI関連の情報、毎日何千と出てくるけど\n本当に価値があるのは1%以下。\n\n「全部追う」は不可能。\n「何を無視するか」で差がつく。`,
+`Claude Codeがmega viralになった理由、\n技術的にすごいからだけじゃない。\n\n「非エンジニアでも使える」\nこの一点が爆発のトリガー。\n\n技術の民主化が本当に起きてる瞬間を\nリアルタイムで見てる。`],
+rp:[
+`「1%だけフィルター」\nまさに今一番必要な仕事ですね。\n\n日本語でこのクオリティの\nフィルタリングをしてる人が\nまだ圧倒的に少ない。`,
+`AI情報の洪水の中で\n「読むべき1%」を見極める力、\nAI時代の最重要リテラシーかも。`,
+`英語圏のAI情報を\n日本語でフィルタリングする需要、\nめちゃくちゃありますよね。`]},
+
+// === Codex / Devin ===
+{id:'cd1',cat:'cd',au:'OpenAI (公式)',vw:'410万',og:'「Codex app — エージェントで開発するためのコマンドセンター。macOSで利用可能に」',url:'https://x.com/OpenAI/status/2018385565289267236',
+qt:[
+`OpenAIがCodexを\n「コマンドセンター」と呼んでるのが\n象徴的。\n\nもうIDEじゃない。\nエージェントを指揮する司令塔。\n\n「コードを書く場所」から\n「AIに仕事を任せる場所」へ。\n\n開発環境の定義が変わった。`,
+`Codex app、410万回表示。\n\nClaude Code vs Codex vs Cursor vs Devin\n\nAIコーディングの覇権争いが\nここまで激化した年は初めて。\n\n勝者はまだわからない。\nでも確実に言えるのは\n「人間がゼロから書く時代」は終わったということ。`,
+`macOSから、Windowsは後日。\n\nこの順番が面白い。\n\n開発者のMac比率が高いから\n当然といえば当然だけど、\n\nAIコーディングツールが\nOS戦争にまで影響する時代。`],
+rp:[
+`「command center for building with agents」\nこの定義、しっくり来ますね。\n\nもはやIDEじゃなくて\nエージェント管理の司令塔。`,
+`Claude Code vs Codex、\n両方使ってる人の比較レビューが\n一番参考になりそうですね。\n\n使い分けのポイント知りたいです。`,
+`FreeとGoでも使えるようにしたの\n明らかにClaude Code対策ですよね。\n\n競争が消費者の利益になってる。`]},
+
+{id:'cd2',cat:'cd',au:'Cognition',vw:'100万+',og:'「Devin 2.2 — computer useでテスト、自己検証、自動修正。3倍高速起動。完全リデザイン」',url:'https://x.com/cognition/status/2026343816521994339',
+qt:[
+`Devin 2.2の進化がえぐい。\n\n「テストして、自己検証して、\n自動で修正する」\n\nこれ、人間のジュニアエンジニアより\n確実にQA品質が高い。\n\nAIエンジニアの「信頼性」が\n人間を超え始めた瞬間。`,
+`3倍高速。完全リデザイン。\nComputer use搭載。\n\nDevinの進化速度を見てると\n「AIコーディングエージェント」は\nもう実験段階じゃない。\n\n本番環境で使うフェーズに入った。`,
+`self-verify & auto-fix\n\nこの2つが実装されたのは\n地味だけど革命的。\n\n「AIが書いたコード、大丈夫？」\nっていう不安が\n「AIが自分で確認して直した」に変わる。\n\n人間のレビュー工数が激減する。`],
+rp:[
+`self-verify + auto-fix\nこの組み合わせが本当に革命的ですね。\n\nAIが書く→AIが検証→AIが修正\n人間は最終判断だけ。`,
+`3x faster startupが\n地味に一番嬉しい改善かも。\n\nAIツールの「待ち時間」が\nまだ最大のUXボトルネックなので。`,
+`computer useが入ったということは\nブラウザテストも自動化できる。\n\nE2Eテストの概念が変わりそう。`]},
+
+// === OpenClaw ===
+{id:'oc1',cat:'oc',au:'Sam Altman',vw:'数百万',og:'「Peter SteipeteがOpenAIに参加。彼は天才。スマートエージェント同士が連携してユーザーに価値を届ける未来を作る」',url:'https://x.com/sama/status/2023150230905159801',
+qt:[
+`Altmanが「genius」と呼んだ人物。\n\n1人でOpenClawを作り、\n180K+ GitHub stars、\n100カ国以上で利用。\n\nAnthropicは商標でCease & Desist。\nOpenAIは「一緒に未来を作ろう」。\n\n同じ脅威に対する\n2社の対応の差が面白すぎる。`,
+`OpenClawの物語：\n\n1人のオーストリア人開発者\n→ 2ヶ月で180K stars\n→ Anthropicが排除しようとする\n→ OpenAIが「天才」と呼んで採用\n\n2026年版シンデレラストーリー。\n\n個人開発者にとって\nこれ以上の希望はない。`,
+`Altman自らが\n「genius with amazing ideas」\nと公開で言うの、\n相当なリクルーティング戦略。\n\nAI人材の獲得競争が\nCEO直々のスカウトレベルに。\n\nAI時代の人材戦争、えぐい。`],
+rp:[
+`Anthropicの対応 vs OpenAIの対応、\n完全に対照的で示唆的ですね。\n\n「排除」より「取り込み」の方が\n長期的に正しい戦略。`,
+`1人で作ったものが\n大企業のCEOを動かす。\n\n2026年、個人の影響力が\n過去最高に高まってる。`,
+`「very smart agents interacting\nwith each other」\n\nAltmanのこの表現から\nOpenAIの次の戦略が\n見えてきますね。\n\nマルチエージェント協調に\n本気で取り組むつもり。`]},
+
+{id:'oc2',cat:'oc',au:'Lex Fridman',vw:'数百万',og:'「OpenClaw creator Peter Steinberger — 180K+ stars。mind-blowing, inspiring, and fun conversation!」',url:'https://x.com/lexfridman/status/2021785659644453136',
+qt:[
+`Lex FridmanがOpenClawの\nPeter Steinbergerにインタビュー。\n\n「mind-blowing, inspiring, fun」\n\nLexがここまで褒めるの珍しい。\n\n180K stars、1人で開発、\nOpenAIに採用。\n\n個人開発者の究極の成功ストーリーが\nここにある。`,
+`このインタビュー、\nAI開発に興味ある人は全員見るべき。\n\n1人の開発者が\nGitHub史上最も人気のプロジェクトを\n2ヶ月で作った話。\n\nしかもReactやLinuxを超えて。\n\n何が可能かの基準が\n完全に変わった。`,
+`Lex Fridmanのゲスト選びは\n常にAI業界の方向性を示す。\n\nKarpathy、Altman、Musk…\nそこにPeter Steinbergerが並んだ。\n\n個人開発者がAI業界の\nトップティアに入る時代。`],
+rp:[
+`Lexがここまで褒めるの\n本当に珍しいですよね。\n\n「mind-blowing」を\nLex Fridmanが使うと\n重みが違う。`,
+`このインタビュー、\n日本語字幕つけてほしい…\n\n英語圏では超バズってるのに\n日本ではまだ認知が低い。`,
+`OpenClawの技術的な部分だけじゃなく\n「1人でどうやって180K starsまで\nたどり着いたか」の戦略論が\n一番面白そうです。`]},
+
+// === Market ===
+{id:'mk1',cat:'mk',au:'OpenAI (公式)',vw:'1000万+',og:'「Stargate Project — $500Bを4年でAIインフラに投資。$100Bを即座に展開」',url:'https://x.com/OpenAI/status/1881830103858172059',
+qt:[
+`$500B。日本円で約75兆円。\n\n日本の国家予算の半分以上を\n1社のAIインフラに投資する。\n\nもはや「企業の投資」じゃなくて\n「国家プロジェクト」。\n\nAIは産業じゃない。\n新しい文明の基盤。`,
+`「immediately deploy $100B」\n\nこの「即座に」がすごい。\n\n$100B（15兆円）を\n「すぐ使います」と言える会社。\n\nAIインフラが\n電気・水道と同じ社会基盤になる。\n\nStargateという名前の通り\n「次の世界への入口」。`,
+`$500Bを4年。\n年間$125B。\n\nAppleの年間売上が$380B。\nToyotaが$270B。\n\nつまりトヨタの半分近い金額を\n毎年AIインフラだけに投じる。\n\nこのスケール感を\n日本のビジネスパーソンは\nもっと知るべき。`],
+rp:[
+`$500B = 日本の国家予算の半分超。\n\nAIインフラが\n社会基盤になるという宣言ですね。\n\nStargateの名前通り\n「次の世界への入口」を\n本気で作ろうとしてる。`,
+`この金額、もはや\n企業投資の概念を超えてますよね。\n\n国家レベルのインフラ事業。`,
+`日本円換算で75兆円…\n日本の全スタートアップの\n累計調達額と比較すると\n桁が違いすぎて言葉が出ない。`]},
+
+{id:'mk2',cat:'mk',au:'Greg Isenberg',vw:'500万+',og:'「夜も眠れない話。AI彼女/彼氏は$50B市場。深夜2時のApp Storeを見ろ」',url:'https://x.com/gregisenberg/status/1956703650744578091',
+qt:[
+`「深夜2時のApp Storeを見ろ」\n\nこれ、めちゃくちゃリアル。\n\n表では誰もAI彼女の話をしない。\nでも裏では$50B市場が育ってる。\n\n表で語られないものほど\n市場としてはデカくなる。\nこれ、歴史が証明してる。`,
+`$50B。\n\n表では語られない。\nApp Storeの深夜ランキングだけが真実を語る。\n\nSNS、ポルノ、ギャンブル——\n「人に言えないサービス」は\n歴史的に巨大市場になってきた。\n\nAI彼女/彼氏はその最新版。`,
+`Isenbergのこの指摘、\nAI業界で一番タブーなのに\n一番大きい市場の話。\n\nAIと人間の関係性が\n「ツール→パートナー→恋人」\nと進化してる。\n\n誰も公には言わないけど\nみんなうすうす気づいてる。`],
+rp:[
+`「nobody will talk about it publicly」\nここが一番重要なポイントですよね。\n\nタブー視されてる市場ほど\n競合が少なくて成長余地がある。`,
+`深夜2時のApp Storeランキング、\n実際に見てみたら\nAIコンパニオン系が\n上位に並んでてびっくりした。\n\nIsenbergの言う通りだった。`,
+`日本はこの領域、\n文化的にかなり受容性高いと思います。\n\nキャラクター文化がベースにあるから\nAIパートナーへの抵抗感が低い。\n\nチャンスあるのでは。`]},
+
+{id:'mk3',cat:'mk',au:'Elon Musk',vw:'数千万',og:'「AI and robots will replace all jobs. Working will be optional, like growing your own vegetables」',url:'https://x.com/elonmusk/status/1980765809338147193',
+qt:[
+`「仕事は任意になる。\n野菜を自分で育てるように」\n\nMuskのこの例え、\n賛否あるけど考えさせられる。\n\n仕事が「生きるため」じゃなくて\n「やりたいからやる」になる世界。\n\nこれが本当に来るなら\n「何をやりたいか」を持ってる人が\n一番強い。`,
+`Bernie Sandersまで反応した\nMuskのこのツイート。\n\n「全ての仕事がAIに置き換わる」\n\n楽観的に聞こえるけど\n「じゃあ収入は？」って問いに\nまだ誰も答えを持ってない。\n\nUBI、新しい経済モデル、\nこの議論が2026年に本格化する。`,
+`「Working will be optional」\n\nこれを理想と見るか\n脅威と見るかで\nAI時代の立ち位置が決まる。\n\n僕は楽観派。\n\n「やらなきゃいけない仕事」から\n解放されたら\n人間はもっと面白いことをする。`],
+rp:[
+`「野菜を自分で育てるように」\nこの例え、意外と的確かも。\n\n今でも農業は存在するけど\n「食べるため」にやってる人は少数。\n\n仕事も同じ構造になるのかも。`,
+`これにBernie Sandersが反応して\n「じゃあ収入は？」と聞いたのが\n一番重要な問いですよね。\n\n技術的には可能でも\n社会制度が追いついてない。`,
+`楽観論と悲観論の間に\n「じゃあ今何をすべきか」の\n議論がもっと必要だと思います。`]}
+];
+
+// === レンダリング ===
+function render(){
+const cats={kp:'Karpathy — autoresearch & AgentHub',mn:'Meta x Manus AI — $2B買収',cc:'Claude Code — Google告白 & 覇権',cd:'Codex / Devin — AIコーディング',oc:'OpenClaw — 1人で180K stars',mk:'マーケット & ビジョン'};
+const tags={kp:'MEGA VIRAL',mn:'BIG NEWS',cc:'540万views',cd:'410万views',oc:'180K STARS',mk:'HIGH IMPACT'};
+let html='';
+for(const[c,title]of Object.entries(cats)){
+const items=D.filter(d=>d.cat===c);if(!items.length)continue;
+html+=`<div class="cat" data-ct="${c}"><div class="ct">${title} <span class="tg">${tags[c]}</span></div>`;
+for(const d of items){
+html+=`<div class="cd" data-cat="${d.cat}" data-id="${d.id}">
+<div class="ct2"><span class="au">${d.au}</span><span class="vw">${d.vw} views</span></div>
+<div class="og">${d.og}</div>
+<a class="ul" href="${d.url}" target="_blank">${d.url.replace('https://','')}</a>
+<div class="tr">
+<div class="tn on" onclick="st(this,'qt')">引用リプライ</div>
+<div class="tn rp" onclick="st(this,'rp')">リプライ</div>
+</div>
+<div class="tc on" data-tab="qt">
+<div class="ps">${d.qt.map((_,i)=>`<div class="pb${i===0?' on':''}" onclick="sp(this,${i})">${i+1}</div>`).join('')}</div>
+${d.qt.map((t,i)=>`<div class="pt${i===0?' on':''}">\n<div class="tx" onclick="cp(this)">${t}</div>\n<div class="cc"></div></div>`).join('')}
+</div>
+<div class="tc" data-tab="rp">
+<div class="ps">${d.rp.map((_,i)=>`<div class="pb rp${i===0?' on':''}" onclick="sp(this,${i})">${i+1}</div>`).join('')}</div>
+${d.rp.map((t,i)=>`<div class="pt${i===0?' on':''}">\n<div class="tx rt" onclick="cp(this)">${t}</div>\n<div class="cc"></div></div>`).join('')}
+</div>
+<div class="ck"><label class="cl"><input type="checkbox" onchange="oc(this)"><span class="cu"></span><span class="cx">投稿済み</span></label></div>
+</div>`;
 }
-function savePosted(s) { localStorage.setItem(STORAGE_KEY, JSON.stringify([...s])); }
-
-// タブ切り替え
-function switchTab(btn, tab) {
-  const card = btn.closest('.card');
-  card.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  card.querySelectorAll('.tab-content').forEach(c => {
-    c.classList.toggle('active', c.dataset.tab === tab);
-  });
+html+='</div>';
+}
+document.getElementById('cards').innerHTML=html;
+// 文字数
+document.querySelectorAll('.tx').forEach(e=>{const n=e.nextElementSibling;if(n&&n.classList.contains('cc'))n.textContent=e.innerText.length+'文字'});
+// 復元
+const p=gp();
+document.querySelectorAll('.cd').forEach(c=>{
+if(p.has(c.dataset.id)){c.querySelector('input').checked=true;c.classList.add('done');if(hp)c.classList.add('hid')}
+});
+uc();
 }
 
-// チェック
-function onCheck(cb) {
-  const card = cb.closest('.card');
-  const id = card.dataset.id;
-  const posted = getPosted();
-  if (cb.checked) {
-    posted.add(id);
-    card.classList.add('posted');
-    showToast('投稿済み!');
-    if (hidePosted) setTimeout(() => { card.classList.add('hiding'); updateCount(); }, 500);
-  } else {
-    posted.delete(id);
-    card.classList.remove('posted','hiding');
-    showToast('未投稿に戻しました');
-  }
-  savePosted(posted);
-  updateCount();
+// タブ
+function st(btn,tab){
+const cd=btn.closest('.cd');
+cd.querySelectorAll('.tn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
+cd.querySelectorAll('.tc').forEach(c=>c.classList.toggle('on',c.dataset.tab===tab));
+}
+// パターン
+function sp(btn,i){
+const ps=btn.parentElement;
+ps.querySelectorAll('.pb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
+const tc=ps.parentElement;
+tc.querySelectorAll('.pt').forEach((p,j)=>p.classList.toggle('on',j===i));
 }
 
-// 初期化
-function init() {
-  const posted = getPosted();
-  document.querySelectorAll('.card').forEach(card => {
-    const id = card.dataset.id;
-    const cb = card.querySelector('input[type="checkbox"]');
-    if (posted.has(id)) {
-      cb.checked = true;
-      card.classList.add('posted');
-      if (hidePosted) card.classList.add('hiding');
-    }
-  });
-  // 文字数
-  document.querySelectorAll('.text-block').forEach(el => {
-    const next = el.nextElementSibling;
-    if (next && next.classList.contains('char-count')) next.textContent = el.innerText.length + '文字';
-  });
-  updateCount();
-}
+// Storage
+function gp(){try{return new Set(JSON.parse(localStorage.getItem(SK)||'[]'))}catch{return new Set()}}
+function svp(s){localStorage.setItem(SK,JSON.stringify([...s]))}
 
-function updateCount() {
-  const total = document.querySelectorAll('.card').length;
-  const done = getPosted().size;
-  document.getElementById('remainCount').textContent = total - done;
-  document.getElementById('doneCount').textContent = done;
+function oc(cb){
+const cd=cb.closest('.cd'),id=cd.dataset.id,p=gp();
+if(cb.checked){p.add(id);cd.classList.add('done');tw('投稿済み!');if(hp)setTimeout(()=>{cd.classList.add('hid');uc()},400)}
+else{p.delete(id);cd.classList.remove('done','hid');tw('戻しました')}
+svp(p);uc();
 }
-
-function toggleHidePosted() {
-  hidePosted = !hidePosted;
-  const btn = document.getElementById('hidePostedBtn');
-  btn.classList.toggle('active', hidePosted);
-  btn.textContent = hidePosted ? '投稿済み非表示' : '全て表示';
-  const posted = getPosted();
-  document.querySelectorAll('.card').forEach(card => {
-    if (posted.has(card.dataset.id)) {
-      card.classList.toggle('hiding', hidePosted);
-    }
-  });
+function uc(){
+const t=D.length,d=gp().size;
+document.getElementById('rc').textContent=t-d;
+document.getElementById('dc').textContent=d;
+document.getElementById('tc2').textContent=t;
 }
-
-function filterCards(cat) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  const posted = getPosted();
-  document.querySelectorAll('.card').forEach(card => {
-    const match = cat === 'all' || card.dataset.cat === cat;
-    card.style.display = match ? '' : 'none';
-    if (match && posted.has(card.dataset.id) && hidePosted) card.classList.add('hiding');
-  });
-  document.querySelectorAll('.category').forEach(c => {
-    if (cat === 'all') { c.style.display = ''; return; }
-    c.style.display = c.dataset.cat === cat ? '' : 'none';
-  });
+function thp(){
+hp=!hp;const b=document.getElementById('hpb');
+b.classList.toggle('on',hp);b.textContent=hp?'投稿済み非表示':'全て表示';
+const p=gp();
+document.querySelectorAll('.cd').forEach(c=>{if(p.has(c.dataset.id))c.classList.toggle('hid',hp)});
 }
-
-function copyText(el) {
-  navigator.clipboard.writeText(el.innerText).then(() => {
-    el.classList.add('copied');
-    showToast('コピーしました!');
-    setTimeout(() => el.classList.remove('copied'), 2000);
-  });
+function fl(cat){
+document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));event.target.classList.add('on');
+document.querySelectorAll('.cd').forEach(c=>{c.style.display=(cat==='all'||c.dataset.cat===cat)?'':'none'});
+document.querySelectorAll('.cat').forEach(c=>{if(cat==='all'){c.style.display=''}else{c.style.display=c.dataset.ct===cat?'':'none'}});
 }
+function cp(el){navigator.clipboard.writeText(el.innerText).then(()=>{el.classList.add('cp');tw('コピーしました!');setTimeout(()=>el.classList.remove('cp'),2000)})}
+function tw(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1500)}
 
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 1500);
-}
-
-init();
+render();
 </script>
 </body>
 </html>
