@@ -259,6 +259,119 @@ body {
   border-color: rgba(0,180,255,0.3);
   color: #00B4FF;
 }
+
+/* チェックボックス（投稿済み） */
+.card-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.posted-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.posted-check input[type="checkbox"] {
+  display: none;
+}
+
+.posted-check .checkbox-ui {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 2px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.03);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.posted-check input:checked + .checkbox-ui {
+  border-color: #28c840;
+  background: rgba(40,200,64,0.15);
+}
+
+.posted-check input:checked + .checkbox-ui::after {
+  content: '\2713';
+  color: #28c840;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.posted-check .check-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.5px;
+}
+
+.posted-check input:checked ~ .check-label {
+  color: #28c840;
+}
+
+.card.posted {
+  opacity: 0.3;
+  transform: scale(0.98);
+  transition: all 0.4s;
+}
+
+.card.posted.hiding {
+  opacity: 0;
+  max-height: 0;
+  padding: 0 20px;
+  margin-bottom: 0;
+  overflow: hidden;
+  border-color: transparent;
+}
+
+/* 投稿済み非表示トグル */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.toggle-posted {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(40,200,64,0.06);
+  border: 1px solid rgba(40,200,64,0.15);
+  border-radius: 20px;
+  color: rgba(40,200,64,0.6);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.toggle-posted:hover {
+  background: rgba(40,200,64,0.12);
+  color: #28c840;
+}
+
+.toggle-posted.active {
+  background: rgba(40,200,64,0.15);
+  border-color: rgba(40,200,64,0.3);
+  color: #28c840;
+}
+
+.posted-count {
+  font-size: 12px;
+  color: rgba(255,255,255,0.3);
+}
+
+.posted-count strong {
+  color: #28c840;
+  font-weight: 700;
+}
 </style>
 </head>
 <body>
@@ -279,6 +392,11 @@ body {
   <button class="filter-btn" onclick="filterCards('claudecode')">Claude Code</button>
   <button class="filter-btn" onclick="filterCards('moltbook')">Moltbook</button>
   <button class="filter-btn" onclick="filterCards('other')">Other</button>
+</div>
+
+<div class="toggle-row">
+  <button class="toggle-posted active" id="hidePostedBtn" onclick="toggleHidePosted()">投稿済みを非表示</button>
+  <span class="posted-count" id="postedCount"></span>
 </div>
 
 <!-- ===== AgentHub ===== -->
