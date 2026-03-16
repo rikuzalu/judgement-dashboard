@@ -862,6 +862,118 @@ AGIかどうかは専門家に任せるとして、
 <div class="toast" id="toast">Copied!</div>
 
 <script>
+const STORAGE_KEY = 'qt_posted_2026-03-16';
+let hidePosted = true;
+
+// 投稿済み状態をlocalStorageから読み込み
+function getPostedSet() {
+  try {
+    return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
+  } catch { return new Set(); }
+}
+
+function savePostedSet(set) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify([...set]));
+}
+
+// 各カードにIDとチェックボックスを付与
+function initCards() {
+  const posted = getPostedSet();
+  document.querySelectorAll('.card').forEach((card, i) => {
+    const id = 'qt-' + i;
+    card.dataset.id = id;
+
+    // チェックボックス行を先頭に挿入
+    const topRow = document.createElement('div');
+    topRow.className = 'card-top-row';
+
+    const label = document.createElement('label');
+    label.className = 'posted-check';
+
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = posted.has(id);
+    cb.addEventListener('change', () => onCheck(card, cb));
+
+    const boxUI = document.createElement('span');
+    boxUI.className = 'checkbox-ui';
+
+    const labelText = document.createElement('span');
+    labelText.className = 'check-label';
+    labelText.textContent = '投稿済み';
+
+    label.appendChild(cb);
+    label.appendChild(boxUI);
+    label.appendChild(labelText);
+    topRow.appendChild(label);
+    card.insertBefore(topRow, card.firstChild);
+
+    // 既に投稿済みなら状態反映
+    if (posted.has(id)) {
+      card.classList.add('posted');
+      if (hidePosted) card.classList.add('hiding');
+    }
+  });
+  updateCount();
+}
+
+// チェック切り替え
+function onCheck(card, cb) {
+  const posted = getPostedSet();
+  const id = card.dataset.id;
+
+  if (cb.checked) {
+    posted.add(id);
+    card.classList.add('posted');
+    showToast('投稿済みにしました');
+    if (hidePosted) {
+      setTimeout(() => {
+        card.classList.add('hiding');
+        updateCount();
+      }, 600);
+    }
+  } else {
+    posted.delete(id);
+    card.classList.remove('posted', 'hiding');
+    showToast('未投稿に戻しました');
+  }
+  savePostedSet(posted);
+  updateCount();
+}
+
+// 投稿済みカウント更新
+function updateCount() {
+  const posted = getPostedSet();
+  const total = document.querySelectorAll('.card').length;
+  const done = posted.size;
+  const remaining = total - done;
+  document.getElementById('postedCount').innerHTML =
+    '<strong>' + done + '</strong> / ' + total + ' 投稿済み　（残り <strong>' + remaining + '</strong> 件）';
+
+  // ヘッダーの数字も更新
+  const statNums = document.querySelectorAll('.stat-num');
+  if (statNums[0]) statNums[0].textContent = remaining;
+}
+
+// 投稿済み非表示トグル
+function toggleHidePosted() {
+  hidePosted = !hidePosted;
+  const btn = document.getElementById('hidePostedBtn');
+  btn.classList.toggle('active', hidePosted);
+  btn.textContent = hidePosted ? '投稿済みを非表示' : '投稿済みも表示';
+
+  const posted = getPostedSet();
+  document.querySelectorAll('.card').forEach(card => {
+    if (posted.has(card.dataset.id)) {
+      if (hidePosted) {
+        card.classList.add('hiding');
+      } else {
+        card.classList.remove('hiding');
+      }
+    }
+  });
+}
+
 // テキストコピー
 function copyText(el) {
   const text = el.innerText;
@@ -886,21 +998,26 @@ function filterCards(cat) {
   event.target.classList.add('active');
 
   document.querySelectorAll('.card').forEach(card => {
-    if (cat === 'all' || card.dataset.cat === cat) {
-      card.style.display = 'block';
-    } else {
+    const catMatch = (cat === 'all' || card.dataset.cat === cat);
+    const posted = getPostedSet();
+    const isPosted = posted.has(card.dataset.id);
+
+    if (!catMatch) {
       card.style.display = 'none';
+    } else {
+      card.style.display = 'block';
+      if (isPosted && hidePosted) {
+        card.classList.add('hiding');
+      }
     }
   });
 
   document.querySelectorAll('.category').forEach(c => {
-    const visible = c.querySelectorAll('.card[style="display: block"], .card:not([style])');
-    const hidden = c.querySelectorAll('.card[style="display: none"]');
-    if (cat === 'all') {
-      c.style.display = 'block';
-    } else {
-      c.style.display = (hidden.length === c.querySelectorAll('.card').length) ? 'none' : 'block';
-    }
+    const cards = c.querySelectorAll('.card');
+    const allHidden = [...cards].every(card =>
+      card.style.display === 'none' || card.classList.contains('hiding')
+    );
+    c.style.display = allHidden ? 'none' : 'block';
   });
 }
 
@@ -912,6 +1029,9 @@ document.querySelectorAll('.quote-text').forEach(el => {
     counter.textContent = count + ' 文字';
   }
 });
+
+// 初期化
+initCards();
 </script>
 
 </body>
