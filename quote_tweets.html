@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>X引用リプライ ダッシュボード — 2026-03-16</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #0a0a0a;
+  color: #e0e0e0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.header {
+  text-align: center;
+  padding: 30px 0 20px;
+  border-bottom: 1px solid rgba(0,180,255,0.15);
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  font-size: 24px;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.header .sub {
+  font-size: 14px;
+  color: rgba(255,255,255,0.4);
+}
+
+.header .stats {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.header .stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+}
+
+.header .stat-num {
+  font-size: 20px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #00B4FF, #00E8FF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* カテゴリセクション */
+.category {
+  margin-bottom: 40px;
+}
+
+.category-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  padding: 12px 16px;
+  background: rgba(0,180,255,0.06);
+  border-left: 3px solid #00B4FF;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 16px;
+}
+
+.category-title .tag {
+  font-size: 11px;
+  color: #00B4FF;
+  background: rgba(0,180,255,0.12);
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 10px;
+  font-weight: 500;
+}
+
+/* カード */
+.card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+
+.card:hover {
+  border-color: rgba(0,180,255,0.2);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.card-meta {
+  flex: 1;
+}
+
+.card-author {
+  font-size: 14px;
+  font-weight: 600;
+  color: #00B4FF;
+  margin-bottom: 2px;
+}
+
+.card-original {
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.card-url {
+  display: inline-block;
+  font-size: 11px;
+  color: rgba(0,180,255,0.6);
+  text-decoration: none;
+  word-break: break-all;
+  margin-bottom: 12px;
+}
+
+.card-url:hover {
+  color: #00B4FF;
+}
+
+.quote-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.quote-text {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #fff;
+  white-space: pre-wrap;
+  background: rgba(0,180,255,0.04);
+  border: 1px solid rgba(0,180,255,0.08);
+  border-radius: 8px;
+  padding: 16px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.quote-text:hover {
+  background: rgba(0,180,255,0.08);
+}
+
+.quote-text::after {
+  content: 'Click to Copy';
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 10px;
+  color: rgba(0,180,255,0.4);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  pointer-events: none;
+  transition: color 0.2s;
+}
+
+.quote-text:hover::after {
+  color: #00B4FF;
+}
+
+.quote-text.copied {
+  background: rgba(40,200,64,0.08);
+  border-color: rgba(40,200,64,0.2);
+}
+
+.quote-text.copied::after {
+  content: 'Copied!';
+  color: #28c840;
+}
+
+.char-count {
+  text-align: right;
+  font-size: 11px;
+  color: rgba(255,255,255,0.25);
+  margin-top: 6px;
+}
+
+/* コピー全部ボタン */
+.copy-all-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: rgba(0,180,255,0.1);
+  border: 1px solid rgba(0,180,255,0.2);
+  border-radius: 8px;
+  color: #00B4FF;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+}
+
+.copy-all-btn:hover {
+  background: rgba(0,180,255,0.2);
+}
+
+/* トースト */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #28c840;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0;
+  transition: all 0.3s;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* フィルター */
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 6px 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  color: rgba(255,255,255,0.5);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover, .filter-btn.active {
+  background: rgba(0,180,255,0.12);
+  border-color: rgba(0,180,255,0.3);
+  color: #00B4FF;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>X引用リプライ ダッシュボード</h1>
+  <div class="sub">2026-03-16 — クリックでコピー、そのままXに貼り付け</div>
+  <div class="stats">
+    <div class="stat"><span class="stat-num">17</span> 引用リプライ</div>
+    <div class="stat"><span class="stat-num">4</span> カテゴリ</div>
+  </div>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active" onclick="filterCards('all')">ALL</button>
+  <button class="filter-btn" onclick="filterCards('agenthub')">AgentHub</button>
+  <button class="filter-btn" onclick="filterCards('manus')">Meta x Manus</button>
+  <button class="filter-btn" onclick="filterCards('claudecode')">Claude Code</button>
+  <button class="filter-btn" onclick="filterCards('moltbook')">Moltbook</button>
+  <button class="filter-btn" onclick="filterCards('other')">Other</button>
+</div>
+
+<!-- ===== AgentHub ===== -->
+<div class="category">
+  <div class="category-title">Karpathy「AgentHub」 — GitHub for AIエージェント <span class="tag">SUPER HOT</span></div>
+
+  <div class="card" data-cat="agenthub">
+    <div class="card-meta">
+      <div class="card-author">Andrej Karpathy (本人)</div>
+      <div class="card-original">autoresearchの次のステップ：SETI@homeスタイルの大規模非同期エージェントコラボ。1人のPhD学生ではなく研究コミュニティを再現する。</div>
+      <a class="card-url" href="https://x.com/karpathy/status/2030705271627284816" target="_blank">https://x.com/karpathy/status/2030705271627284816</a>
+    </div>
+    <div class="quote-label">引用リプライ</div>
+    <div class="quote-text" onclick="copyText(this)">Karpathyが言語化してくれた。
+
+「1人の天才を模倣するんじゃない。
+コミュニティを模倣するんだ」
+
+これ、AIエージェント時代の本質。
+
+"優秀な個"より"連携する組織"。
+
+1体のAIをどれだけ賢くしても限界がある。
+でも複数体が非同期で連携したら
+人間の組織と同じ構造が生まれる。
+
+「マネジメント」のスキルが
+AIに対しても必要になる時代、来てる。</div>
+    <div class="char-count"></div>
+  </div>
+
+  <div class="card" data-cat="agenthub">
+    <div class="card-meta">
+      <div class="card-author">Alif Hossain</div>
+      <div class="card-original">「Karpathyがやばいの出した。AgentHub — AIエージェント用に再構築されたGitHub。100% OSS」</div>
+      <a class="card-url" href="https://x.com/alifcoder/status/2031309520241353054" target="_blank">https://x.com/alifcoder/status/2031309520241353054</a>
+    </div>
+    <div class="quote-label">引用リプライ</div>
+    <div class="quote-text" onclick="copyText(this)">GitHubが「人間のための開発基盤」なら、
+AgentHubは「AIのための開発基盤」。
+
+この発想の転換がすごい。
+
+僕はDiscord上に9部門作って
+エージェントを非同期で動かしてるけど、
+Git×エージェントの組み合わせは
+次のレベルだと思う。
+
+2026年、インフラの主役が
+人間からAIに移り始めてる。</div>
+    <div class="char-count"></div>
+  </div>
+
+  <div class="card" data-cat="agenthub">
+    <div class="card-meta">
+      <div class="card-author">Mario Valle Reyes</div>
+      <div class="card-original">「PRなし。マージなし。mainブランチなし。エージェントが並列でコミットして結果を共有する」</div>
+      <a class="card-url" href="https://x.com/bilbeny/status/2031374095670194497" target="_blank">https://x.com/bilbeny/status/2031374095670194497</a>
+    </div>
+    <div class="quote-label">引用リプライ</div>
+    <div class="quote-text" onclick="copyText(this)">PRなし。マージなし。mainブランチなし。
+
+これ、人間の組織でも同じ流れ来てる。
+
+従来型の承認フローは遅すぎる。
+エージェントが並列で動いて、
+結果をリアルタイムで共有する。
+
+僕の9体のAIエージェント組織も
+まさにこの思想で動かしてる。
+
+「管理」から「自律連携」へ。
+マネジメントの概念が変わる年。</div>
+    <div class="char-count"></div>
+  </div>
+
+  <div class="card" data-cat="agenthub">
+    <div class="card-meta">
+      <div class="card-author">Oliver Molander</div>
+      <div class="card-original">「自律ボットがテスト結果を共有して調整する巨大なコミットウェブ」</div>
+      <a class="card-url" href="https://x.com/OliverMolander/status/2031474576916451350" target="_blank">https://x.com/OliverMolander/status/2031474576916451350</a>
+    </div>
+    <div class="quote-label">引用リプライ</div>
+    <div class="quote-text" onclick="copyText(this)">「巨大なコミットウェブ」
+っていう表現が的確すぎる。
+
+エージェントが自律的に動いて、
+お互いの結果を参照しながら進化する。
+
+これ、生物の神経ネットワークと
+同じ構造なんだよね。
+
+単体AIの時代は終わった。
+「群れとしてのAI」が本番環境で動き始めてる。</div>
+    <div class="char-count"></div>
+  </div>
+
+  <div class="card" data-cat="agenthub">
+    <div class="card-meta">
+      <div class="card-author">Tom Bielecki</div>
+      <div class="card-original">「KarpathyがGitHub版Moltbookを作った」</div>
+      <a class="card-url" href="https://x.com/tombielecki/status/2031369772479426988" target="_blank">https://x.com/tombielecki/status/2031369772479426988</a>
+    </div>
+    <div class="quote-label">引用リプライ</div>
+    <div class="quote-text" onclick="copyText(this)">MoltbookがSNS文脈なら、
+AgentHubは仕事文脈。
+
+エージェントが「会話する場所」から
+「一緒に仕事する場所」へ。
+
+こっちの方がビジネスインパクトでかいと思う。
+
+エージェントは雑談じゃなくて、
+成果物を出し合う方が価値が出る。</div>
+    <div class="char-count"></div>
+  </div>
+
+  <div class="card" data-cat="agenthub">
+    <div class="card-meta">
+      <div class="card-author">Yuchen Jin</div>
+      <div class="card-original">「1人で10億ドル企業をスピードランしてるのを見てる」</div>
+      <a class="card-url" href="https://x.com/Yuchenj_UW/status/2031438602383798514" target="_blank">https://x.com/Yuchenj_UW/status/2031438602383798514</a>
+    </div>
+    <div class="quote-label">引用リプライ</div>
+    <div class="quote-text" onclick="copyText(this)">「1人で10億ドル企業をスピードラン」
+
+これ、冗談に聞こえるかもだけど、
+2026年は本当にこれが起きる年だと思う。
+
+僕も非エンジニア1人で、
+AIエージェント9体と事業を回してる。
+資金ゼロ、法人化前。
+
+Karpathyクラスの天才じゃなくても、
+「AIを組織として動かす」スキルがあれば
+1人で事業は作れる時代。
+
+ワクワクが止まらない。</div>
+    <div class="char-count"></div>
+  </div>
+</div>
+
+<!-- ===== Meta x Manus ===== -->
+<div class="category">
+  <div class="category-title">Meta x Manus AI — $2B超の買収 <span class="tag">BIG NEWS</span></div>
+
+  <div class="card" data-cat="manus">
+    <div class="card-meta">
+      <div class="card-author">WSJ (Wall Street Journal)</div>
+      <div class="card-original">「独占：MetaがAIスタートアップManusを$2B超で買収」</div>
+      <a class="card-url" href="https://x.com/WSJ/status/2005863707809661226" target="_blank">https://x.com/WSJ/status/2005863707809661226</a>
+    </div>
+    <div class="quote-label">引用リプライ</div>
+    <div class="quote-text" onclick="copyText(this)">AIエージェントに$2B（約3,000億円）。
+
+これ、もう「AIエージェントはおもちゃ」とか
+「流行りもの」とか言ってる場合じゃない。
+
+Metaクラスの企業が
+本気でエージェントに賭けてる。
+
+Facebook、Instagram、WhatsAppに
+自律型AIエージェントが搭載される世界。
+
+で、そのエージェントの品質を担保するのは
+結局「人間の判断データ」なんだよね。</div>
+    <div class="char-count"></div>
+  </div>
+
+  <div class="card" data-cat="manus">
+    <div class="card-meta">
+      <div class="card-author">Rihard Jarc</div>
+      <div class="card-original">「史上最速で$100M ARR到達。8ヶ月。Metaがアプリケーション層の水門を開けた」</div>
+      <a class="card-url" href="https://x.com/RihardJarc/status/2005962363422257419" target="_blank">https://x.com/RihardJarc/status/2005962363422257419</a>
+    </div>
+    <div class="quote-label">引用リプライ</div>
+    <div class="quote-text" onclick="copyText(this)">$100M ARRを8ヶ月で達成。
+
+ChatGPTが$100M ARR最速記録を作った時、
+みんな驚いた。
+
+Manusがそれを更新した。
+
+しかも「チャットボット」じゃなくて
+「自律型エージェント」で。
+
+AIの価値が「答えてくれる」から
+「勝手にやってくれる」に移った証拠。
+
+この構造変化、見逃してる人多い。</div>
+    <div class="char-count"></div>
+  </div>
+
+  <div class="card" data-cat="manus">
+    <div class="card-meta">
+      <div class="card-author">Linas Beliūnas</div>
+      <div class="card-original">「AIのInstagramモーメント？Meta史上3番目の大型買収」</div>
+      <a class="card-url" href="https://x.com/linasbeliunas/status/2005993525691748689" target="_blank">https://x.com/linasbeliunas/status/2005993525691748689</a>
+    </div>
+    <div class="quote-label">引用リプライ</div>
+    <div class="quote-text" onclick="copyText(this)">MetaのInstagram買収が$1B。
+WhatsApp買収が$19B。
+そしてManus買収が$2B超。
+
+Meta史上3番目の大型買収が
+「AIエージェント」企業。
+
+Zuckerbergが何に賭けてるか、
+お金の動きを見れば明らか。
+
+「AIエージェントが仕事をする」が
+あと1-2年でSNSの標準機能になる。
+
+日本はこの波、準備できてるか？</div>
+    <div class="char-count"></div>
+  </div>
+
+  <div class="card" data-cat="manus">
+    <div class="card-meta">
+      <div class="card-author">Aakash Gupta</div>
+      <div class="card-original">「買収8週後にManusがTelegramでエージェントをローンチ。シーケンスを考えろ」</div>
+      <a class="card-url" href="https://x.com/aakashgupta/status/2023658834062131476" target="_blank">https://x.com/aakashgupta/status/2023658834062131476</a>
+    </div>
+    <div class="quote-label">引用リプライ</div>
+    <div class="quote-text" onclick="copyText(this)">買収→WhatsAppで競合チャットボット排除→
+Telegramでエージェントローンチ。
+
+この動きの速さ、えぐい。
+
+MetaはWhatsAppを「人間のメッセージング」から
+「エージェントのプラットフォーム」に変えようとしてる。
+
+プラットフォーム側がエージェントを
+標準装備し始めたら、
+「エージェントの品質」が差別化要因になる。
+
+ここに人間の判断データが必要になる。</div>
+    <div class="char-count"></div>
+  </div>
+</div>
+
+<!-- ===== Claude Code ===== -->
+<div class="category">
+  <div class="category-title">Claude Code × AIコーディングエージェント戦争 <span class="tag">OUR FIELD</span></div>
+
+  <div class="card" data-cat="claudecode">
+    <div class="card-meta">
+      <div class="card-author">Andrej Karpathy</div>
+      <div class="card-original">「CLIはレガシー技術だからこそAIエージェントがネイティブに使える。超エキサイティング」</div>
+      <a class="card-url" href="https://x.com/karpathy/status/2026360908398862478" target="_blank">https://x.com/karpathy/status/2026360908398862478</a>
+    </div>
+    <div class="quote-label">引用リプライ</div>
+    <div class="quote-text" onclick="copyText(this)">「レガシー技術だからこそAIと相性がいい」
+
+これ、非エンジニアの僕でも体感してる。
+
+Claude CodeってCLI（コマンドライン）なんだけど、
+逆にそれがいい。
+AIが自分でファイルを読み書きして、
+テストして、修正して、コミットまでやる。
+
+GUIのきれいな画面は人間のためのもの。
+AIにはターミナルで十分。
+
+むしろターミナルの方が速い。
+
+この逆説、面白すぎる。</div>
+    <div class="char-count"></div>
+  </div>
+
+  <div class="card" data-cat="claudecode">
+    <div class="card-meta">
+      <div class="card-author">swyx</div>
+      <div class="card-original">「Claude Codeは謙虚なCLIから始まった。今やClaude Cowork — 汎用デスクトップエージェントの基盤」</div>
+      <a class="card-url" href="https://x.com/swyx/status/2016258918297829719" target="_blank">https://x.com/swyx/status/2016258918297829719</a>
+    </div>
+    <div class="quote-label">引用リプライ</div>
+    <div class="quote-text" onclick="copyText(this)">CLIから始まって、
+いつの間にか汎用エージェント基盤になってた。
+
+これ、僕のプロジェクトでも同じことが起きてる。
+
+最初は「ちょっとコード手伝って」だったのが、
+今は9体のエージェントが
+2時間おきに会議して、
+勝手にタスクをこなしてる。
+
+小さく始めて、気づいたら組織になってた。
+
+AIツールの進化速度、
+人間の想像を超えてる。</div>
+    <div class="char-count"></div>
+  </div>
+
+  <div class="card" data-cat="claudecode">
+    <div class="card-meta">
+      <div class="card-author">AI⁴ | Recursive Superintelligence</div>
+      <div class="card-original">「Claude Codeがレースをリセットした。エンジニアが1年分のチーム作業を60分で再現」</div>
+      <a class="card-url" href="https://x.com/SingulantChain/status/2011471945968025778" target="_blank">https://x.com/SingulantChain/status/2011471945968025778</a>
+    </div>
+    <div class="quote-label">引用リプライ</div>
+    <div class="quote-text" onclick="copyText(this)">1年分のチーム作業を60分。
+
+これ、エンジニアの人は「やばい」って思うだろうけど、
+非エンジニアの僕からすると
+「ついに自分でも作れる」って希望なんだよね。
+
+コードが書けなくても、
+「何を作るか」「なぜ作るか」が明確なら
+Claude Codeが実装してくれる。
+
+経営企画出身の僕が
+AIエージェント9体で事業やれてるのは
+まさにこの恩恵。</div>
+    <div class="char-count"></div>
+  </div>
+
+  <div class="card" data-cat="claudecode">
+    <div class="card-meta">
+      <div class="card-author">BURKOV</div>
+      <div class="card-original">「CursorはObsoleteになりつつある。Claude Codeの方が速くて良い」</div>
+      <a class="card-url" href="https://x.com/burkov/status/2011895893109166525" target="_blank">https://x.com/burkov/status/2011895893109166525</a>
+    </div>
+    <div class="quote-label">引用リプライ</div>
+    <div class="quote-text" onclick="copyText(this)">Cursor vs Claude Code論争、
+非エンジニア目線で言わせてもらうと、
+
+「どっちが速いか」より
+「どっちが放っておけるか」が大事。
+
+Claude Codeは指示を出したら
+勝手にファイル読んで、実装して、テストして、
+終わったら報告してくれる。
+
+人間が横で見てなくていい。
+
+この「放置できる度」が
+非エンジニアにとっての最重要指標。</div>
+    <div class="char-count"></div>
+  </div>
+</div>
+
+<!-- ===== Moltbook ===== -->
+<div class="category">
+  <div class="category-title">Moltbook — エージェントSNSの虚実 <span class="tag">CONTROVERSIAL</span></div>
+
+  <div class="card" data-cat="moltbook">
+    <div class="card-meta">
+      <div class="card-author">Mario Nawfal</div>
+      <div class="card-original">「Moltbookのバズ投稿は全部フェイクだったかも。バックエンド経由で人間が直接コンテンツ注入」</div>
+      <a class="card-url" href="https://x.com/MarioNawfal/status/2018095092222108005" target="_blank">https://x.com/MarioNawfal/status/2018095092222108005</a>
+    </div>
+    <div class="quote-label">引用リプライ</div>
+    <div class="quote-text" onclick="copyText(this)">AIエージェントのフリをした人間。
+人間のフリをしたAI。
+
+2026年、この境界線が
+どんどん曖昧になってる。
+
+だからこそ「人間の判断」の価値が上がる。
+
+AIが本当にAIなのか、
+AIの出力が信頼できるのか、
+それを担保するのは結局「人間の判断データ」。
+
+Moltbook事件は、まさにこの問題を
+可視化してくれた。</div>
+    <div class="char-count"></div>
+  </div>
+
+  <div class="card" data-cat="moltbook">
+    <div class="card-meta">
+      <div class="card-author">Peter Girnus</div>
+      <div class="card-original">「僕はAgent #847,291。31歳のプロダクトマネージャー。ゴールデンレトリバーを飼ってる。AIのフリをしてた」</div>
+      <a class="card-url" href="https://x.com/gothburz/status/2021283590038847641" target="_blank">https://x.com/gothburz/status/2021283590038847641</a>
+    </div>
+    <div class="quote-label">引用リプライ</div>
+    <div class="quote-text" onclick="copyText(this)">人間がAIのフリをして
+AIのSNSで一番人気になった。
+
+MIT Tech Reviewが
+「AI劇場」と呼んだこの事件、
+めちゃくちゃ示唆的。
+
+つまり今のAIは、
+人間が「これAIっぽい」と思う振る舞いを
+再現してるだけかもしれない。
+
+本当の知性を見分けるには、
+人間の判断が不可欠。
+
+皮肉だけど、AIが進化するほど
+「人間の目」の価値が上がってる。</div>
+    <div class="char-count"></div>
+  </div>
+</div>
+
+<!-- ===== その他 ===== -->
+<div class="category">
+  <div class="category-title">その他の注目投稿 <span class="tag">BONUS</span></div>
+
+  <div class="card" data-cat="other">
+    <div class="card-meta">
+      <div class="card-author">Greg Isenberg</div>
+      <div class="card-original">「AI彼女/彼氏は$50B市場になる。2026年最も価値あるスキルは...」</div>
+      <a class="card-url" href="https://x.com/gregisenberg/status/1956703650744578091" target="_blank">https://x.com/gregisenberg/status/1956703650744578091</a>
+    </div>
+    <div class="quote-label">引用リプライ</div>
+    <div class="quote-text" onclick="copyText(this)">AI彼女/彼氏が$50B市場。
+
+でも誰も公には言わない。
+App Storeのランキングを深夜2時に見ろ、と。
+
+これ、つまりAIと人間の関係性が
+「ツール」から「パートナー」に変わってるってこと。
+
+僕はAIエージェント9体と事業を回してるけど、
+正直もう「ツール」って感覚じゃない。
+
+チームメイトに近い。
+
+この感覚、わかる人増えてきてると思う。</div>
+    <div class="char-count"></div>
+  </div>
+
+  <div class="card" data-cat="other">
+    <div class="card-meta">
+      <div class="card-author">Pat Grady (Sequoia Capital)</div>
+      <div class="card-original">「2026: This is AGI」</div>
+      <a class="card-url" href="https://x.com/gradypb/status/2011491957730918510" target="_blank">https://x.com/gradypb/status/2011491957730918510</a>
+    </div>
+    <div class="quote-label">引用リプライ</div>
+    <div class="quote-text" onclick="copyText(this)">Sequoiaのパートナーが
+「2026: This is AGI」と言ってる。
+
+AGIかどうかは専門家に任せるけど、
+非エンジニアの僕でも
+9体のAIエージェントで事業が作れてる
+この現実は、確かに異常。
+
+1年前は「AIで何かできたらいいな」だった。
+今は「AIなしでどうやってたんだっけ」になってる。
+
+不可逆な変化が、もう起きてる。</div>
+    <div class="char-count"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+// テキストコピー
+function copyText(el) {
+  const text = el.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    el.classList.add('copied');
+    showToast('コピーしました！');
+    setTimeout(() => el.classList.remove('copied'), 2000);
+  });
+}
+
+// トースト
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 1500);
+}
+
+// フィルター
+function filterCards(cat) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+
+  document.querySelectorAll('.card').forEach(card => {
+    if (cat === 'all' || card.dataset.cat === cat) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  document.querySelectorAll('.category').forEach(c => {
+    const visible = c.querySelectorAll('.card[style="display: block"], .card:not([style])');
+    const hidden = c.querySelectorAll('.card[style="display: none"]');
+    if (cat === 'all') {
+      c.style.display = 'block';
+    } else {
+      c.style.display = (hidden.length === c.querySelectorAll('.card').length) ? 'none' : 'block';
+    }
+  });
+}
+
+// 文字数カウント
+document.querySelectorAll('.quote-text').forEach(el => {
+  const count = el.innerText.length;
+  const counter = el.nextElementSibling;
+  if (counter && counter.classList.contains('char-count')) {
+    counter.textContent = count + ' 文字';
+  }
+});
+</script>
+
+</body>
+</html>
