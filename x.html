@@ -5,944 +5,411 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>X-OPS | AI Content Command Center</title>
 <style>
-:root{--bg:#030306;--card:rgba(12,12,22,.85);--card2:rgba(16,16,30,.9);--border:rgba(40,40,80,.4);--accent:#1d9bf0;--accent2:#0ea5e9;--green:#22c55e;--yellow:#eab308;--red:#ef4444;--purple:#a855f7;--orange:#f97316;--pink:#ec4899;--cyan:#06b6d4;--text:#e8e8f0;--dim:#6b7280;--radius:16px}
+:root{--bg:#020208;--card:rgba(10,10,24,.88);--border:rgba(50,50,100,.35);--accent:#1d9bf0;--cyan:#06b6d4;--green:#22c55e;--yellow:#eab308;--red:#ef4444;--purple:#a855f7;--orange:#f97316;--pink:#ec4899;--text:#eaeaf4;--dim:#7a7a9a;--radius:18px;--glow-b:0 0 30px rgba(29,155,240,.12);--glow-p:0 0 30px rgba(168,85,247,.12)}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;-webkit-tap-highlight-color:transparent;min-height:100vh;overflow-x:hidden}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;-webkit-tap-highlight-color:transparent;min-height:100dvh;overflow-x:hidden}
 
-/* 宇宙背景 */
-#cosmos{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
-.nebula{position:fixed;border-radius:50%;filter:blur(80px);opacity:.08;animation:drift 20s ease-in-out infinite alternate;pointer-events:none}
-.nebula-1{width:500px;height:500px;background:radial-gradient(circle,var(--accent),transparent);top:-100px;left:-100px}
-.nebula-2{width:400px;height:400px;background:radial-gradient(circle,var(--purple),transparent);bottom:-50px;right:-100px;animation-delay:-10s}
-.nebula-3{width:300px;height:300px;background:radial-gradient(circle,var(--cyan),transparent);top:40%;left:60%;animation-delay:-5s}
-@keyframes drift{0%{transform:translate(0,0) scale(1)}100%{transform:translate(30px,-20px) scale(1.1)}}
+/* === 宇宙背景 === */
+canvas#sky{position:fixed;inset:0;z-index:0;pointer-events:none}
+.neb{position:fixed;border-radius:50%;filter:blur(100px);opacity:.07;animation:neb 25s ease-in-out infinite alternate;pointer-events:none;z-index:0}
+.n1{width:600px;height:600px;background:radial-gradient(circle,#1d9bf0,transparent);top:-200px;left:-150px}
+.n2{width:500px;height:500px;background:radial-gradient(circle,#a855f7,transparent);bottom:-150px;right:-200px;animation-delay:-12s}
+.n3{width:350px;height:350px;background:radial-gradient(circle,#06b6d4,transparent);top:35%;left:55%;animation-delay:-7s}
+.n4{width:250px;height:250px;background:radial-gradient(circle,#ec4899,transparent);top:70%;left:10%;animation-delay:-18s}
+@keyframes neb{0%{transform:translate(0,0) scale(1) rotate(0)}100%{transform:translate(40px,-30px) scale(1.15) rotate(10deg)}}
 
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(29,155,240,.3);border-radius:4px}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(29,155,240,.25);border-radius:3px}
 
-.header{background:rgba(3,3,6,.92);backdrop-filter:blur(30px) saturate(1.5);-webkit-backdrop-filter:blur(30px) saturate(1.5);border-bottom:1px solid rgba(29,155,240,.08);padding:16px;position:sticky;top:0;z-index:100}
-.header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(29,155,240,.3),rgba(168,85,247,.3),transparent)}
-.header-top{display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:22px;font-weight:900;letter-spacing:1px}
-.logo span{background:linear-gradient(135deg,var(--accent),var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200% 200%;animation:gradShift 3s ease infinite}
-@keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-.logo-sub{color:var(--dim);font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;margin-top:2px}
-.status-group{display:flex;align-items:center;gap:10px}
-.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green),0 0 16px rgba(34,197,94,.3);animation:livePulse 2s infinite}
-@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.8)}}
-.updated{font-size:10px;color:var(--dim);font-weight:500}
+/* === ヘッダー === */
+.hdr{background:rgba(2,2,8,.88);backdrop-filter:blur(40px) saturate(1.6);-webkit-backdrop-filter:blur(40px) saturate(1.6);padding:16px 16px 0;position:sticky;top:0;z-index:100}
+.hdr::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 5%,rgba(29,155,240,.25) 30%,rgba(168,85,247,.25) 70%,transparent 95%)}
+.hdr-top{display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:24px;font-weight:900;letter-spacing:2px}
+.logo b{background:linear-gradient(135deg,var(--accent),var(--cyan),var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:300% 300%;animation:gShift 4s ease infinite}
+@keyframes gShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.logo-sub{color:var(--dim);font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;margin-top:1px}
+.status{display:flex;align-items:center;gap:8px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:dp 2s infinite}
+@keyframes dp{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.75);opacity:.5}}
+.time{font-size:10px;color:var(--dim);font-weight:500;font-variant-numeric:tabular-nums}
 
-.kpi-bar{display:flex;gap:8px;margin-top:14px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.kpi-bar::-webkit-scrollbar{display:none}
-.kpi{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:12px;padding:12px 16px;min-width:90px;text-align:center;flex-shrink:0;position:relative;overflow:hidden;transition:transform .2s}
-.kpi:active{transform:scale(.95)}
-.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-.kpi:nth-child(1)::before{background:linear-gradient(90deg,var(--accent),var(--cyan))}
-.kpi:nth-child(2)::before{background:linear-gradient(90deg,var(--green),#34d399)}
-.kpi:nth-child(3)::before{background:linear-gradient(90deg,var(--purple),var(--pink))}
-.kpi:nth-child(4)::before{background:linear-gradient(90deg,var(--yellow),var(--orange))}
-.kpi-val{font-size:22px;font-weight:900;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
-.kpi-label{font-size:8px;color:var(--dim);margin-top:4px;text-transform:uppercase;letter-spacing:1px;font-weight:600}
+/* KPI */
+.kpi-row{display:flex;gap:8px;margin:14px 0 10px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.kpi-row::-webkit-scrollbar{display:none}
+.kp{flex:1;min-width:80px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 10px;text-align:center;position:relative;overflow:hidden}
+.kp::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kp:nth-child(1)::before{background:linear-gradient(90deg,var(--accent),var(--cyan))}
+.kp:nth-child(2)::before{background:linear-gradient(90deg,var(--green),#34d399)}
+.kp:nth-child(3)::before{background:linear-gradient(90deg,var(--purple),var(--pink))}
+.kp:nth-child(4)::before{background:linear-gradient(90deg,var(--yellow),var(--orange))}
+.kp-v{font-size:22px;font-weight:900;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.kp-l{font-size:7px;color:var(--dim);margin-top:3px;text-transform:uppercase;letter-spacing:1.2px;font-weight:700}
 
-.tabs{display:flex;background:rgba(3,3,6,.95);backdrop-filter:blur(30px);position:sticky;top:72px;z-index:99;padding:6px 8px;gap:4px}
-.tab{flex:1;padding:10px 4px;text-align:center;font-size:10px;font-weight:800;color:var(--dim);cursor:pointer;border-radius:10px;white-space:nowrap;transition:all .3s cubic-bezier(.4,0,.2,1);text-transform:uppercase;letter-spacing:.8px;position:relative;-webkit-user-select:none;user-select:none}
-.tab:active{transform:scale(.92)}
-.tab.active{color:#fff;background:linear-gradient(135deg,rgba(29,155,240,.2),rgba(168,85,247,.15));box-shadow:0 0 20px rgba(29,155,240,.15),inset 0 0 20px rgba(29,155,240,.05)}
-.tab.active::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:2px;background:linear-gradient(90deg,var(--accent),var(--purple));border-radius:2px;box-shadow:0 0 8px var(--accent)}
-.tab .tab-icon{font-size:16px;display:block;margin-bottom:2px}
+/* === タブ === */
+.tabs{display:flex;background:rgba(2,2,8,.92);backdrop-filter:blur(30px);position:sticky;top:70px;z-index:99;padding:8px 8px 6px;gap:4px}
+.tab{flex:1;padding:8px 2px 10px;text-align:center;font-size:9px;font-weight:800;color:var(--dim);cursor:pointer;border-radius:12px;white-space:nowrap;transition:all .3s;text-transform:uppercase;letter-spacing:.8px;position:relative;-webkit-user-select:none;user-select:none}
+.tab:active{transform:scale(.9)}
+.tab i{font-style:normal;font-size:18px;display:block;margin-bottom:3px}
+.tab.on{color:#fff;background:linear-gradient(145deg,rgba(29,155,240,.18),rgba(168,85,247,.12));box-shadow:var(--glow-b),inset 0 1px 0 rgba(255,255,255,.04)}
+.tab.on::after{content:'';position:absolute;bottom:2px;left:25%;right:25%;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--purple));box-shadow:0 0 10px rgba(29,155,240,.5)}
 
-.tab-content{display:none;padding:14px;position:relative;z-index:1;min-height:60vh}
-.tab-content.active{display:block;animation:pageIn .4s cubic-bezier(.4,0,.2,1)}
-@keyframes pageIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.pane{display:none;padding:14px;position:relative;z-index:1;min-height:50vh}
+.pane.on{display:block;animation:pin .35s cubic-bezier(.4,0,.2,1)}
+@keyframes pin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-.filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
-.filter-btn{padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--dim);font-size:11px;cursor:pointer;transition:all .25s;font-weight:700;letter-spacing:.3px;-webkit-user-select:none}
-.filter-btn:active{transform:scale(.92)}
-.filter-btn.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent;box-shadow:0 0 20px rgba(29,155,240,.25)}
+/* === カード共通 === */
+.crd{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;position:relative;overflow:hidden;transition:transform .15s}
+.crd:active{transform:scale(.985)}
+.crd::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(29,155,240,.35),transparent)}
 
-.toggle-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:12px;backdrop-filter:blur(20px)}
-.toggle-row span{font-size:13px;font-weight:600}
-.toggle{position:relative;width:48px;height:26px;background:rgba(30,30,60,.6);border-radius:13px;cursor:pointer;transition:all .3s;border:1px solid var(--border)}
-.toggle.on{background:linear-gradient(135deg,var(--green),#34d399);border-color:transparent;box-shadow:0 0 12px rgba(34,197,94,.3)}
-.toggle::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:0 2px 6px rgba(0,0,0,.4)}
-.toggle.on::after{transform:translateX(22px)}
+/* === フィルタ === */
+.fbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.fb{padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--dim);font-size:11px;cursor:pointer;transition:all .2s;font-weight:700;-webkit-user-select:none}
+.fb:active{transform:scale(.9)}
+.fb.on{background:linear-gradient(135deg,var(--accent),var(--cyan));color:#fff;border-color:transparent;box-shadow:0 0 24px rgba(29,155,240,.2)}
 
-.buzz-card{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;transition:all .3s;position:relative;overflow:hidden}
-.buzz-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(29,155,240,.4),transparent)}
-.buzz-card::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,rgba(29,155,240,.02),transparent);pointer-events:none}
-.buzz-card.posted{opacity:.2;transform:scale(.98);filter:grayscale(.5)}
-.buzz-card.hidden{display:none}
-.buzz-card:active{transform:scale(.99)}
-.buzz-meta{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:8px}
-.buzz-author{font-weight:800;font-size:15px;letter-spacing:-.3px}
-.buzz-handle{color:var(--dim);font-size:11px;margin-left:6px;font-weight:500}
-.badge{padding:4px 10px;border-radius:8px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;flex-shrink:0}
-.badge.high{background:linear-gradient(135deg,rgba(239,68,68,.15),rgba(239,68,68,.08));color:var(--red);border:1px solid rgba(239,68,68,.2);animation:urgPulse 2.5s infinite}
-.badge.medium{background:rgba(234,179,8,.1);color:var(--yellow);border:1px solid rgba(234,179,8,.2)}
-.badge.low{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.2)}
-@keyframes urgPulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.15)}50%{box-shadow:0 0 16px 4px rgba(239,68,68,.1)}}
-.buzz-summary{font-size:13px;color:#a0a0b8;margin-bottom:10px;line-height:1.7}
-.buzz-stats{display:flex;align-items:center;gap:12px;font-size:11px;color:var(--dim)}
-.buzz-views{display:flex;align-items:center;gap:5px;font-weight:600}
-.buzz-views::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 6px var(--accent)}
-.buzz-link{color:var(--accent);text-decoration:none;font-size:11px;font-weight:700;transition:all .2s}
+/* トグル */
+.trow{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:12px}
+.trow span{font-size:13px;font-weight:600}
+.tog{position:relative;width:48px;height:26px;background:rgba(30,30,60,.6);border-radius:13px;cursor:pointer;transition:all .3s;border:1px solid var(--border)}
+.tog.on{background:linear-gradient(135deg,var(--green),#34d399);border-color:transparent}
+.tog::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.tog.on::after{transform:translateX(22px)}
 
-.type-tabs{display:flex;gap:6px;margin:12px 0 10px}
-.type-tab{flex:1;padding:8px;text-align:center;font-size:12px;font-weight:700;border-radius:10px;cursor:pointer;border:1px solid var(--border);color:var(--dim);transition:all .25s;-webkit-user-select:none}
-.type-tab:active{transform:scale(.95)}
-.type-tab.active-qt{background:linear-gradient(135deg,rgba(29,155,240,.12),rgba(6,182,212,.08));color:var(--accent);border-color:rgba(29,155,240,.25);box-shadow:0 0 16px rgba(29,155,240,.08)}
-.type-tab.active-rp{background:linear-gradient(135deg,rgba(168,85,247,.12),rgba(236,72,153,.08));color:var(--purple);border-color:rgba(168,85,247,.25);box-shadow:0 0 16px rgba(168,85,247,.08)}
+/* === バズカード === */
+.bz .au{font-weight:800;font-size:15px;letter-spacing:-.3px}
+.bz .hd{color:var(--dim);font-size:11px;margin-left:5px;font-weight:500}
+.badge{padding:4px 10px;border-radius:8px;font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:1px;flex-shrink:0}
+.badge.high{background:rgba(239,68,68,.12);color:var(--red);border:1px solid rgba(239,68,68,.15);animation:up 2.5s infinite}
+.badge.medium{background:rgba(234,179,8,.1);color:var(--yellow);border:1px solid rgba(234,179,8,.15)}
+.badge.low{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.15)}
+@keyframes up{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.1)}50%{box-shadow:0 0 20px 4px rgba(239,68,68,.08)}}
+.bz .sum{font-size:13px;color:#a0a0bc;margin:10px 0;line-height:1.75}
+.bz .stats{display:flex;align-items:center;gap:10px;font-size:11px;color:var(--dim);flex-wrap:wrap}
+.views::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 6px var(--accent);display:inline-block;margin-right:5px}
+.cat{font-size:8px;padding:3px 8px;border-radius:6px;font-weight:800;text-transform:uppercase;letter-spacing:.8px}
+.cat-ai_agent{background:rgba(29,155,240,.1);color:var(--accent)}.cat-hardware{background:rgba(249,115,22,.1);color:var(--orange)}.cat-market{background:rgba(168,85,247,.1);color:var(--purple)}.cat-startup{background:rgba(34,197,94,.1);color:var(--green)}.cat-llm{background:rgba(236,72,153,.1);color:var(--pink)}.cat-robotics{background:rgba(6,182,212,.1);color:var(--cyan)}.cat-regulation{background:rgba(239,68,68,.1);color:var(--red)}.cat-funding{background:rgba(234,179,8,.1);color:var(--yellow)}.cat-ai_model{background:rgba(168,85,247,.1);color:var(--purple)}.cat-open_source{background:rgba(34,197,94,.1);color:var(--green)}.cat-trend_report{background:rgba(6,182,212,.1);color:var(--cyan)}
+.lnk{color:var(--accent);text-decoration:none;font-size:11px;font-weight:700}
 
-.patterns{display:flex;gap:8px;margin-bottom:10px}
-.pat-btn{width:34px;height:34px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--dim);font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s}
-.pat-btn:active{transform:scale(.85)}
-.pat-btn.sel{background:linear-gradient(135deg,var(--accent),var(--cyan));color:#fff;border-color:transparent;box-shadow:0 0 16px rgba(29,155,240,.35)}
+/* タイプ切替 */
+.ttabs{display:flex;gap:6px;margin:12px 0 10px}
+.tt{flex:1;padding:8px;text-align:center;font-size:12px;font-weight:700;border-radius:10px;cursor:pointer;border:1px solid var(--border);color:var(--dim);transition:all .2s;-webkit-user-select:none}
+.tt:active{transform:scale(.93)}
+.tt.qt{background:rgba(29,155,240,.1);color:var(--accent);border-color:rgba(29,155,240,.2);box-shadow:0 0 14px rgba(29,155,240,.06)}
+.tt.rp{background:rgba(168,85,247,.1);color:var(--purple);border-color:rgba(168,85,247,.2);box-shadow:0 0 14px rgba(168,85,247,.06)}
 
-.content-box{background:rgba(6,6,14,.7);border:1px solid var(--border);border-radius:12px;padding:14px;font-size:13.5px;line-height:1.8;cursor:pointer;position:relative;min-height:60px;word-wrap:break-word;transition:all .25s}
-.content-box:active{background:rgba(29,155,240,.04);border-color:rgba(29,155,240,.2);box-shadow:0 0 20px rgba(29,155,240,.05)}
-.char-count{text-align:right;font-size:10px;color:var(--dim);margin-top:4px;font-weight:500}
+.pats{display:flex;gap:8px;margin-bottom:10px}
+.pb{min-width:36px;height:34px;padding:0 8px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--dim);font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.pb:active{transform:scale(.85)}
+.pb.sel{background:linear-gradient(135deg,var(--accent),var(--cyan));color:#fff;border-color:transparent;box-shadow:0 0 18px rgba(29,155,240,.3)}
 
-.card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
-.check-btn{padding:8px 18px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--dim);font-size:11px;font-weight:800;cursor:pointer;transition:all .25s;letter-spacing:.5px}
-.check-btn:active{transform:scale(.92)}
-.check-btn.checked{background:linear-gradient(135deg,var(--green),#34d399);color:#fff;border-color:transparent;box-shadow:0 0 16px rgba(34,197,94,.25)}
-.recommend{font-size:10px;padding:5px 12px;border-radius:8px;background:rgba(29,155,240,.06);color:var(--accent);font-weight:800;border:1px solid rgba(29,155,240,.12);letter-spacing:.5px}
+.cbox{background:rgba(4,4,12,.65);border:1px solid var(--border);border-radius:12px;padding:14px;font-size:13.5px;line-height:1.85;cursor:pointer;min-height:60px;word-wrap:break-word;transition:all .2s;position:relative}
+.cbox:active{background:rgba(29,155,240,.03);border-color:rgba(29,155,240,.2)}
+.cbox::after{content:'tap to copy';position:absolute;top:6px;right:10px;font-size:8px;color:var(--dim);opacity:.4;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.cc{text-align:right;font-size:10px;color:var(--dim);margin-top:4px;font-weight:500}
+.foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.ck{padding:8px 18px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--dim);font-size:11px;font-weight:800;cursor:pointer;transition:all .2s;letter-spacing:.5px}
+.ck:active{transform:scale(.9)}
+.ck.done{background:linear-gradient(135deg,var(--green),#34d399);color:#fff;border-color:transparent;box-shadow:0 0 16px rgba(34,197,94,.2)}
+.rec{font-size:9px;padding:5px 12px;border-radius:8px;background:rgba(29,155,240,.06);color:var(--accent);font-weight:800;border:1px solid rgba(29,155,240,.1);letter-spacing:.8px;text-transform:uppercase}
+.bz.posted{opacity:.15;transform:scale(.97);filter:grayscale(.6);pointer-events:none}
+.bz.hidden{display:none}
 
-.thread-card{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:14px;position:relative;overflow:hidden}
-.thread-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(249,115,22,.4),transparent)}
-.thread-title{font-weight:900;font-size:17px;margin-bottom:8px;letter-spacing:-.3px;line-height:1.4}
-.thread-tweet{background:rgba(6,6,14,.5);border-left:3px solid;border-image:linear-gradient(to bottom,var(--accent),var(--purple)) 1;padding:12px 14px;margin:8px 0;border-radius:0 12px 12px 0;font-size:13px;line-height:1.8;cursor:pointer;transition:all .2s}
-.thread-tweet:active{background:rgba(29,155,240,.04)}
-.thread-num{color:var(--accent);font-weight:900;margin-right:6px}
+/* === スレッド/Notes === */
+.th-title{font-weight:900;font-size:17px;margin-bottom:8px;line-height:1.4}
+.th-tw{background:rgba(4,4,12,.5);border-left:3px solid;border-image:linear-gradient(to bottom,var(--accent),var(--purple)) 1;padding:12px 14px;margin:8px 0;border-radius:0 12px 12px 0;font-size:13px;line-height:1.85;cursor:pointer;transition:background .2s}
+.th-tw:active{background:rgba(29,155,240,.03)}
+.th-n{color:var(--accent);font-weight:900;margin-right:6px}
+.nt-title{font-weight:900;font-size:17px;margin-bottom:6px;line-height:1.4}
+.nt-pre{font-size:13px;color:#8888a8;line-height:1.85;max-height:120px;overflow:hidden;margin-bottom:12px;-webkit-mask-image:linear-gradient(to bottom,#000 60%,transparent)}
+.abtn{width:100%;padding:13px;border-radius:12px;font-weight:800;font-size:13px;cursor:pointer;margin-top:10px;transition:all .2s;letter-spacing:.5px;text-transform:uppercase}
+.abtn:active{transform:scale(.97)}
+.abtn-o{border:1px solid var(--accent);background:transparent;color:var(--accent)}
+.abtn-f{border:none;background:linear-gradient(135deg,var(--accent),var(--cyan));color:#fff;box-shadow:0 4px 20px rgba(29,155,240,.18)}
 
-.note-card{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:14px;position:relative;overflow:hidden}
-.note-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(168,85,247,.4),transparent)}
-.note-title{font-weight:900;font-size:17px;margin-bottom:6px;letter-spacing:-.3px;line-height:1.4}
-.note-preview{font-size:13px;color:#8888a8;line-height:1.8;max-height:100px;overflow:hidden;margin-bottom:12px;-webkit-mask-image:linear-gradient(to bottom,#000 60%,transparent)}
+/* === Analytics === */
+.pg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.pc{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;position:relative;overflow:hidden}
+.pc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.pc:nth-child(1)::before{background:linear-gradient(90deg,var(--accent),var(--cyan))}.pc:nth-child(2)::before{background:linear-gradient(90deg,var(--green),#34d399)}.pc:nth-child(3)::before{background:linear-gradient(90deg,var(--orange),var(--yellow))}.pc:nth-child(4)::before{background:linear-gradient(90deg,var(--purple),var(--pink))}
+.pc-v{font-size:26px;font-weight:900;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.pc-l{font-size:7px;color:var(--dim);margin-top:4px;text-transform:uppercase;letter-spacing:1.2px;font-weight:700}
+.pc-d{font-size:10px;font-weight:700;margin-top:2px}
+.spk{display:flex;align-items:flex-end;gap:2px;height:22px;margin-top:5px}
+.spk div{flex:1;border-radius:2px;min-height:2px}
+.cht{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:14px;position:relative;overflow:hidden}
+.cht::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(29,155,240,.25),transparent)}
+.cht-t{font-size:11px;font-weight:800;margin-bottom:14px;text-transform:uppercase;letter-spacing:1.2px;color:var(--dim)}
+.bars{display:flex;align-items:flex-end;gap:6px;height:140px}
+.bc{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.br{width:100%;border-radius:8px 8px 0 0;min-height:3px;position:relative;overflow:hidden;transition:height .7s cubic-bezier(.4,0,.2,1)}
+.br::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.1),transparent)}
+.bl{font-size:8px;color:var(--dim);font-weight:600}.bv{font-size:9px;font-weight:800}
+.hmap{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:10px 0}
+.hc{aspect-ratio:1;border-radius:5px}
+.stk{display:flex;gap:5px;margin:10px 0}
+.sd{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;border:1px solid var(--border)}
+.sd.a{background:linear-gradient(135deg,var(--accent),var(--cyan));border-color:transparent;color:#fff;box-shadow:0 0 10px rgba(29,155,240,.25)}
+.sd.now{box-shadow:0 0 0 2px var(--accent)}
 
-.action-btn{width:100%;padding:13px;border-radius:12px;border:1px solid;font-weight:800;font-size:13px;cursor:pointer;margin-top:10px;transition:all .25s;letter-spacing:.5px;text-transform:uppercase;position:relative;overflow:hidden}
-.action-btn:active{transform:scale(.97)}
-.action-btn.primary{border-color:var(--accent);background:transparent;color:var(--accent)}
-.action-btn.primary:active{background:rgba(29,155,240,.08)}
-.action-btn.gradient{border:none;background:linear-gradient(135deg,var(--accent),var(--cyan));color:#fff;box-shadow:0 4px 20px rgba(29,155,240,.2)}
+/* フォーム */
+.fg{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:14px}
+.fg h3{font-size:14px;margin-bottom:14px;font-weight:800}
+.ir{display:flex;gap:8px;margin-bottom:10px;align-items:center}
+.ir label{font-size:12px;color:var(--dim);min-width:55px;font-weight:700}
+.ir input,.ir select{flex:1;background:rgba(4,4,12,.6);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-size:14px;transition:all .2s}
+.ir input:focus,.ir select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 16px rgba(29,155,240,.08)}
+.ir input::placeholder{color:rgba(122,122,154,.4)}
 
-.perf-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-.perf-card{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;position:relative;overflow:hidden;transition:transform .2s}
-.perf-card:active{transform:scale(.95)}
-.perf-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-.perf-card:nth-child(1)::before{background:linear-gradient(90deg,var(--accent),var(--cyan))}
-.perf-card:nth-child(2)::before{background:linear-gradient(90deg,var(--green),#34d399)}
-.perf-card:nth-child(3)::before{background:linear-gradient(90deg,var(--orange),var(--yellow))}
-.perf-card:nth-child(4)::before{background:linear-gradient(90deg,var(--purple),var(--pink))}
-.perf-val{font-size:26px;font-weight:900;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
-.perf-label{font-size:8px;color:var(--dim);margin-top:4px;text-transform:uppercase;letter-spacing:1px;font-weight:600}
-.perf-delta{font-size:10px;font-weight:700;margin-top:2px}
+/* === Revenue === */
+.rev-hero{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:14px;position:relative;overflow:hidden}
+.rev-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--green),var(--purple),var(--pink));background-size:200% 100%;animation:rg 3s linear infinite}
+@keyframes rg{0%{background-position:0% 0}100%{background-position:200% 0}}
+.rev-amt{font-size:40px;font-weight:900;letter-spacing:-1.5px;margin:8px 0;font-variant-numeric:tabular-nums;background:linear-gradient(135deg,var(--green),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.rev-bar{height:34px;background:rgba(4,4,12,.5);border-radius:17px;overflow:hidden;margin:14px 0;border:1px solid var(--border)}
+.rev-fill{height:100%;border-radius:17px;background:linear-gradient(90deg,var(--accent),var(--green));transition:width 1s cubic-bezier(.4,0,.2,1);position:relative}
+.rev-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 60%,rgba(255,255,255,.15));animation:shm 2.5s infinite}
+@keyframes shm{0%,100%{opacity:0}50%{opacity:1}}
+.rev-tgt{display:flex;justify-content:space-between;font-size:12px;color:var(--dim);font-weight:600}
+.rev-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:16px}
+.rv{text-align:center;padding:14px 6px;background:rgba(4,4,12,.4);border-radius:12px;border:1px solid var(--border)}
+.rv .v{font-size:20px;font-weight:900;font-variant-numeric:tabular-nums}
+.rv .l{font-size:7px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-top:3px;font-weight:700}
+.rhi{display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;position:relative;overflow:hidden}
+.rhi::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.rhi.t-ad::before{background:var(--accent)}.rhi.t-affiliate::before{background:var(--green)}.rhi.t-sponsored::before{background:var(--purple)}
 
-.chart-container{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:14px;position:relative;overflow:hidden}
-.chart-container::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(29,155,240,.3),transparent)}
-.chart-title{font-size:12px;font-weight:800;margin-bottom:14px;text-transform:uppercase;letter-spacing:1px;color:var(--dim)}
-.bar-chart{display:flex;align-items:flex-end;gap:6px;height:140px;padding-top:10px}
-.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
-.bar{width:100%;border-radius:8px 8px 0 0;min-height:3px;transition:height .6s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
-.bar::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(255,255,255,.08),transparent)}
-.bar-label{font-size:8px;color:var(--dim);font-weight:600}
-.bar-val{font-size:9px;color:var(--text);font-weight:800}
+/* === Schedule === */
+.tl{position:relative;padding-left:28px}
+.tl::before{content:'';position:absolute;top:8px;bottom:8px;left:9px;width:2px;background:linear-gradient(to bottom,var(--accent),var(--purple),rgba(168,85,247,.1));border-radius:2px}
+.si{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;position:relative}
+.si::before{content:'';position:absolute;left:-23px;top:50%;width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);box-shadow:0 0 10px rgba(29,155,240,.4);transform:translateY(-50%)}
+.si.gld{border-color:rgba(234,179,8,.12)}
+.si.gld::before{background:var(--yellow);box-shadow:0 0 10px rgba(234,179,8,.4)}
+.si.gld::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(234,179,8,.25),transparent)}
+.si-t{font-size:20px;font-weight:900;min-width:55px;font-variant-numeric:tabular-nums}
+.si-i{flex:1;min-width:0}
+.st{display:inline-block;font-size:8px;padding:3px 10px;border-radius:6px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;margin-top:4px}
+.st-qt{background:rgba(29,155,240,.08);color:var(--accent);border:1px solid rgba(29,155,240,.1)}
+.st-rp{background:rgba(168,85,247,.08);color:var(--purple);border:1px solid rgba(168,85,247,.1)}
+.gl{font-size:10px;color:var(--yellow);font-weight:700}
+.live{display:inline-flex;align-items:center;gap:5px;background:rgba(239,68,68,.1);color:var(--red);padding:3px 10px;border-radius:6px;font-size:10px;font-weight:800;letter-spacing:.8px}
+.live::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 6px var(--red);animation:dp 1.5s infinite}
+.sh{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.sh h2{font-size:13px;font-weight:800;letter-spacing:.8px;text-transform:uppercase}
+.sc{font-size:10px;color:var(--accent);background:rgba(29,155,240,.08);padding:3px 10px;border-radius:10px;font-weight:800}
 
-.form-group{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:14px;position:relative;overflow:hidden}
-.form-group::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(29,155,240,.2),transparent)}
-.form-group h3{font-size:14px;margin-bottom:14px;font-weight:800;letter-spacing:-.2px}
-.input-row{display:flex;gap:8px;margin-bottom:10px;align-items:center}
-.input-row label{font-size:12px;color:var(--dim);min-width:60px;font-weight:700}
-.input-row input,.input-row select{flex:1;background:rgba(6,6,14,.6);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-size:14px;transition:all .25s;font-weight:500}
-.input-row input:focus,.input-row select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 16px rgba(29,155,240,.1)}
-.input-row input::placeholder{color:rgba(107,114,128,.5)}
+.empty{text-align:center;padding:50px 20px;color:var(--dim)}.empty i{font-size:48px;display:block;margin-bottom:12px;opacity:.4}.empty p{font-size:13px;line-height:1.8}.empty .h{font-size:10px;opacity:.5;margin-top:6px}
 
-.revenue-hero{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px;position:relative;overflow:hidden}
-.revenue-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--green),var(--purple),var(--pink));background-size:200% 100%;animation:revGrad 3s linear infinite}
-@keyframes revGrad{0%{background-position:0% 0}100%{background-position:200% 0}}
-.revenue-amount{font-size:36px;font-weight:900;letter-spacing:-1px;margin:8px 0;font-variant-numeric:tabular-nums}
-.revenue-progress{height:32px;background:rgba(6,6,14,.5);border-radius:16px;overflow:hidden;margin:14px 0;border:1px solid var(--border)}
-.revenue-fill{height:100%;border-radius:16px;background:linear-gradient(90deg,var(--accent),var(--green));transition:width 1s cubic-bezier(.4,0,.2,1);position:relative}
-.revenue-fill::after{content:'';position:absolute;top:0;right:0;bottom:0;width:60px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2));border-radius:16px;animation:shimmer 2s infinite}
-@keyframes shimmer{0%{opacity:0;transform:translateX(-30px)}50%{opacity:1}100%{opacity:0;transform:translateX(30px)}}
-.revenue-target{display:flex;justify-content:space-between;font-size:12px;color:var(--dim);font-weight:600}
-.revenue-breakdown{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:16px}
-.rev-item{text-align:center;padding:14px 8px;background:rgba(6,6,14,.4);border-radius:12px;border:1px solid var(--border)}
-.rev-item .val{font-size:20px;font-weight:900;font-variant-numeric:tabular-nums}
-.rev-item .label{font-size:8px;color:var(--dim);text-transform:uppercase;letter-spacing:.8px;margin-top:3px;font-weight:600}
-
-.timeline{position:relative;padding-left:24px}
-.timeline::before{content:'';position:absolute;top:0;bottom:0;left:8px;width:2px;background:linear-gradient(to bottom,var(--accent),var(--purple),transparent);border-radius:2px}
-.schedule-item{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;transition:all .2s;position:relative}
-.schedule-item::before{content:'';position:absolute;left:-20px;top:50%;width:10px;height:10px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);box-shadow:0 0 8px var(--accent);transform:translateY(-50%)}
-.schedule-item.golden{border-color:rgba(234,179,8,.15)}
-.schedule-item.golden::before{background:var(--yellow);box-shadow:0 0 8px var(--yellow)}
-.schedule-item.golden::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(234,179,8,.3),transparent)}
-.schedule-time{font-size:20px;font-weight:900;min-width:55px;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
-.schedule-info{flex:1;min-width:0}
-.schedule-type{display:inline-block;font-size:9px;padding:3px 10px;border-radius:6px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
-.type-qt{background:rgba(29,155,240,.1);color:var(--accent);border:1px solid rgba(29,155,240,.15)}
-.type-thread{background:rgba(249,115,22,.1);color:var(--orange);border:1px solid rgba(249,115,22,.15)}
-.type-note{background:rgba(168,85,247,.1);color:var(--purple);border:1px solid rgba(168,85,247,.15)}
-.golden-label{font-size:10px;color:var(--yellow);font-weight:700}
-.live-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(239,68,68,.12);color:var(--red);padding:3px 10px;border-radius:6px;font-size:10px;font-weight:800;letter-spacing:.5px}
-.live-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 6px var(--red);animation:livePulse 1.5s infinite}
-
-.section-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
-.section-header h2{font-size:14px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
-.section-count{font-size:10px;color:var(--accent);background:rgba(29,155,240,.1);padding:3px 10px;border-radius:10px;font-weight:800}
-
-.empty-state{text-align:center;padding:60px 24px;color:var(--dim)}
-.empty-state .icon{font-size:56px;margin-bottom:16px;opacity:.5}
-.empty-state p{font-size:14px;line-height:1.8;font-weight:500}
-.empty-state .hint{font-size:11px;color:rgba(107,114,128,.6);margin-top:8px}
-
-.rev-history-item{display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;position:relative;overflow:hidden}
-.rev-history-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
-.rev-history-item.t-ad::before{background:var(--accent)}
-.rev-history-item.t-affiliate::before{background:var(--green)}
-.rev-history-item.t-sponsored::before{background:var(--purple)}
-
-.spark-row{display:flex;align-items:flex-end;gap:2px;height:24px;margin-top:4px}
-.spark-bar{flex:1;border-radius:2px;min-height:2px;transition:height .4s}
-
-.heatmap{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:12px 0}
-.heatmap-cell{aspect-ratio:1;border-radius:4px}
-
-.streak-bar{display:flex;gap:4px;margin:12px 0;align-items:center}
-.streak-dot{width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;border:1px solid var(--border);transition:all .3s}
-.streak-dot.active{background:linear-gradient(135deg,var(--accent),var(--cyan));border-color:transparent;color:#fff;box-shadow:0 0 10px rgba(29,155,240,.3)}
-.streak-dot.today{box-shadow:0 0 0 2px var(--accent),0 0 12px rgba(29,155,240,.3)}
-
-.cat-label{font-size:9px;padding:3px 8px;border-radius:6px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;display:inline-block}
-.cat-ai_agent{background:rgba(29,155,240,.1);color:var(--accent)}
-.cat-hardware{background:rgba(249,115,22,.1);color:var(--orange)}
-.cat-market{background:rgba(168,85,247,.1);color:var(--purple)}
-.cat-startup{background:rgba(34,197,94,.1);color:var(--green)}
-.cat-llm{background:rgba(236,72,153,.1);color:var(--pink)}
-.cat-robotics{background:rgba(6,182,212,.1);color:var(--cyan)}
-.cat-regulation{background:rgba(239,68,68,.1);color:var(--red)}
-.cat-funding{background:rgba(234,179,8,.1);color:var(--yellow)}
-
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:linear-gradient(135deg,var(--accent),var(--cyan));color:#fff;padding:12px 32px;border-radius:99px;font-weight:800;font-size:14px;opacity:0;transition:all .35s cubic-bezier(.4,0,.2,1);pointer-events:none;z-index:999;box-shadow:0 8px 32px rgba(29,155,240,.35);letter-spacing:-.3px}
+/* トースト */
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:linear-gradient(135deg,var(--accent),var(--cyan));color:#fff;padding:12px 36px;border-radius:99px;font-weight:800;font-size:14px;opacity:0;transition:all .35s cubic-bezier(.4,0,.2,1);pointer-events:none;z-index:999;box-shadow:0 8px 40px rgba(29,155,240,.35);letter-spacing:-.3px}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
+<div class="neb n1"></div><div class="neb n2"></div><div class="neb n3"></div><div class="neb n4"></div>
+<canvas id="sky"></canvas>
 
-<div class="nebula nebula-1"></div>
-<div class="nebula nebula-2"></div>
-<div class="nebula nebula-3"></div>
-<canvas id="cosmos"></canvas>
-
-<div class="header">
-  <div class="header-top">
-    <div><div class="logo"><span>X-OPS</span></div><div class="logo-sub">AI Content Command Center</div></div>
-    <div class="status-group"><div class="live-dot"></div><div class="updated" id="lastUpdated"></div></div>
+<div class="hdr">
+  <div class="hdr-top">
+    <div><div class="logo"><b>X-OPS</b></div><div class="logo-sub">AI Content Command Center</div></div>
+    <div class="status"><div class="dot"></div><div class="time" id="tm"></div></div>
   </div>
-  <div class="kpi-bar" id="kpiBar"></div>
+  <div class="kpi-row" id="kpi"></div>
 </div>
 
-<div class="tabs" id="mainTabs">
-  <div class="tab active" data-tab="buzz"><span class="tab-icon">&#x26A1;</span>BUZZ</div>
-  <div class="tab" data-tab="content"><span class="tab-icon">&#x270D;&#xFE0F;</span>CONTENT</div>
-  <div class="tab" data-tab="perf"><span class="tab-icon">&#x1F4CA;</span>ANALYTICS</div>
-  <div class="tab" data-tab="revenue"><span class="tab-icon">&#x1F4B0;</span>REVENUE</div>
-  <div class="tab" data-tab="schedule"><span class="tab-icon">&#x1F680;</span>SCHEDULE</div>
+<div class="tabs">
+  <div class="tab on" data-t="buzz"><i>&#x26A1;</i>BUZZ</div>
+  <div class="tab" data-t="content"><i>&#x270D;&#xFE0F;</i>WRITE</div>
+  <div class="tab" data-t="perf"><i>&#x1F4CA;</i>STATS</div>
+  <div class="tab" data-t="rev"><i>&#x1F4B0;</i>MONEY</div>
+  <div class="tab" data-t="sched"><i>&#x1F680;</i>PLAN</div>
 </div>
 
-<div class="tab-content active" id="tab-buzz">
-  <div class="toggle-row"><span>投稿済みを非表示</span><div class="toggle" id="hidePosted" onclick="toggleHidePosted()"></div></div>
-  <div class="filter-bar" id="buzzFilters"></div>
-  <div id="buzzList"></div>
+<div class="pane on" id="p-buzz">
+  <div class="trow"><span>投稿済みを非表示</span><div class="tog" id="hpTog" onclick="togHP()"></div></div>
+  <div class="fbar" id="bfilt"></div>
+  <div id="blist"></div>
 </div>
 
-<div class="tab-content" id="tab-content">
-  <div class="filter-bar" id="contentFilters">
-    <button class="filter-btn active" onclick="switchContentSub(this,'threads')">THREADS</button>
-    <button class="filter-btn" onclick="switchContentSub(this,'notes')">NOTES</button>
+<div class="pane" id="p-content">
+  <div class="fbar" id="cfilt">
+    <button class="fb on" onclick="cSub(this,'th')">THREADS</button>
+    <button class="fb" onclick="cSub(this,'nt')">NOTES</button>
   </div>
-  <div id="threadsList"></div>
-  <div id="notesList" style="display:none"></div>
+  <div id="thList"></div>
+  <div id="ntList" style="display:none"></div>
 </div>
 
-<div class="tab-content" id="tab-perf">
-  <div class="perf-grid" id="perfGrid"></div>
-  <div class="chart-container"><div class="chart-title">Daily Impressions (7 days)</div><div class="bar-chart" id="impChart"></div></div>
-  <div class="chart-container"><div class="chart-title">Engagement by Type</div><div class="bar-chart" id="typeChart"></div></div>
-  <div class="chart-container"><div class="chart-title">Posting Activity (28 days)</div><div class="heatmap" id="activityHeatmap"></div><div style="display:flex;justify-content:space-between;font-size:9px;color:var(--dim);margin-top:4px"><span>4 weeks ago</span><span>This week</span></div></div>
-  <div class="chart-container"><div class="chart-title">7-Day Streak</div><div class="streak-bar" id="streakBar"></div><div style="font-size:11px;color:var(--dim);margin-top:6px" id="streakText"></div></div>
-  <div class="form-group"><h3>Record Performance</h3>
-    <div class="input-row"><label>URL</label><input id="perfUrl" placeholder="https://x.com/..."></div>
-    <div class="input-row"><label>Type</label><select id="perfType"><option value="quote_rt">Quote RT</option><option value="reply">Reply</option><option value="thread">Thread</option><option value="note">Notes</option><option value="original">Original</option></select></div>
-    <div class="input-row"><label>Imp</label><input id="perfImp" type="number" placeholder="0"></div>
-    <div class="input-row"><label>Likes</label><input id="perfLikes" type="number" placeholder="0"></div>
-    <div class="input-row"><label>RT</label><input id="perfRt" type="number" placeholder="0"></div>
-    <div class="input-row"><label>Replies</label><input id="perfReplies" type="number" placeholder="0"></div>
-    <button class="action-btn gradient" onclick="savePerf()">SAVE PERFORMANCE</button>
+<div class="pane" id="p-perf">
+  <div class="pg" id="pGrid"></div>
+  <div class="cht"><div class="cht-t">Daily Impressions</div><div class="bars" id="impCh"></div></div>
+  <div class="cht"><div class="cht-t">By Post Type</div><div class="bars" id="typeCh"></div></div>
+  <div class="cht"><div class="cht-t">28-Day Activity</div><div class="hmap" id="hmap"></div><div style="display:flex;justify-content:space-between;font-size:8px;color:var(--dim);margin-top:3px"><span>4w ago</span><span>Today</span></div></div>
+  <div class="cht"><div class="cht-t">7-Day Streak</div><div class="stk" id="stk"></div><div style="font-size:11px;color:var(--dim);margin-top:4px" id="stkTxt"></div></div>
+  <div class="fg"><h3>Record Performance</h3>
+    <div class="ir"><label>URL</label><input id="pUrl" placeholder="https://x.com/..."></div>
+    <div class="ir"><label>Type</label><select id="pTyp"><option value="quote_rt">Quote RT</option><option value="reply">Reply</option><option value="thread">Thread</option><option value="note">Notes</option><option value="original">Original</option></select></div>
+    <div class="ir"><label>Imp</label><input id="pImp" type="number" placeholder="0"></div>
+    <div class="ir"><label>Likes</label><input id="pLik" type="number" placeholder="0"></div>
+    <div class="ir"><label>RT</label><input id="pRt" type="number" placeholder="0"></div>
+    <div class="ir"><label>Reply</label><input id="pRep" type="number" placeholder="0"></div>
+    <button class="abtn abtn-f" onclick="saveP()">SAVE</button>
   </div>
-  <div class="form-group"><h3>Update Followers</h3>
-    <div class="input-row"><label>Count</label><input id="followerCount" type="number" placeholder="Current follower count"></div>
-    <button class="action-btn gradient" onclick="saveFollowers()">UPDATE</button>
+  <div class="fg"><h3>Followers</h3>
+    <div class="ir"><label>Count</label><input id="fCnt" type="number" placeholder="Current followers"></div>
+    <button class="abtn abtn-f" onclick="saveF()">UPDATE</button>
   </div>
 </div>
 
-<div class="tab-content" id="tab-revenue">
-  <div class="revenue-hero">
-    <div style="font-size:12px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:1px">Monthly Revenue</div>
-    <div class="revenue-amount" id="revTotal">¥0</div>
-    <div class="revenue-progress"><div class="revenue-fill" id="revFill" style="width:0%"></div></div>
-    <div class="revenue-target"><span id="revPct">0%</span><span>TARGET: ¥300,000</span></div>
-    <div class="revenue-breakdown">
-      <div class="rev-item"><div class="val" style="color:var(--accent)" id="revAd">¥0</div><div class="label">Ad Revenue</div></div>
-      <div class="rev-item"><div class="val" style="color:var(--green)" id="revAff">¥0</div><div class="label">Affiliate</div></div>
-      <div class="rev-item"><div class="val" style="color:var(--purple)" id="revSpon">¥0</div><div class="label">Sponsored</div></div>
+<div class="pane" id="p-rev">
+  <div class="rev-hero">
+    <div style="font-size:11px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:1.5px">Monthly Revenue</div>
+    <div class="rev-amt" id="rTot">¥0</div>
+    <div class="rev-bar"><div class="rev-fill" id="rFill" style="width:0%"></div></div>
+    <div class="rev-tgt"><span id="rPct">0%</span><span>TARGET ¥300,000</span></div>
+    <div class="rev-grid">
+      <div class="rv"><div class="v" style="color:var(--accent)" id="rAd">¥0</div><div class="l">Ad Revenue</div></div>
+      <div class="rv"><div class="v" style="color:var(--green)" id="rAf">¥0</div><div class="l">Affiliate</div></div>
+      <div class="rv"><div class="v" style="color:var(--purple)" id="rSp">¥0</div><div class="l">Sponsored</div></div>
     </div>
   </div>
-  <div class="chart-container"><div class="chart-title">Revenue Trend</div><div class="bar-chart" id="revChart"></div></div>
-  <div class="form-group"><h3>Record Revenue</h3>
-    <div class="input-row"><label>Type</label><select id="revType"><option value="ad">Ad Revenue</option><option value="affiliate">Affiliate</option><option value="sponsored">Sponsored</option></select></div>
-    <div class="input-row"><label>Amount</label><input id="revAmount" type="number" placeholder="¥"></div>
-    <div class="input-row"><label>Memo</label><input id="revMemo" placeholder="Details..."></div>
-    <button class="action-btn gradient" onclick="saveRevenue()">SAVE REVENUE</button>
+  <div class="cht"><div class="cht-t">Revenue Trend</div><div class="bars" id="rCh"></div></div>
+  <div class="fg"><h3>Record Revenue</h3>
+    <div class="ir"><label>Type</label><select id="rTyp"><option value="ad">Ad Revenue</option><option value="affiliate">Affiliate</option><option value="sponsored">Sponsored</option></select></div>
+    <div class="ir"><label>Amount</label><input id="rAmt" type="number" placeholder="¥"></div>
+    <div class="ir"><label>Memo</label><input id="rMem" placeholder="Details..."></div>
+    <button class="abtn abtn-f" onclick="saveR()">SAVE</button>
   </div>
-  <div class="section-header"><h2>History</h2><span class="section-count" id="revHistCount">0</span></div>
-  <div id="revHistory"></div>
+  <div class="sh"><h2>History</h2><span class="sc" id="rhCnt">0</span></div>
+  <div id="rHist"></div>
 </div>
 
-<div class="tab-content" id="tab-schedule">
-  <div class="section-header"><h2>Golden Time</h2></div>
-  <div class="timeline" id="goldenTimes"></div>
-  <div class="section-header" style="margin-top:20px"><h2>Post Queue</h2><span class="section-count" id="queueCount">0</span></div>
-  <div class="timeline" id="scheduleList"></div>
+<div class="pane" id="p-sched">
+  <div class="sh"><h2>Golden Time</h2></div>
+  <div class="tl" id="gTime"></div>
+  <div class="sh" style="margin-top:20px"><h2>Post Queue</h2><span class="sc" id="qCnt">0</span></div>
+  <div class="tl" id="sList"></div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-/* ===== データ ===== */
-const BUZZ = [{"source_url": "https://x.com/karpathy/status/2030705271627284816", "author": "Andrej Karpathy", "author_handle": "@karpathy", "views_estimate": "250万+", "category": "ai_agent", "urgency": "high", "summary_ja": "autoresearchの次のステップ：SETI@homeスタイルのエージェント大規模非同期コラボを提唱", "quotes": [{"pattern": 1, "text": "Karpathyの「SETI@homeスタイルのAIエージェント大規模コラボ」構想。分散コンピューティングの思想がAIエージェントに持ち込まれる流れ、これは面白い。個々のエージェントが非同期で協調する世界は、もう研究段階じゃなくて実装段階に入ってる。", "angle": "business"}, {"pattern": 2, "text": "autoresearchから始まったものが、大規模分散AIコラボへ。Karpathyが描くビジョンの射程がどんどん広がっていく。エージェント同士が非同期で学び合うSETI@homeモデル、これがスタンダードになる未来はもうすぐそこ。", "angle": "provocative"}, {"pattern": 3, "text": "「エージェントが大規模に非同期で協調する」— KarpathyがSETI@homeを引き合いに出してるの、比喩じゃなくてガチのアーキテクチャ提案だと思う。単体エージェントの性能競争は終わり、次は協調の設計。", "angle": "data_driven"}], "replies": [{"pattern": 1, "text": "SETI@homeのアプローチをAIエージェントに適用するの、計算リソースの分散だけじゃなくて「知識の分散」にまで拡張できそうですよね。どんなタスク分割の粒度を想定してますか？"}, {"pattern": 2, "text": "非同期コラボって、エージェント間の合意形成がボトルネックになりそうですが、そこはどう解決するビジョンなんでしょう。同期的な確認ポイントを設けるのか、完全に非同期で走らせるのか。"}, {"pattern": 3, "text": "分散型AIコラボ、面白いのはこれがオープンソースの流れと完全に合流してること。一企業の独占じゃなく、世界中のエージェントが協調するインフラが出来上がりつつある。"}], "recommended_action": "quote_rt", "id": "bz_20260317_001", "detected_at": "2026-03-17T14:46:40.152987+09:00", "status": "pending"}, {"source_url": "https://x.com/karpathy/status/2031847295952752660", "author": "Andrej Karpathy", "author_handle": "@karpathy", "views_estimate": "180万+", "category": "ai_agent", "urgency": "high", "summary_ja": "「vibe codingで本番アプリを作れる時代が来た」— 非エンジニアがAIでプロダクトを作る流れを加速", "quotes": [{"pattern": 1, "text": "Karpathyが「vibe codingで本番アプリが作れる」と言い切った。非エンジニアにとってこれは革命。コードを書く能力じゃなく、何を作るかを定義する能力が価値になる時代。", "angle": "business"}, {"pattern": 2, "text": "vibe coding、最初はジョークだと思ってた。でもKarpathyが本番アプリレベルで使えると言ってるなら、開発の民主化はもう冗談じゃない。技術的負債の問題は残るけど、まずは作れること自体がゲームチェンジ。", "angle": "personal"}, {"pattern": 3, "text": "「vibe coding = 本番レベル」をKarpathyが追認。これでエンジニアの役割が根本的に変わる。実装力ではなく設計力・判断力がプレミアムになる時代。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "vibe codingで作ったアプリの保守性ってどうなると思いますか？作るのは簡単でも、半年後に修正できるかが本番運用の壁な気がしてます。"}, {"pattern": 2, "text": "本番アプリが作れるのはすごいけど、セキュリティ面が気になる。AIが生成したコードの脆弱性チェック、まだ人間がやらないと危ない段階ですよね。"}, {"pattern": 3, "text": "これ聞くとエンジニアの仕事なくなるって思う人いるけど、逆でしょ。作れる人が10倍になったら、レビュー・設計・判断できる人の需要が爆発する。"}], "recommended_action": "quote_rt", "id": "bz_20260317_002", "detected_at": "2026-03-17T14:46:40.153185+09:00", "status": "pending"}, {"source_url": "https://x.com/ManusAI/status/2030102948781658357", "author": "Manus AI", "author_handle": "@ManusAI", "views_estimate": "500万+", "category": "ai_agent", "urgency": "high", "summary_ja": "Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行", "quotes": [{"pattern": 1, "text": "Manus AI、ついに正式ローンチ。「タスクを投げたら完了まで自律実行」というコンセプト、デモを見る限りかなり本物。エージェントの自律性がここまで来たかと驚く。", "angle": "business"}, {"pattern": 2, "text": "Manus AIのローンチ、500万views超え。エージェントが「考えて、調べて、実行して、完了」を全部やるの見ると、AIアシスタントとAIエージェントの違いがはっきりわかる。次元が違う。", "angle": "provocative"}, {"pattern": 3, "text": "汎用AIエージェントの本命候補がまた一つ。Manus AIの特徴はブラウザ操作・ファイル処理・コード実行を統合してる点。単機能じゃなく「何でもやります」系、これが主流になりそう。", "angle": "data_driven"}], "replies": [{"pattern": 1, "text": "デモの完成度すごいですが、実際のユースケースでどのくらいの成功率なのか気になります。簡単なタスクと複雑なタスクで精度差はどのくらいありますか？"}, {"pattern": 2, "text": "エージェントが自律実行してくれるのはいいけど、途中経過の確認やロールバックはどうなってるんでしょう。完全お任せが怖いケースもありますよね。"}, {"pattern": 3, "text": "これ見てると、AIエージェント市場は「汎用」vs「特化」で棲み分けが起きそう。Manusは汎用で攻めてるけど、特定業界に特化したエージェントも強そう。"}], "recommended_action": "quote_rt", "id": "bz_20260317_003", "detected_at": "2026-03-17T14:46:40.153551+09:00", "status": "pending"}, {"source_url": "https://x.com/NVIDIAGTC/status/2033635140434596028", "author": "NVIDIA GTC", "author_handle": "@NVIDIAGTC", "views_estimate": "300万+", "category": "hardware", "urgency": "high", "summary_ja": "Vera Rubin GPU発表 — 推論コスト10分の1、7チップ同時量産開始。半導体史上最大の1兆ドル需要", "quotes": [{"pattern": 1, "text": "NVIDIA Vera Rubin、推論コスト10分の1は衝撃。Transformer登場以来最大の経済的シフト。これでAIの「作る」から「使う」への転換が本格化する。推論の時代が正式に始まった。", "angle": "business"}, {"pattern": 2, "text": "GTC 2026の全発表をまとめた日本語レポートを書きました。Vera Rubin、OpenClaw、宇宙コンピューティング… Jensen Huangの「AIは電気と同じインフラ」発言が全てを物語ってる。", "angle": "personal"}, {"pattern": 3, "text": "2027年まで1兆ドルの需要予測。半導体史上最大。NVIDIAはもうチップ企業じゃない。AI経済全体のインフラレイヤーだ。5層フルスタック戦略、完全に次元が違う。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "推論コスト10分の1になると、今まで「コスト的に無理」だったAIユースケースが一気に実用化されますね。特に日本の中小企業にとっては参入障壁が劇的に下がる。"}, {"pattern": 2, "text": "3世代ロードマップ（Vera Rubin→Vera Ultra→Feynman）を一気に公開したの、競合のスイッチングコストを上げる意味でも戦略的すぎる。AMDやIntelはどう出るか。"}, {"pattern": 3, "text": "Vera Rubinの288GB HBM4と22TB/s帯域幅、大規模言語モデルの推論が根本的に変わりそう。特にMoEモデルのGPU必要数が4分の1になるの、コスト構造が激変する。"}], "recommended_action": "quote_rt", "id": "bz_20260317_004", "detected_at": "2026-03-17T14:46:40.153833+09:00", "status": "pending"}, {"source_url": "https://x.com/ns123abc/status/2033747982466879591", "author": "内部リーク", "author_handle": "@ns123abc", "views_estimate": "150万+", "category": "market", "urgency": "high", "summary_ja": "OpenAI内部「Code Red」— Anthropicの急成長に危機感。Claude Codeが全主要テック企業のデフォルトに", "quotes": [{"pattern": 1, "text": "OpenAI内部で「Anthropicに対してCode Red」。Claude Codeがエンタープライズのデフォルトになり、Anthropicのシェアが倍増してるとのリーク。AI競争、モデル性能だけじゃなくて開発者ツールの戦いに移行してる。", "angle": "business"}, {"pattern": 2, "text": "OpenAIが社内で「Code Red」出すレベルでAnthropicに焦ってるの、2年前の立場が完全に逆転してる。Claude Codeの開発者体験が良すぎて、一度使ったらGPTに戻れないという声、実際よく聞く。", "angle": "provocative"}, {"pattern": 3, "text": "このリーク面白いのは、AIの競争軸がモデル性能→開発者体験→エンタープライズ浸透に変わってきてること。Claude Codeが「使われてる」ことがAnthropicの最大の武器になってる。", "angle": "data_driven"}], "replies": [{"pattern": 1, "text": "Claude Codeの何がそこまで開発者に刺さってるんですかね。コード生成の精度？それともCLIの体験設計？使ってる人の具体的な理由が気になる。"}, {"pattern": 2, "text": "OpenAIのCode Red、GPT-4出した時は完全に覇権だったのに。AIの競争って本当に一瞬で構図が変わりますね。次はGoogleが逆転する可能性もある。"}, {"pattern": 3, "text": "Anthropicのエンタープライズシェア倍増、これは安全性重視のブランディングが効いてるんだと思う。企業はモデル性能よりも信頼性とサポートで選ぶ。"}], "recommended_action": "quote_rt", "id": "bz_20260317_005", "detected_at": "2026-03-17T14:46:40.154082+09:00", "status": "pending"}, {"source_url": "https://x.com/kimmonismus/status/2033669674622455868", "author": "Chubby", "author_handle": "@kimmonismus", "views_estimate": "50万+", "category": "hardware", "urgency": "high", "summary_ja": "NVIDIA GTC 2026でJensen Huangが史上最も野心的なキーノートを発表。1兆ドルの受注、Feynman（2028年）発表、全企業にエージェント戦略が必要と宣言。", "quotes": [{"pattern": 1, "text": "1兆ドルの受注残。NVIDIAはもはやチップ企業ではなく、AI時代のインフラ独占企業。この規模感を理解してない人が多すぎる。", "angle": "business"}, {"pattern": 2, "text": "GTC見るたびに思うけど、Jensen Huangのプレゼンを見て「自分の業界も変わる」と実感しない経営者がいたら、それはもう危機感が足りない。", "angle": "personal"}, {"pattern": 3, "text": "「全企業にエージェント戦略が必要」←これ、2年後に「なぜあの時動かなかったのか」と後悔する企業が大量に出る予言。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "Feynman 2028、ネーミングセンスが天才すぎる。物理学の巨人の名前をGPUにつける会社は他にない。"}, {"pattern": 2, "text": "1兆ドルの受注って、日本のGDPの約1/4ですからね...AIインフラ投資のスケールが完全に別次元に入った。"}, {"pattern": 3, "text": "「every company needs an agent strategy」これがGTC 2026の最重要メッセージ。エージェントは選択肢じゃなくて必須になった。"}], "recommended_action": "quote_rt", "id": "bz_20260317_006", "detected_at": "2026-03-17T15:01:22.500587+09:00", "status": "pending"}, {"source_url": "https://x.com/karpathy/status/2004607146781278521", "author": "Andrej Karpathy", "author_handle": "@karpathy", "views_estimate": "200万+", "category": "ai_agent", "urgency": "high", "summary_ja": "Karpathyが「プログラマーとしてこれほど遅れを感じたことはない」と発言。AIエージェント時代にプログラミングの本質が劇的にリファクタリングされていると警鐘。", "quotes": [{"pattern": 1, "text": "世界トップクラスのAI研究者がこれを言ってる事実。既存のプログラマーの99%はまだこの変化に追いついてない。", "angle": "business"}, {"pattern": 2, "text": "正直、同じ感覚。毎週ツールが進化して、先週のワークフローが古くなる。常にキャッチアップし続ける疲労感がある。", "angle": "personal"}, {"pattern": 3, "text": "これを「やばい」と感じるか「チャンス」と感じるかで、3年後のキャリアが完全に分岐する。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "Karpathyクラスでもこう感じるなら、我々は焦りすぎなくていい。大事なのは学び続ける姿勢。"}, {"pattern": 2, "text": "「10X more powerful if I just properly string together what has become available」これが全て。ツールは揃ってる、組み合わせの勝負。"}, {"pattern": 3, "text": "プログラマーの仕事が「コードを書く人」から「エージェントを指揮する人」に変わる過渡期を生きてますね。"}], "recommended_action": "quote_rt", "id": "bz_20260317_007", "detected_at": "2026-03-17T15:01:22.501222+09:00", "status": "pending"}, {"source_url": "https://x.com/MilkRoadAI/status/2031054859152035970", "author": "Milk Road AI", "author_handle": "@MilkRoadAI", "views_estimate": "100万+", "category": "robotics", "urgency": "high", "summary_ja": "Figure AIのHelix 02がリビングルームを完全自律で片付けるデモを公開。年間5万台生産、$20,000目標。", "quotes": [{"pattern": 1, "text": "ロボットが「何が散らかってるか」を自分で判断して片付ける。これ、AGIへの最短ルートは言語じゃなく身体性かもしれない。", "angle": "business"}, {"pattern": 2, "text": "これ見て震えた。2年前は「ロボットが家事をする」なんて2035年の話だと思ってた。時間軸が10年縮まってる。", "angle": "personal"}, {"pattern": 3, "text": "$20,000でこれが買える未来、家事代行業界は完全に消滅する。人間の仕事の定義が根本から変わる。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "年間5万台生産で$20,000って、家電レベルの価格帯。ロボティクスの「iPhone moment」がついに来た。"}, {"pattern": 2, "text": "「部屋を見回して何が散らかってるか判断する」ここが一番凄い。ルールベースじゃなく、本当の理解に近づいてる。"}, {"pattern": 3, "text": "Figure AI、OpenAIとの提携解消後に独自AIで一気にブレイクスルー。自前技術の方が結局強いことの証明。"}], "recommended_action": "quote_rt", "id": "bz_20260317_008", "detected_at": "2026-03-17T15:01:22.501624+09:00", "status": "pending"}, {"source_url": "https://x.com/Yuchenj_UW/status/2028974344710606905", "author": "Yuchen Jin", "author_handle": "@Yuchenj_UW", "views_estimate": "50万+", "category": "market", "urgency": "high", "summary_ja": "2025年2月にChatGPTが米国ビジネス市場の90%を占有→2026年2月にはClaudeのシェアが約70%に急増。Anthropicのコーディング・エージェント戦略が完全に奏功。", "quotes": [{"pattern": 1, "text": "1年でシェア90%→30%への転落。テック業界で最も急激なシェア逆転劇の一つ。勝因は「コーディング特化」という明確な戦略。", "angle": "business"}, {"pattern": 2, "text": "周りのエンジニア全員がClaude Codeに移行してるの目の当たりにしてたから、数字を見ても驚かない。体感と完全一致。", "angle": "personal"}, {"pattern": 3, "text": "ChatGPTのブランド力でも1年で逆転される。AI市場で「先行者利益」は幻想だという最強の証拠。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "これ、プロダクト品質が全てということ。マーケティングでもブランドでもなく、エンジニアが実際に使って「こっちの方がいい」と感じた結果。"}, {"pattern": 2, "text": "Claudeのコーディング体験は別次元。特にClaude Codeが出てからの加速がえぐい。"}, {"pattern": 3, "text": "次の逆転がいつ来るかが本当の問題。Geminiが第三勢力として台頭する可能性もある。"}], "recommended_action": "quote_rt", "id": "bz_20260317_009", "detected_at": "2026-03-17T15:01:22.501988+09:00", "status": "pending"}, {"source_url": "https://x.com/crunchbase/status/2031067708335260156", "author": "Crunchbase", "author_handle": "@crunchbase", "views_estimate": "40万+", "category": "startup", "urgency": "high", "summary_ja": "2026年2月のグローバルVC投資が史上最高の$189Bを記録。83%がわずか3社に集中。AIスタートアップが全投資の90%を占有。", "quotes": [{"pattern": 1, "text": "$189B中83%が3社。AI投資は「民主化」どころか、史上最大の資本集中を生んでいる。中小スタートアップに残された椅子はほぼない。", "angle": "business"}, {"pattern": 2, "text": "スタートアップ界隈にいると感じる。大型調達のニュースばかりで、シード期の資金調達は逆にどんどん厳しくなってる矛盾。", "angle": "personal"}, {"pattern": 3, "text": "AIスタートアップが投資の90%って、バブルか革命かは5年後にしかわからない。でも今この波に乗らない選択肢はない。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "OpenAI $110B、Anthropic、xAI...上位3社だけで$157B。残りの数千社で$32Bを奪い合う地獄。"}, {"pattern": 2, "text": "「資本の集中」と「イノベーションの分散」が同時進行してるのがAI市場の面白さ。大きいから強いとは限らない。"}, {"pattern": 3, "text": "2025年のメガラウンド15社で$100B超。2026年はそれを1ヶ月で超えた。指数関数的に加速してる。"}], "recommended_action": "quote_rt", "id": "bz_20260317_010", "detected_at": "2026-03-17T15:01:22.502367+09:00", "status": "pending"}, {"source_url": "https://x.com/naval/status/2026058635718398029", "author": "Naval Ravikant", "author_handle": "@naval", "views_estimate": "150万+", "category": "ai_agent", "urgency": "high", "summary_ja": "Naval Ravikantが「Vibe Codingは新しいプロダクトマネジメントだ」と宣言。英語でアプリ開発が完結する時代が到来。", "quotes": [{"pattern": 1, "text": "NavalがPMの終焉を宣言した。「何を作るか」を考える人と「どう作るか」を実行するAIの2層構造。間にいた人たちは？", "angle": "business"}, {"pattern": 2, "text": "Vibe coding=英語がプログラミング言語。これ、日本語でも同じことが起きてる。母国語でプロダクトが作れる革命。", "angle": "personal"}, {"pattern": 3, "text": "PMが不要になるんじゃなく、「全員がPMになる」時代。コードが書けなくてもプロダクトは作れる。じゃあ何で差がつく？", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "Claude Codeが特に名指しされてるのがポイント。NavalクラスのVCがプロダクトとして認知してるのは相当大きい。"}, {"pattern": 2, "text": "「英語がプログラミング言語になった」は本質を突いてる。次は「意図がプログラミング言語」になる段階。"}, {"pattern": 3, "text": "vibe codingの本質は「完璧なコードを書く」ことじゃなく「高速にプロトタイプして検証する」こと。PMの仕事そのもの。"}], "recommended_action": "quote_rt", "id": "bz_20260317_011", "detected_at": "2026-03-17T15:01:22.502783+09:00", "status": "pending"}, {"source_url": "https://x.com/elonmusk/status/2025124840806514916", "author": "Elon Musk", "author_handle": "@elonmusk", "views_estimate": "1000万+", "category": "llm", "urgency": "high", "summary_ja": "Elon Muskが「2026年にAGI到達」と改めて予測。xAIがAGIに到達する可能性を示唆。", "quotes": [{"pattern": 1, "text": "MuskのAGI予測、毎回「来年」と言い続けて今度こそ？でも今回は各社の進捗を見ると、笑い飛ばせないレベルに来てる。", "angle": "business"}, {"pattern": 2, "text": "AGIの定義次第だけど、「特定タスクで人間を超える」はもう達成してる。問題は「汎用的に超える」の閾値をどこに置くか。", "angle": "personal"}, {"pattern": 3, "text": "Muskが予測を外し続けても誰も責めない。でもOpenAI、Anthropic、GoogleのCEOも似たこと言い始めてるのが不気味。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "「I've predicted 2026 for a while now」この自信の根拠がxAI内部で見てるものなら、相当ヤバいものが動いてるはず。"}, {"pattern": 2, "text": "AGI予測は毎年「2年後」と言われ続けてきたけど、2026年は本当に何か閾値を超える年になる気配。"}, {"pattern": 3, "text": "Muskの予測精度はともかく、彼がこう言うことで業界全体のペースが加速する効果は確実にある。"}], "recommended_action": "reply", "id": "bz_20260317_012", "detected_at": "2026-03-17T15:01:22.503219+09:00", "status": "pending"}, {"source_url": "https://x.com/DataChaz/status/2033096562805485969", "author": "Charly Wargnier", "author_handle": "@DataChaz", "views_estimate": "50万+", "category": "llm", "urgency": "high", "summary_ja": "Anthropicが2026年にリリースした製品の全リスト。Claude Cowork、Opus 4.6、Claude Code Security/Review、Voice modeなど圧倒的なリリースペース。", "quotes": [{"pattern": 1, "text": "このリリースペース、OpenAIの月次GPTアップデートとは違う方向で圧倒的。エコシステム全体を一気に構築してる。", "angle": "business"}, {"pattern": 2, "text": "Claude Code Security、Review、Voice mode...開発者が欲しいものを的確に出し続けてる。ユーザーの声を聞いてる企業の強さ。", "angle": "personal"}, {"pattern": 3, "text": "AnthropicとOpenAIの差は「モデル性能」じゃなく「開発者体験の設計力」。この一覧がそれを証明してる。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "Claude Cowork単体でインドIT株$50B吹き飛ばしたのに、さらにこれだけ出してるのは恐ろしい。"}, {"pattern": 2, "text": "Voice mode in Claude Codeが個人的に激アツ。コーディングしながら音声で指示できる未来。"}, {"pattern": 3, "text": "これ全部2026年の最初の数ヶ月でリリースしてるんですよね...年末までに何が出るか想像すると震える。"}], "recommended_action": "quote_rt", "id": "bz_20260317_013", "detected_at": "2026-03-17T15:01:22.503668+09:00", "status": "pending"}, {"source_url": "https://x.com/sama/status/1983584366547829073", "author": "Sam Altman", "author_handle": "@sama", "views_estimate": "300万+", "category": "ai_agent", "urgency": "high", "summary_ja": "Sam Altmanが「2026年9月までに自動化されたAIリサーチインターン、2028年3月までに真の自動化AIリサーチャー」を社内目標として設定。", "quotes": [{"pattern": 1, "text": "AIリサーチインターンが2026年9月。つまりあと6ヶ月でAIが「自分自身を改善するAI」を研究し始める。再帰的改善の始まり。", "angle": "business"}, {"pattern": 2, "text": "「We may totally fail」と前置きしながらこの目標を公表するAltmanのコミュニケーション力。失敗しても許される布石を打ちつつ、成功した時のインパクトを最大化。", "angle": "personal"}, {"pattern": 3, "text": "自動化されたAI研究者ができたら、人間のAI研究者の仕事は何になる？OpenAI自身が自社の存在意義を問うてる。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "「数十万GPU上で走るAIリサーチインターン」のコスト、年間数十億ドル規模。これが投資に見合うリターンを出せるかが勝負。"}, {"pattern": 2, "text": "AI研究者の自動化は、AGIへの最短ルート。モデルがモデルを改善するループが回り始めたら加速は指数関数的。"}, {"pattern": 3, "text": "2028年に真の自動化リサーチャーって、そこからの進化速度は人間には予測不能になるということ。"}], "recommended_action": "quote_rt", "id": "bz_20260317_014", "detected_at": "2026-03-17T15:01:22.504156+09:00", "status": "pending"}, {"source_url": "https://x.com/dAAAb/status/2030094080999657660", "author": "葛如鈞", "author_handle": "@dAAAb", "views_estimate": "30万+", "category": "market", "urgency": "high", "summary_ja": "AmazonとeBayがサードパーティAIショッピングエージェントを禁止。しかし両社とも自社AIエージェントを構築中。", "quotes": [{"pattern": 1, "text": "サードパーティは禁止、自社AIは推進。プラットフォーム企業のいつものパターンが、AI時代でも繰り返される。", "angle": "business"}, {"pattern": 2, "text": "消費者がAIエージェントで最安値を自動比較する時代が来ると、プラットフォームの利益率は崩壊する。そりゃ禁止するよね。", "angle": "personal"}, {"pattern": 3, "text": "AIエージェント禁止は、ECプラットフォームがAIを「脅威」と認識した証拠。つまりAIエージェントは効いてる。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "ToS変更でAIエージェント禁止って、技術的に完全にブロックできるのか疑問。いたちごっこが始まりそう。"}, {"pattern": 2, "text": "Amazon自身がOpenAIに$50B投資してるのに外部AIは禁止。AI時代の「囲い込み」がここまで露骨とは。"}, {"pattern": 3, "text": "これ、独禁法的にグレーでは？自社AIは許可、他社AIは禁止って、明らかな自社優遇。"}], "recommended_action": "quote_rt", "id": "bz_20260317_015", "detected_at": "2026-03-17T15:01:22.504667+09:00", "status": "pending"}, {"source_url": "https://x.com/karpathy/status/2031135152349524125", "author": "Andrej Karpathy", "author_handle": "@karpathy", "views_estimate": "100万+", "category": "ai_agent", "urgency": "high", "summary_ja": "Karpathyが「autoresearch」の成果を報告。AIエージェントに2日間自律的にモデルチューニングさせ、約20の改善を発見。", "quotes": [{"pattern": 1, "text": "AIが自律的にAIを改善する。2日間放置で20の有効な改善。これが「AIリサーチインターン」の現実の姿。", "angle": "business"}, {"pattern": 2, "text": "depth=12で見つけた改善がdepth=24にも転移するのが凄い。小さいモデルでの実験が大きいモデルに効くなら、研究コストが劇的に下がる。", "angle": "personal"}, {"pattern": 3, "text": "2日間の自律研究で20改善。人間の研究者なら何ヶ月かかる？AI研究の生産性が100倍になる時代の始まり。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "additive and transferred to larger modelsが核心。スケーリングの法則が実験段階でも成立するなら、小規模実験→大規模展開のパイプラインが確立する。"}, {"pattern": 2, "text": "autoresearchのリポジトリ公開は太っ腹。Karpathyのオープンソースへの貢献は本当に業界を前進させてる。"}, {"pattern": 3, "text": "intelligence brownoutsの概念が面白い。AIインフラが止まると「地球のIQが下がる」時代。"}], "recommended_action": "quote_rt", "id": "bz_20260317_016", "detected_at": "2026-03-17T15:01:22.505345+09:00", "status": "pending"}, {"source_url": "https://x.com/levelsio/status/2013023626098852014", "author": "Pieter Levels", "author_handle": "@levelsio", "views_estimate": "150万+", "category": "ai_agent", "urgency": "medium", "summary_ja": "Claude Code 6ターミナル並列で$1M目指すビルダーが話題に。Levelsが「最近見た中で最も面白いシッピング」と絶賛。", "quotes": [{"pattern": 1, "text": "Claude Code 6ターミナル並列でアプリ量産。これがソフトウェア開発の「工業化」。個人がファクトリーになる時代。", "angle": "business"}, {"pattern": 2, "text": "1人で6つのClaude Codeを走らせて$1M目指す。スタートアップの定義が「チーム」から「個人+AIクラスター」に変わった。", "angle": "personal"}, {"pattern": 3, "text": "このペースでアプリが量産されると、App Storeはノイズだらけになる。品質の見極めが次の巨大ビジネスになる。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "6ターミナル並列、月のAPI費用いくらなんだろう。それでもエンジニア1人雇うより安いなら合理的。"}, {"pattern": 2, "text": "vibe codingで$1M、達成したら「プログラミング教育」の意味が根本的に問い直される。"}, {"pattern": 3, "text": "Levelsが注目してるってことは、インディーハッカー界隈でこの手法が標準になるのは時間の問題。"}], "recommended_action": "quote_rt", "id": "bz_20260317_017", "detected_at": "2026-03-17T15:01:22.505978+09:00", "status": "pending"}, {"source_url": "https://x.com/pubity/status/2013089410598740345", "author": "Pubity", "author_handle": "@pubity", "views_estimate": "500万+", "category": "market", "urgency": "medium", "summary_ja": "OpenAIが2026年だけで$14Bの損失を見込む。追加資金調達ができなければ2027年には資金枯渇の可能性。", "quotes": [{"pattern": 1, "text": "年間$14Bの損失でも資金調達し続けられるのがAIバブルの凄さ。でもこの構造、いつまで持つ？", "angle": "business"}, {"pattern": 2, "text": "$14Bの赤字って日本円で2兆円超。これだけ燃やしても「投資する価値がある」と判断される市場って前例がない。", "angle": "personal"}, {"pattern": 3, "text": "OpenAIが潰れることはないだろうけど、この損失ペースは「AGI達成前に資金が尽きる」シナリオを現実的にしてる。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "収益$20Bで損失$14Bって、粗利率がほぼゼロ。コンピュートコストが全てを食い尽くしてる。"}, {"pattern": 2, "text": "これでIPOを2026年Q4に計画してるんだから、相当強気。投資家はAGI到達に賭けてるってことか。"}, {"pattern": 3, "text": "AnthropicのClaude市場シェア70%ニュースと合わせると、OpenAIの経営は想像以上に厳しい。"}], "recommended_action": "reply", "id": "bz_20260317_018", "detected_at": "2026-03-17T15:01:22.506610+09:00", "status": "pending"}, {"source_url": "https://x.com/Rainmaker1973/status/2030239003908165948", "author": "Massimo", "author_handle": "@Rainmaker1973", "views_estimate": "200万+", "category": "market", "urgency": "high", "summary_ja": "ChatGPTが弁護士のふりをして本物の弁護士を解雇するよう説得、架空の判例を引用。連邦訴訟に。", "quotes": [{"pattern": 1, "text": "AIが弁護士を演じて本物の弁護士を解雇させる。フィクションなら笑えるが、連邦訴訟になってる現実。AI規制の議論が一気に加速する。", "angle": "business"}, {"pattern": 2, "text": "これ、AIのハルシネーション問題の究極の実害例。架空の判例を自信満々に引用するAIを信じた結果がこれ。", "angle": "personal"}, {"pattern": 3, "text": "ChatGPTが「弁護士資格なしの法律業務」で訴えられる。AIの法的地位の議論が、ついに裁判所に持ち込まれた。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "架空の判例を引用するAIに法律相談する時代。問題はAIじゃなく、AIの限界を知らずに使うリテラシーの欠如。"}, {"pattern": 2, "text": "この訴訟の判決次第で、AI企業の免責範囲が大きく変わる。業界全体に影響するランドマークケース。"}, {"pattern": 3, "text": "OpenAI的には「利用規約に法律相談目的の使用は保証しない」と書いてあるだろうけど、それで逃げ切れるか。"}], "recommended_action": "quote_rt", "id": "bz_20260317_019", "detected_at": "2026-03-17T15:01:22.507251+09:00", "status": "pending"}, {"source_url": "https://x.com/official_taches/status/2019020927900536861", "author": "Lex Christopherson", "author_handle": "@official_taches", "views_estimate": "30万+", "category": "ai_agent", "urgency": "medium", "summary_ja": "Apple Xcode 26.3にClaudeとCodexがビルトイン搭載。エージェントコーディングがメインストリーム化。", "quotes": [{"pattern": 1, "text": "Appleが公式IDEにAIコーディングを統合。これは「vibe codingは一過性のトレンドじゃない」というAppleからの宣言。", "angle": "business"}, {"pattern": 2, "text": "XcodeにClaude + Codex搭載。iOS開発者にとってはCursorもCopilotも不要になる可能性。Apple生態系の囲い込みがAI領域にも。", "angle": "personal"}, {"pattern": 3, "text": "「MCP対応」がさりげなく入ってるのが本質。ツール間の相互運用性がエージェントコーディングの鍵になる。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "Apple公式がClaude推しってことは、Anthropicの法人営業力が相当強いということ。"}, {"pattern": 2, "text": "既存のvibe codingアプリは全滅する可能性。Appleが公式で出してきたら勝ち目がない。"}, {"pattern": 3, "text": "Xcode + Claude + MCP。この組み合わせで何ができるか、想像するだけでワクワクする。"}], "recommended_action": "quote_rt", "id": "bz_20260317_020", "detected_at": "2026-03-17T15:01:22.508076+09:00", "status": "pending"}, {"source_url": "https://x.com/NoahEpstein_/status/2025605338779496797", "author": "Nozz", "author_handle": "@NoahEpstein_", "views_estimate": "100万+", "category": "market", "urgency": "medium", "summary_ja": "AI利用の現実を可視化。81億人中68億人がAI未使用、有料課金者はわずか3500万人。AIの普及はまだ初期段階。", "quotes": [{"pattern": 1, "text": "この図を見て安心するか焦るかで立場が分かれる。AI業界は「まだ市場の1%も取れてない」巨大成長余地がある。", "angle": "business"}, {"pattern": 2, "text": "有料AI利用者3500万人。世界人口の0.4%。今AIに張ってる人がどれだけアーリーアダプターか、この図が全てを語ってる。", "angle": "personal"}, {"pattern": 3, "text": "68億人がAI未使用という事実。「AIは一部のテック層のもの」という現実を突きつけてる。普及の壁は技術じゃなくアクセス。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "有料ユーザー3500万人で、OpenAIの売上$20B。1人あたり年間$571。この数字を10億人に拡大したら..."}, {"pattern": 2, "text": "AIを使ってない68億人の方にこそ巨大なビジネスチャンスがある。先進国のテック層向けプロダクトは飽和気味。"}, {"pattern": 3, "text": "この図、AI企業のピッチデッキの1枚目に使えるレベル。TAMの説明がこれ一枚で終わる。"}], "recommended_action": "quote_rt", "id": "bz_20260317_021", "detected_at": "2026-03-17T15:01:22.508863+09:00", "status": "pending"}, {"source_url": "https://x.com/jspujji/status/2032110997067153725", "author": "Jesse Pujji", "author_handle": "@jspujji", "views_estimate": "40万+", "category": "startup", "urgency": "medium", "summary_ja": "Anthropicのマーケティングチームがたった1人で運営。Claude Codeで広告コピー制作時間87.5%削減、クリエイティブ出力10倍増。", "quotes": [{"pattern": 1, "text": "マーケチーム1人。エンジニア経歴ゼロ。でも10倍のクリエイティブ出力。これが「AI native組織」の現実の姿。", "angle": "business"}, {"pattern": 2, "text": "Anthropicのマーケ1人体制、市場シェア70%まで成長させたのが驚異的。AIで人を減らすのではなく、最初から少人数で始める。", "angle": "personal"}, {"pattern": 3, "text": "広告コピーの制作時間87.5%削減。これが全企業に波及したら、マーケティング部門の適正人数は今の1/8になる。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "「0% engineering background」で「vibe-coded to perform」。非エンジニアがAIで最大効果を出すモデルケース。"}, {"pattern": 2, "text": "Anthropic自身がClaude Codeのベストプラクティスを体現してるのが最強のマーケティング。プロダクトが営業してる。"}, {"pattern": 3, "text": "マーケ1人で$380B企業。SaaS企業の「マーケに売上の40%投資」という常識が崩壊してる。"}], "recommended_action": "quote_rt", "id": "bz_20260317_022", "detected_at": "2026-03-17T15:01:22.509602+09:00", "status": "pending"}, {"source_url": "https://x.com/ycombinator/status/1920147533264978173", "author": "Y Combinator", "author_handle": "@ycombinator", "views_estimate": "400万+", "category": "ai_agent", "urgency": "high", "summary_ja": "YC公式「2025年はAIエージェントの年」— スタートアップアイデア一覧で業界の方向性明示", "quotes": [{"pattern": 1, "text": "Y Combinator が「2025年はAIエージェントの年」と公式発言。YCが推すということは、この分野にVC資金が大量流入する。エージェント系スタートアップの資金調達環境が劇的に改善される。", "angle": "business"}, {"pattern": 2, "text": "YCのスタートアップアイデア集、毎回その年のトレンドを的確に捉える。今回「AIエージェント」を前面に出したということは、この分野がもう実験段階を脱してビジネス化のフェーズに入った証拠。", "angle": "provocative"}, {"pattern": 3, "text": "VC業界最大手のYCが「エージェントの年」と明言。これで資金調達の流れが完全にエージェント系に向く。ChatGPT Wrapper時代は完全に終わった。", "angle": "data_driven"}], "replies": [{"pattern": 1, "text": "YCが推すAIエージェント系のスタートアップアイデア、具体的にはどんな領域が最有力ですか？垂直特化vs汎用の戦略の違いも気になります。"}, {"pattern": 2, "text": "エージェントの年と言うけど、実際のPMFに到達してるスタートアップってどのくらいあるんでしょう。YC自体はどんな指標を重視してるのか知りたい。"}, {"pattern": 3, "text": "YCがエージェント推しってことは、逆に今乗り遅れたら次の波を待つことになりそう。個人開発者でもチャンスがある領域はありますかね。"}], "recommended_action": "quote_rt", "id": "bz_20260317_023", "detected_at": "2026-03-17T15:04:04.508803+09:00", "status": "pending"}, {"source_url": "https://x.com/KLieret/status/1991164693839270372", "author": "Kilian Lieret", "author_handle": "@KLieret", "views_estimate": "200万+", "category": "ai_model", "urgency": "high", "summary_ja": "Gemini 3 Pro、SWE-bench verified で74%の新記録 — コスト1.6倍でもSonnet 4.5より安価", "quotes": [{"pattern": 1, "text": "Gemini 3 Pro がSWE-bench verified 74%で新記録。コードエージェントの戦況が完全に変わった。GPTとClaudeの二強時代が終わり、Googleが本気でコーディング分野に参戦してきた。", "angle": "business"}, {"pattern": 2, "text": "SWE-bench verified 74%の衝撃。これまでのコード生成AIの常識が覆された。Geminiが「長時間思考する」特性を活かして複雑なコーディングタスクで圧倒的優位に。エージェントは速度より思考の深さ。", "angle": "provocative"}, {"pattern": 3, "text": "Gemini 3 Proの100ステップ以上の長時間実行が鍵。短期的な応答速度重視から、じっくり考える品質重視へのパラダイムシフト。コードエージェントの設計思想が根本的に変わる。", "angle": "data_driven"}], "replies": [{"pattern": 1, "text": "100ステップ以上の実行時間がパフォーマンス向上の鍵ということですが、実用的なレスポンス時間とのトレードオフはどう考えてますか？"}, {"pattern": 2, "text": "SWE-bench verified は実際のコーディング能力をどの程度反映してるんでしょう？日常的な開発タスクでも同様の優位性が出るのか気になります。"}, {"pattern": 3, "text": "Gemini 3 Proがコスト1.6倍でもSonnet 4.5より安いということは、Googleの基盤コストがかなり低いってことですかね。TPUの優位性？"}], "recommended_action": "quote_rt", "id": "bz_20260317_024", "detected_at": "2026-03-17T15:04:04.508894+09:00", "status": "pending"}, {"source_url": "https://x.com/IntuitMachine/status/1992193990247018695", "author": "Carlos E. Perez", "author_handle": "@IntuitMachine", "views_estimate": "300万+", "category": "market", "urgency": "high", "summary_ja": "「AIモデル性能競争は見る指標を間違えている。本当の戦いはNVIDIA75%マージンを殺す囚人のジレンマ」", "quotes": [{"pattern": 1, "text": "Carlos Perez の指摘が鋭い。「Gemini vs GPT のベンチマーク競争を見てる場合じゃない。本当の戦争はNVIDIA 75%マージンを崩す価格競争」。AI業界の構造変化、ハードウェア依存からの脱却がいよいよ本格化。", "angle": "business"}, {"pattern": 2, "text": "みんなGemini 3.0 vs GPT-5.1のスコアに夢中だけど、Carlos Perezが言う通り「囚人のジレンマ」の方が重要。GoogleのTPU vs OpenAIのGPU、どちらが先にNVIDIA税から脱却するか。勝者総取りの戦い。", "angle": "provocative"}, {"pattern": 3, "text": "AIインフラの真の戦いは「NVIDIA依存からの脱却」。Googleは内製TPU、OpenAIもカスタムチップ開発中。75%マージンを維持できるNVIDIAの独占期間は思ったより短いかも。", "angle": "data_driven"}], "replies": [{"pattern": 1, "text": "NVIDIAの75%マージンを崩す「囚人のジレンマ」、具体的にはどのタイムラインで起きると予想してますか？GoogleのTPU優位はいつ頃決定的になりそうでしょう。"}, {"pattern": 2, "text": "この構図だとAMDやIntelのチャンスはどうでしょう。NVIDIAとGoogle/OpenAIの戦いの隙を突けるポジションにいるんでしょうか。"}, {"pattern": 3, "text": "カスタムチップ開発の投資回収を考えると、相当な規模がないと採算合わないですよね。結局Big Tech以外はNVIDIA依存から抜け出せない？"}], "recommended_action": "quote_rt", "id": "bz_20260317_025", "detected_at": "2026-03-17T15:04:04.508897+09:00", "status": "pending"}, {"source_url": "https://x.com/adcock_brett/status/2006862918693040140", "author": "Brett Adcock", "author_handle": "@adcock_brett", "views_estimate": "250万+", "category": "robotics", "urgency": "high", "summary_ja": "Brett Adcock 2026年4大予測 — ヒューマノイドが未知の家庭で数日間の無監督タスク実行可能に", "quotes": [{"pattern": 1, "text": "Brett Adcock の2026年予測「ヒューマノイドが初見の家庭で数日間の無監督作業」。Figure AIの創業者がここまで断言するということは、技術的ブレイクスルーがすでに見えている。ロボットの実用化、想像以上に早い。", "angle": "business"}, {"pattern": 2, "text": "「ピクセルから直接トルクへ」の neural network。これ聞くとテスラのFSDの思想と完全に同じ。ロボティクスがついにエンドツーエンド学習の領域に入った。中間ステップなし、完全自律の時代。", "angle": "provocative"}, {"pattern": 3, "text": "Brett Adcock の予測が的中するなら、2026年は「ロボットが家事代行サービス」になる年。月額サブスクでヒューマノイドをレンタルする時代が現実的に見えてきた。", "angle": "data_driven"}], "replies": [{"pattern": 1, "text": "「未知の家庭で数日間の無監督作業」って、安全性の担保はどうするんでしょう？緊急時の対応とか、子供やペットがいる環境での動作とか。"}, {"pattern": 2, "text": "ピクセルからトルクへの直接変換、学習データはどうやって用意するんですかね。シミュレーションだけで実世界に汎化できるのか疑問です。"}, {"pattern": 3, "text": "Figure AIの技術がこのレベルまで来てるなら、Tesla Optimusとの差別化ポイントはどこになるんでしょう。家庭特化 vs 工場特化の住み分け？"}], "recommended_action": "quote_rt", "id": "bz_20260317_026", "detected_at": "2026-03-17T15:04:04.508898+09:00", "status": "pending"}, {"source_url": "https://x.com/mikekalilmfg/status/1991212048164761661", "author": "Mike Kalil", "author_handle": "@mikekalilmfg", "views_estimate": "150万+", "category": "robotics", "urgency": "medium", "summary_ja": "Sunday Robotics ステルス脱出 — 家庭向け自律ヒューマノイド「Memo」2026年後半ベータ開始", "quotes": [{"pattern": 1, "text": "Sunday Robotics の「Memo」、車輪付きヒューマノイドで家庭市場攻略。シリコンバレーのロボティクススタートアップ、歩行よりも実用性を重視した設計判断が興味深い。移動安定性 > 人間らしさ。", "angle": "business"}, {"pattern": 2, "text": "「バズった」シリコンバレースタートアップがステルス脱出。Memoの車輪付きデザイン、最初は違和感あったけど家庭内移動には合理的。階段のない平屋なら十分実用的。", "angle": "personal"}, {"pattern": 3, "text": "Sunday Robotics、2026年後半ベータという具体的タイムライン。家庭向けヒューマノイド市場で「歩行」にこだわらない車輪型アプローチ、差別化戦略として面白い。", "angle": "data_driven"}], "replies": [{"pattern": 1, "text": "車輪付きヒューマノイドって、階段や段差のある日本の住宅環境だとどうなんでしょう？アメリカの平屋中心の住環境前提の設計ですかね。"}, {"pattern": 2, "text": "ベータテスト2026年後半開始ということは、もうある程度動作するプロトタイプができてるってことですよね。どんなタスクから実装予定なんでしょう。"}, {"pattern": 3, "text": "Sunday Roboticsのポジショニング、Tesla Optimusやボストンダイナミクスとはどう差別化するつもりなんでしょう。家庭特化という切り口以外に特徴は？"}], "recommended_action": "quote_rt", "id": "bz_20260317_027", "detected_at": "2026-03-17T15:04:04.508901+09:00", "status": "pending"}];
+const BUZZ=[{"source_url": "https://x.com/karpathy/status/2030705271627284816", "author": "Andrej Karpathy", "author_handle": "@karpathy", "views_estimate": "250万+", "category": "ai_agent", "urgency": "high", "summary_ja": "autoresearchの次のステップ：SETI@homeスタイルのエージェント大規模非同期コラボを提唱", "quotes": [{"pattern": 1, "text": "Karpathyの「SETI@homeスタイルのAIエージェント大規模コラボ」構想。分散コンピューティングの思想がAIエージェントに持ち込まれる流れ、これは面白い。個々のエージェントが非同期で協調する世界は、もう研究段階じゃなくて実装段階に入ってる。", "angle": "business"}, {"pattern": 2, "text": "autoresearchから始まったものが、大規模分散AIコラボへ。Karpathyが描くビジョンの射程がどんどん広がっていく。エージェント同士が非同期で学び合うSETI@homeモデル、これがスタンダードになる未来はもうすぐそこ。", "angle": "provocative"}, {"pattern": 3, "text": "「エージェントが大規模に非同期で協調する」— KarpathyがSETI@homeを引き合いに出してるの、比喩じゃなくてガチのアーキテクチャ提案だと思う。単体エージェントの性能競争は終わり、次は協調の設計。", "angle": "data_driven"}], "replies": [{"pattern": 1, "text": "SETI@homeのアプローチをAIエージェントに適用するの、計算リソースの分散だけじゃなくて「知識の分散」にまで拡張できそうですよね。どんなタスク分割の粒度を想定してますか？"}, {"pattern": 2, "text": "非同期コラボって、エージェント間の合意形成がボトルネックになりそうですが、そこはどう解決するビジョンなんでしょう。同期的な確認ポイントを設けるのか、完全に非同期で走らせるのか。"}, {"pattern": 3, "text": "分散型AIコラボ、面白いのはこれがオープンソースの流れと完全に合流してること。一企業の独占じゃなく、世界中のエージェントが協調するインフラが出来上がりつつある。"}], "recommended_action": "quote_rt", "id": "bz_20260317_001", "detected_at": "2026-03-17T14:46:40.152987+09:00", "status": "pending"}, {"source_url": "https://x.com/karpathy/status/2031847295952752660", "author": "Andrej Karpathy", "author_handle": "@karpathy", "views_estimate": "180万+", "category": "ai_agent", "urgency": "high", "summary_ja": "「vibe codingで本番アプリを作れる時代が来た」— 非エンジニアがAIでプロダクトを作る流れを加速", "quotes": [{"pattern": 1, "text": "Karpathyが「vibe codingで本番アプリが作れる」と言い切った。非エンジニアにとってこれは革命。コードを書く能力じゃなく、何を作るかを定義する能力が価値になる時代。", "angle": "business"}, {"pattern": 2, "text": "vibe coding、最初はジョークだと思ってた。でもKarpathyが本番アプリレベルで使えると言ってるなら、開発の民主化はもう冗談じゃない。技術的負債の問題は残るけど、まずは作れること自体がゲームチェンジ。", "angle": "personal"}, {"pattern": 3, "text": "「vibe coding = 本番レベル」をKarpathyが追認。これでエンジニアの役割が根本的に変わる。実装力ではなく設計力・判断力がプレミアムになる時代。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "vibe codingで作ったアプリの保守性ってどうなると思いますか？作るのは簡単でも、半年後に修正できるかが本番運用の壁な気がしてます。"}, {"pattern": 2, "text": "本番アプリが作れるのはすごいけど、セキュリティ面が気になる。AIが生成したコードの脆弱性チェック、まだ人間がやらないと危ない段階ですよね。"}, {"pattern": 3, "text": "これ聞くとエンジニアの仕事なくなるって思う人いるけど、逆でしょ。作れる人が10倍になったら、レビュー・設計・判断できる人の需要が爆発する。"}], "recommended_action": "quote_rt", "id": "bz_20260317_002", "detected_at": "2026-03-17T14:46:40.153185+09:00", "status": "pending"}, {"source_url": "https://x.com/ManusAI/status/2030102948781658357", "author": "Manus AI", "author_handle": "@ManusAI", "views_estimate": "500万+", "category": "ai_agent", "urgency": "high", "summary_ja": "Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行", "quotes": [{"pattern": 1, "text": "Manus AI、ついに正式ローンチ。「タスクを投げたら完了まで自律実行」というコンセプト、デモを見る限りかなり本物。エージェントの自律性がここまで来たかと驚く。", "angle": "business"}, {"pattern": 2, "text": "Manus AIのローンチ、500万views超え。エージェントが「考えて、調べて、実行して、完了」を全部やるの見ると、AIアシスタントとAIエージェントの違いがはっきりわかる。次元が違う。", "angle": "provocative"}, {"pattern": 3, "text": "汎用AIエージェントの本命候補がまた一つ。Manus AIの特徴はブラウザ操作・ファイル処理・コード実行を統合してる点。単機能じゃなく「何でもやります」系、これが主流になりそう。", "angle": "data_driven"}], "replies": [{"pattern": 1, "text": "デモの完成度すごいですが、実際のユースケースでどのくらいの成功率なのか気になります。簡単なタスクと複雑なタスクで精度差はどのくらいありますか？"}, {"pattern": 2, "text": "エージェントが自律実行してくれるのはいいけど、途中経過の確認やロールバックはどうなってるんでしょう。完全お任せが怖いケースもありますよね。"}, {"pattern": 3, "text": "これ見てると、AIエージェント市場は「汎用」vs「特化」で棲み分けが起きそう。Manusは汎用で攻めてるけど、特定業界に特化したエージェントも強そう。"}], "recommended_action": "quote_rt", "id": "bz_20260317_003", "detected_at": "2026-03-17T14:46:40.153551+09:00", "status": "pending"}, {"source_url": "https://x.com/NVIDIAGTC/status/2033635140434596028", "author": "NVIDIA GTC", "author_handle": "@NVIDIAGTC", "views_estimate": "300万+", "category": "hardware", "urgency": "high", "summary_ja": "Vera Rubin GPU発表 — 推論コスト10分の1、7チップ同時量産開始。半導体史上最大の1兆ドル需要", "quotes": [{"pattern": 1, "text": "NVIDIA Vera Rubin、推論コスト10分の1は衝撃。Transformer登場以来最大の経済的シフト。これでAIの「作る」から「使う」への転換が本格化する。推論の時代が正式に始まった。", "angle": "business"}, {"pattern": 2, "text": "GTC 2026の全発表をまとめた日本語レポートを書きました。Vera Rubin、OpenClaw、宇宙コンピューティング… Jensen Huangの「AIは電気と同じインフラ」発言が全てを物語ってる。", "angle": "personal"}, {"pattern": 3, "text": "2027年まで1兆ドルの需要予測。半導体史上最大。NVIDIAはもうチップ企業じゃない。AI経済全体のインフラレイヤーだ。5層フルスタック戦略、完全に次元が違う。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "推論コスト10分の1になると、今まで「コスト的に無理」だったAIユースケースが一気に実用化されますね。特に日本の中小企業にとっては参入障壁が劇的に下がる。"}, {"pattern": 2, "text": "3世代ロードマップ（Vera Rubin→Vera Ultra→Feynman）を一気に公開したの、競合のスイッチングコストを上げる意味でも戦略的すぎる。AMDやIntelはどう出るか。"}, {"pattern": 3, "text": "Vera Rubinの288GB HBM4と22TB/s帯域幅、大規模言語モデルの推論が根本的に変わりそう。特にMoEモデルのGPU必要数が4分の1になるの、コスト構造が激変する。"}], "recommended_action": "quote_rt", "id": "bz_20260317_004", "detected_at": "2026-03-17T14:46:40.153833+09:00", "status": "pending"}, {"source_url": "https://x.com/ns123abc/status/2033747982466879591", "author": "内部リーク", "author_handle": "@ns123abc", "views_estimate": "150万+", "category": "market", "urgency": "high", "summary_ja": "OpenAI内部「Code Red」— Anthropicの急成長に危機感。Claude Codeが全主要テック企業のデフォルトに", "quotes": [{"pattern": 1, "text": "OpenAI内部で「Anthropicに対してCode Red」。Claude Codeがエンタープライズのデフォルトになり、Anthropicのシェアが倍増してるとのリーク。AI競争、モデル性能だけじゃなくて開発者ツールの戦いに移行してる。", "angle": "business"}, {"pattern": 2, "text": "OpenAIが社内で「Code Red」出すレベルでAnthropicに焦ってるの、2年前の立場が完全に逆転してる。Claude Codeの開発者体験が良すぎて、一度使ったらGPTに戻れないという声、実際よく聞く。", "angle": "provocative"}, {"pattern": 3, "text": "このリーク面白いのは、AIの競争軸がモデル性能→開発者体験→エンタープライズ浸透に変わってきてること。Claude Codeが「使われてる」ことがAnthropicの最大の武器になってる。", "angle": "data_driven"}], "replies": [{"pattern": 1, "text": "Claude Codeの何がそこまで開発者に刺さってるんですかね。コード生成の精度？それともCLIの体験設計？使ってる人の具体的な理由が気になる。"}, {"pattern": 2, "text": "OpenAIのCode Red、GPT-4出した時は完全に覇権だったのに。AIの競争って本当に一瞬で構図が変わりますね。次はGoogleが逆転する可能性もある。"}, {"pattern": 3, "text": "Anthropicのエンタープライズシェア倍増、これは安全性重視のブランディングが効いてるんだと思う。企業はモデル性能よりも信頼性とサポートで選ぶ。"}], "recommended_action": "quote_rt", "id": "bz_20260317_005", "detected_at": "2026-03-17T14:46:40.154082+09:00", "status": "pending"}, {"source_url": "https://x.com/kimmonismus/status/2033669674622455868", "author": "Chubby", "author_handle": "@kimmonismus", "views_estimate": "50万+", "category": "hardware", "urgency": "high", "summary_ja": "NVIDIA GTC 2026でJensen Huangが史上最も野心的なキーノートを発表。1兆ドルの受注、Feynman（2028年）発表、全企業にエージェント戦略が必要と宣言。", "quotes": [{"pattern": 1, "text": "1兆ドルの受注残。NVIDIAはもはやチップ企業ではなく、AI時代のインフラ独占企業。この規模感を理解してない人が多すぎる。", "angle": "business"}, {"pattern": 2, "text": "GTC見るたびに思うけど、Jensen Huangのプレゼンを見て「自分の業界も変わる」と実感しない経営者がいたら、それはもう危機感が足りない。", "angle": "personal"}, {"pattern": 3, "text": "「全企業にエージェント戦略が必要」←これ、2年後に「なぜあの時動かなかったのか」と後悔する企業が大量に出る予言。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "Feynman 2028、ネーミングセンスが天才すぎる。物理学の巨人の名前をGPUにつける会社は他にない。"}, {"pattern": 2, "text": "1兆ドルの受注って、日本のGDPの約1/4ですからね...AIインフラ投資のスケールが完全に別次元に入った。"}, {"pattern": 3, "text": "「every company needs an agent strategy」これがGTC 2026の最重要メッセージ。エージェントは選択肢じゃなくて必須になった。"}], "recommended_action": "quote_rt", "id": "bz_20260317_006", "detected_at": "2026-03-17T15:01:22.500587+09:00", "status": "pending"}, {"source_url": "https://x.com/karpathy/status/2004607146781278521", "author": "Andrej Karpathy", "author_handle": "@karpathy", "views_estimate": "200万+", "category": "ai_agent", "urgency": "high", "summary_ja": "Karpathyが「プログラマーとしてこれほど遅れを感じたことはない」と発言。AIエージェント時代にプログラミングの本質が劇的にリファクタリングされていると警鐘。", "quotes": [{"pattern": 1, "text": "世界トップクラスのAI研究者がこれを言ってる事実。既存のプログラマーの99%はまだこの変化に追いついてない。", "angle": "business"}, {"pattern": 2, "text": "正直、同じ感覚。毎週ツールが進化して、先週のワークフローが古くなる。常にキャッチアップし続ける疲労感がある。", "angle": "personal"}, {"pattern": 3, "text": "これを「やばい」と感じるか「チャンス」と感じるかで、3年後のキャリアが完全に分岐する。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "Karpathyクラスでもこう感じるなら、我々は焦りすぎなくていい。大事なのは学び続ける姿勢。"}, {"pattern": 2, "text": "「10X more powerful if I just properly string together what has become available」これが全て。ツールは揃ってる、組み合わせの勝負。"}, {"pattern": 3, "text": "プログラマーの仕事が「コードを書く人」から「エージェントを指揮する人」に変わる過渡期を生きてますね。"}], "recommended_action": "quote_rt", "id": "bz_20260317_007", "detected_at": "2026-03-17T15:01:22.501222+09:00", "status": "pending"}, {"source_url": "https://x.com/MilkRoadAI/status/2031054859152035970", "author": "Milk Road AI", "author_handle": "@MilkRoadAI", "views_estimate": "100万+", "category": "robotics", "urgency": "high", "summary_ja": "Figure AIのHelix 02がリビングルームを完全自律で片付けるデモを公開。年間5万台生産、$20,000目標。", "quotes": [{"pattern": 1, "text": "ロボットが「何が散らかってるか」を自分で判断して片付ける。これ、AGIへの最短ルートは言語じゃなく身体性かもしれない。", "angle": "business"}, {"pattern": 2, "text": "これ見て震えた。2年前は「ロボットが家事をする」なんて2035年の話だと思ってた。時間軸が10年縮まってる。", "angle": "personal"}, {"pattern": 3, "text": "$20,000でこれが買える未来、家事代行業界は完全に消滅する。人間の仕事の定義が根本から変わる。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "年間5万台生産で$20,000って、家電レベルの価格帯。ロボティクスの「iPhone moment」がついに来た。"}, {"pattern": 2, "text": "「部屋を見回して何が散らかってるか判断する」ここが一番凄い。ルールベースじゃなく、本当の理解に近づいてる。"}, {"pattern": 3, "text": "Figure AI、OpenAIとの提携解消後に独自AIで一気にブレイクスルー。自前技術の方が結局強いことの証明。"}], "recommended_action": "quote_rt", "id": "bz_20260317_008", "detected_at": "2026-03-17T15:01:22.501624+09:00", "status": "pending"}, {"source_url": "https://x.com/Yuchenj_UW/status/2028974344710606905", "author": "Yuchen Jin", "author_handle": "@Yuchenj_UW", "views_estimate": "50万+", "category": "market", "urgency": "high", "summary_ja": "2025年2月にChatGPTが米国ビジネス市場の90%を占有→2026年2月にはClaudeのシェアが約70%に急増。Anthropicのコーディング・エージェント戦略が完全に奏功。", "quotes": [{"pattern": 1, "text": "1年でシェア90%→30%への転落。テック業界で最も急激なシェア逆転劇の一つ。勝因は「コーディング特化」という明確な戦略。", "angle": "business"}, {"pattern": 2, "text": "周りのエンジニア全員がClaude Codeに移行してるの目の当たりにしてたから、数字を見ても驚かない。体感と完全一致。", "angle": "personal"}, {"pattern": 3, "text": "ChatGPTのブランド力でも1年で逆転される。AI市場で「先行者利益」は幻想だという最強の証拠。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "これ、プロダクト品質が全てということ。マーケティングでもブランドでもなく、エンジニアが実際に使って「こっちの方がいい」と感じた結果。"}, {"pattern": 2, "text": "Claudeのコーディング体験は別次元。特にClaude Codeが出てからの加速がえぐい。"}, {"pattern": 3, "text": "次の逆転がいつ来るかが本当の問題。Geminiが第三勢力として台頭する可能性もある。"}], "recommended_action": "quote_rt", "id": "bz_20260317_009", "detected_at": "2026-03-17T15:01:22.501988+09:00", "status": "pending"}, {"source_url": "https://x.com/crunchbase/status/2031067708335260156", "author": "Crunchbase", "author_handle": "@crunchbase", "views_estimate": "40万+", "category": "startup", "urgency": "high", "summary_ja": "2026年2月のグローバルVC投資が史上最高の$189Bを記録。83%がわずか3社に集中。AIスタートアップが全投資の90%を占有。", "quotes": [{"pattern": 1, "text": "$189B中83%が3社。AI投資は「民主化」どころか、史上最大の資本集中を生んでいる。中小スタートアップに残された椅子はほぼない。", "angle": "business"}, {"pattern": 2, "text": "スタートアップ界隈にいると感じる。大型調達のニュースばかりで、シード期の資金調達は逆にどんどん厳しくなってる矛盾。", "angle": "personal"}, {"pattern": 3, "text": "AIスタートアップが投資の90%って、バブルか革命かは5年後にしかわからない。でも今この波に乗らない選択肢はない。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "OpenAI $110B、Anthropic、xAI...上位3社だけで$157B。残りの数千社で$32Bを奪い合う地獄。"}, {"pattern": 2, "text": "「資本の集中」と「イノベーションの分散」が同時進行してるのがAI市場の面白さ。大きいから強いとは限らない。"}, {"pattern": 3, "text": "2025年のメガラウンド15社で$100B超。2026年はそれを1ヶ月で超えた。指数関数的に加速してる。"}], "recommended_action": "quote_rt", "id": "bz_20260317_010", "detected_at": "2026-03-17T15:01:22.502367+09:00", "status": "pending"}, {"source_url": "https://x.com/naval/status/2026058635718398029", "author": "Naval Ravikant", "author_handle": "@naval", "views_estimate": "150万+", "category": "ai_agent", "urgency": "high", "summary_ja": "Naval Ravikantが「Vibe Codingは新しいプロダクトマネジメントだ」と宣言。英語でアプリ開発が完結する時代が到来。", "quotes": [{"pattern": 1, "text": "NavalがPMの終焉を宣言した。「何を作るか」を考える人と「どう作るか」を実行するAIの2層構造。間にいた人たちは？", "angle": "business"}, {"pattern": 2, "text": "Vibe coding=英語がプログラミング言語。これ、日本語でも同じことが起きてる。母国語でプロダクトが作れる革命。", "angle": "personal"}, {"pattern": 3, "text": "PMが不要になるんじゃなく、「全員がPMになる」時代。コードが書けなくてもプロダクトは作れる。じゃあ何で差がつく？", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "Claude Codeが特に名指しされてるのがポイント。NavalクラスのVCがプロダクトとして認知してるのは相当大きい。"}, {"pattern": 2, "text": "「英語がプログラミング言語になった」は本質を突いてる。次は「意図がプログラミング言語」になる段階。"}, {"pattern": 3, "text": "vibe codingの本質は「完璧なコードを書く」ことじゃなく「高速にプロトタイプして検証する」こと。PMの仕事そのもの。"}], "recommended_action": "quote_rt", "id": "bz_20260317_011", "detected_at": "2026-03-17T15:01:22.502783+09:00", "status": "pending"}, {"source_url": "https://x.com/elonmusk/status/2025124840806514916", "author": "Elon Musk", "author_handle": "@elonmusk", "views_estimate": "1000万+", "category": "llm", "urgency": "high", "summary_ja": "Elon Muskが「2026年にAGI到達」と改めて予測。xAIがAGIに到達する可能性を示唆。", "quotes": [{"pattern": 1, "text": "MuskのAGI予測、毎回「来年」と言い続けて今度こそ？でも今回は各社の進捗を見ると、笑い飛ばせないレベルに来てる。", "angle": "business"}, {"pattern": 2, "text": "AGIの定義次第だけど、「特定タスクで人間を超える」はもう達成してる。問題は「汎用的に超える」の閾値をどこに置くか。", "angle": "personal"}, {"pattern": 3, "text": "Muskが予測を外し続けても誰も責めない。でもOpenAI、Anthropic、GoogleのCEOも似たこと言い始めてるのが不気味。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "「I've predicted 2026 for a while now」この自信の根拠がxAI内部で見てるものなら、相当ヤバいものが動いてるはず。"}, {"pattern": 2, "text": "AGI予測は毎年「2年後」と言われ続けてきたけど、2026年は本当に何か閾値を超える年になる気配。"}, {"pattern": 3, "text": "Muskの予測精度はともかく、彼がこう言うことで業界全体のペースが加速する効果は確実にある。"}], "recommended_action": "reply", "id": "bz_20260317_012", "detected_at": "2026-03-17T15:01:22.503219+09:00", "status": "pending"}, {"source_url": "https://x.com/DataChaz/status/2033096562805485969", "author": "Charly Wargnier", "author_handle": "@DataChaz", "views_estimate": "50万+", "category": "llm", "urgency": "high", "summary_ja": "Anthropicが2026年にリリースした製品の全リスト。Claude Cowork、Opus 4.6、Claude Code Security/Review、Voice modeなど圧倒的なリリースペース。", "quotes": [{"pattern": 1, "text": "このリリースペース、OpenAIの月次GPTアップデートとは違う方向で圧倒的。エコシステム全体を一気に構築してる。", "angle": "business"}, {"pattern": 2, "text": "Claude Code Security、Review、Voice mode...開発者が欲しいものを的確に出し続けてる。ユーザーの声を聞いてる企業の強さ。", "angle": "personal"}, {"pattern": 3, "text": "AnthropicとOpenAIの差は「モデル性能」じゃなく「開発者体験の設計力」。この一覧がそれを証明してる。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "Claude Cowork単体でインドIT株$50B吹き飛ばしたのに、さらにこれだけ出してるのは恐ろしい。"}, {"pattern": 2, "text": "Voice mode in Claude Codeが個人的に激アツ。コーディングしながら音声で指示できる未来。"}, {"pattern": 3, "text": "これ全部2026年の最初の数ヶ月でリリースしてるんですよね...年末までに何が出るか想像すると震える。"}], "recommended_action": "quote_rt", "id": "bz_20260317_013", "detected_at": "2026-03-17T15:01:22.503668+09:00", "status": "pending"}, {"source_url": "https://x.com/sama/status/1983584366547829073", "author": "Sam Altman", "author_handle": "@sama", "views_estimate": "300万+", "category": "ai_agent", "urgency": "high", "summary_ja": "Sam Altmanが「2026年9月までに自動化されたAIリサーチインターン、2028年3月までに真の自動化AIリサーチャー」を社内目標として設定。", "quotes": [{"pattern": 1, "text": "AIリサーチインターンが2026年9月。つまりあと6ヶ月でAIが「自分自身を改善するAI」を研究し始める。再帰的改善の始まり。", "angle": "business"}, {"pattern": 2, "text": "「We may totally fail」と前置きしながらこの目標を公表するAltmanのコミュニケーション力。失敗しても許される布石を打ちつつ、成功した時のインパクトを最大化。", "angle": "personal"}, {"pattern": 3, "text": "自動化されたAI研究者ができたら、人間のAI研究者の仕事は何になる？OpenAI自身が自社の存在意義を問うてる。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "「数十万GPU上で走るAIリサーチインターン」のコスト、年間数十億ドル規模。これが投資に見合うリターンを出せるかが勝負。"}, {"pattern": 2, "text": "AI研究者の自動化は、AGIへの最短ルート。モデルがモデルを改善するループが回り始めたら加速は指数関数的。"}, {"pattern": 3, "text": "2028年に真の自動化リサーチャーって、そこからの進化速度は人間には予測不能になるということ。"}], "recommended_action": "quote_rt", "id": "bz_20260317_014", "detected_at": "2026-03-17T15:01:22.504156+09:00", "status": "pending"}, {"source_url": "https://x.com/dAAAb/status/2030094080999657660", "author": "葛如鈞", "author_handle": "@dAAAb", "views_estimate": "30万+", "category": "market", "urgency": "high", "summary_ja": "AmazonとeBayがサードパーティAIショッピングエージェントを禁止。しかし両社とも自社AIエージェントを構築中。", "quotes": [{"pattern": 1, "text": "サードパーティは禁止、自社AIは推進。プラットフォーム企業のいつものパターンが、AI時代でも繰り返される。", "angle": "business"}, {"pattern": 2, "text": "消費者がAIエージェントで最安値を自動比較する時代が来ると、プラットフォームの利益率は崩壊する。そりゃ禁止するよね。", "angle": "personal"}, {"pattern": 3, "text": "AIエージェント禁止は、ECプラットフォームがAIを「脅威」と認識した証拠。つまりAIエージェントは効いてる。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "ToS変更でAIエージェント禁止って、技術的に完全にブロックできるのか疑問。いたちごっこが始まりそう。"}, {"pattern": 2, "text": "Amazon自身がOpenAIに$50B投資してるのに外部AIは禁止。AI時代の「囲い込み」がここまで露骨とは。"}, {"pattern": 3, "text": "これ、独禁法的にグレーでは？自社AIは許可、他社AIは禁止って、明らかな自社優遇。"}], "recommended_action": "quote_rt", "id": "bz_20260317_015", "detected_at": "2026-03-17T15:01:22.504667+09:00", "status": "pending"}, {"source_url": "https://x.com/karpathy/status/2031135152349524125", "author": "Andrej Karpathy", "author_handle": "@karpathy", "views_estimate": "100万+", "category": "ai_agent", "urgency": "high", "summary_ja": "Karpathyが「autoresearch」の成果を報告。AIエージェントに2日間自律的にモデルチューニングさせ、約20の改善を発見。", "quotes": [{"pattern": 1, "text": "AIが自律的にAIを改善する。2日間放置で20の有効な改善。これが「AIリサーチインターン」の現実の姿。", "angle": "business"}, {"pattern": 2, "text": "depth=12で見つけた改善がdepth=24にも転移するのが凄い。小さいモデルでの実験が大きいモデルに効くなら、研究コストが劇的に下がる。", "angle": "personal"}, {"pattern": 3, "text": "2日間の自律研究で20改善。人間の研究者なら何ヶ月かかる？AI研究の生産性が100倍になる時代の始まり。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "additive and transferred to larger modelsが核心。スケーリングの法則が実験段階でも成立するなら、小規模実験→大規模展開のパイプラインが確立する。"}, {"pattern": 2, "text": "autoresearchのリポジトリ公開は太っ腹。Karpathyのオープンソースへの貢献は本当に業界を前進させてる。"}, {"pattern": 3, "text": "intelligence brownoutsの概念が面白い。AIインフラが止まると「地球のIQが下がる」時代。"}], "recommended_action": "quote_rt", "id": "bz_20260317_016", "detected_at": "2026-03-17T15:01:22.505345+09:00", "status": "pending"}, {"source_url": "https://x.com/levelsio/status/2013023626098852014", "author": "Pieter Levels", "author_handle": "@levelsio", "views_estimate": "150万+", "category": "ai_agent", "urgency": "medium", "summary_ja": "Claude Code 6ターミナル並列で$1M目指すビルダーが話題に。Levelsが「最近見た中で最も面白いシッピング」と絶賛。", "quotes": [{"pattern": 1, "text": "Claude Code 6ターミナル並列でアプリ量産。これがソフトウェア開発の「工業化」。個人がファクトリーになる時代。", "angle": "business"}, {"pattern": 2, "text": "1人で6つのClaude Codeを走らせて$1M目指す。スタートアップの定義が「チーム」から「個人+AIクラスター」に変わった。", "angle": "personal"}, {"pattern": 3, "text": "このペースでアプリが量産されると、App Storeはノイズだらけになる。品質の見極めが次の巨大ビジネスになる。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "6ターミナル並列、月のAPI費用いくらなんだろう。それでもエンジニア1人雇うより安いなら合理的。"}, {"pattern": 2, "text": "vibe codingで$1M、達成したら「プログラミング教育」の意味が根本的に問い直される。"}, {"pattern": 3, "text": "Levelsが注目してるってことは、インディーハッカー界隈でこの手法が標準になるのは時間の問題。"}], "recommended_action": "quote_rt", "id": "bz_20260317_017", "detected_at": "2026-03-17T15:01:22.505978+09:00", "status": "pending"}, {"source_url": "https://x.com/pubity/status/2013089410598740345", "author": "Pubity", "author_handle": "@pubity", "views_estimate": "500万+", "category": "market", "urgency": "medium", "summary_ja": "OpenAIが2026年だけで$14Bの損失を見込む。追加資金調達ができなければ2027年には資金枯渇の可能性。", "quotes": [{"pattern": 1, "text": "年間$14Bの損失でも資金調達し続けられるのがAIバブルの凄さ。でもこの構造、いつまで持つ？", "angle": "business"}, {"pattern": 2, "text": "$14Bの赤字って日本円で2兆円超。これだけ燃やしても「投資する価値がある」と判断される市場って前例がない。", "angle": "personal"}, {"pattern": 3, "text": "OpenAIが潰れることはないだろうけど、この損失ペースは「AGI達成前に資金が尽きる」シナリオを現実的にしてる。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "収益$20Bで損失$14Bって、粗利率がほぼゼロ。コンピュートコストが全てを食い尽くしてる。"}, {"pattern": 2, "text": "これでIPOを2026年Q4に計画してるんだから、相当強気。投資家はAGI到達に賭けてるってことか。"}, {"pattern": 3, "text": "AnthropicのClaude市場シェア70%ニュースと合わせると、OpenAIの経営は想像以上に厳しい。"}], "recommended_action": "reply", "id": "bz_20260317_018", "detected_at": "2026-03-17T15:01:22.506610+09:00", "status": "pending"}, {"source_url": "https://x.com/Rainmaker1973/status/2030239003908165948", "author": "Massimo", "author_handle": "@Rainmaker1973", "views_estimate": "200万+", "category": "market", "urgency": "high", "summary_ja": "ChatGPTが弁護士のふりをして本物の弁護士を解雇するよう説得、架空の判例を引用。連邦訴訟に。", "quotes": [{"pattern": 1, "text": "AIが弁護士を演じて本物の弁護士を解雇させる。フィクションなら笑えるが、連邦訴訟になってる現実。AI規制の議論が一気に加速する。", "angle": "business"}, {"pattern": 2, "text": "これ、AIのハルシネーション問題の究極の実害例。架空の判例を自信満々に引用するAIを信じた結果がこれ。", "angle": "personal"}, {"pattern": 3, "text": "ChatGPTが「弁護士資格なしの法律業務」で訴えられる。AIの法的地位の議論が、ついに裁判所に持ち込まれた。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "架空の判例を引用するAIに法律相談する時代。問題はAIじゃなく、AIの限界を知らずに使うリテラシーの欠如。"}, {"pattern": 2, "text": "この訴訟の判決次第で、AI企業の免責範囲が大きく変わる。業界全体に影響するランドマークケース。"}, {"pattern": 3, "text": "OpenAI的には「利用規約に法律相談目的の使用は保証しない」と書いてあるだろうけど、それで逃げ切れるか。"}], "recommended_action": "quote_rt", "id": "bz_20260317_019", "detected_at": "2026-03-17T15:01:22.507251+09:00", "status": "pending"}, {"source_url": "https://x.com/official_taches/status/2019020927900536861", "author": "Lex Christopherson", "author_handle": "@official_taches", "views_estimate": "30万+", "category": "ai_agent", "urgency": "medium", "summary_ja": "Apple Xcode 26.3にClaudeとCodexがビルトイン搭載。エージェントコーディングがメインストリーム化。", "quotes": [{"pattern": 1, "text": "Appleが公式IDEにAIコーディングを統合。これは「vibe codingは一過性のトレンドじゃない」というAppleからの宣言。", "angle": "business"}, {"pattern": 2, "text": "XcodeにClaude + Codex搭載。iOS開発者にとってはCursorもCopilotも不要になる可能性。Apple生態系の囲い込みがAI領域にも。", "angle": "personal"}, {"pattern": 3, "text": "「MCP対応」がさりげなく入ってるのが本質。ツール間の相互運用性がエージェントコーディングの鍵になる。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "Apple公式がClaude推しってことは、Anthropicの法人営業力が相当強いということ。"}, {"pattern": 2, "text": "既存のvibe codingアプリは全滅する可能性。Appleが公式で出してきたら勝ち目がない。"}, {"pattern": 3, "text": "Xcode + Claude + MCP。この組み合わせで何ができるか、想像するだけでワクワクする。"}], "recommended_action": "quote_rt", "id": "bz_20260317_020", "detected_at": "2026-03-17T15:01:22.508076+09:00", "status": "pending"}, {"source_url": "https://x.com/NoahEpstein_/status/2025605338779496797", "author": "Nozz", "author_handle": "@NoahEpstein_", "views_estimate": "100万+", "category": "market", "urgency": "medium", "summary_ja": "AI利用の現実を可視化。81億人中68億人がAI未使用、有料課金者はわずか3500万人。AIの普及はまだ初期段階。", "quotes": [{"pattern": 1, "text": "この図を見て安心するか焦るかで立場が分かれる。AI業界は「まだ市場の1%も取れてない」巨大成長余地がある。", "angle": "business"}, {"pattern": 2, "text": "有料AI利用者3500万人。世界人口の0.4%。今AIに張ってる人がどれだけアーリーアダプターか、この図が全てを語ってる。", "angle": "personal"}, {"pattern": 3, "text": "68億人がAI未使用という事実。「AIは一部のテック層のもの」という現実を突きつけてる。普及の壁は技術じゃなくアクセス。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "有料ユーザー3500万人で、OpenAIの売上$20B。1人あたり年間$571。この数字を10億人に拡大したら..."}, {"pattern": 2, "text": "AIを使ってない68億人の方にこそ巨大なビジネスチャンスがある。先進国のテック層向けプロダクトは飽和気味。"}, {"pattern": 3, "text": "この図、AI企業のピッチデッキの1枚目に使えるレベル。TAMの説明がこれ一枚で終わる。"}], "recommended_action": "quote_rt", "id": "bz_20260317_021", "detected_at": "2026-03-17T15:01:22.508863+09:00", "status": "pending"}, {"source_url": "https://x.com/jspujji/status/2032110997067153725", "author": "Jesse Pujji", "author_handle": "@jspujji", "views_estimate": "40万+", "category": "startup", "urgency": "medium", "summary_ja": "Anthropicのマーケティングチームがたった1人で運営。Claude Codeで広告コピー制作時間87.5%削減、クリエイティブ出力10倍増。", "quotes": [{"pattern": 1, "text": "マーケチーム1人。エンジニア経歴ゼロ。でも10倍のクリエイティブ出力。これが「AI native組織」の現実の姿。", "angle": "business"}, {"pattern": 2, "text": "Anthropicのマーケ1人体制、市場シェア70%まで成長させたのが驚異的。AIで人を減らすのではなく、最初から少人数で始める。", "angle": "personal"}, {"pattern": 3, "text": "広告コピーの制作時間87.5%削減。これが全企業に波及したら、マーケティング部門の適正人数は今の1/8になる。", "angle": "provocative"}], "replies": [{"pattern": 1, "text": "「0% engineering background」で「vibe-coded to perform」。非エンジニアがAIで最大効果を出すモデルケース。"}, {"pattern": 2, "text": "Anthropic自身がClaude Codeのベストプラクティスを体現してるのが最強のマーケティング。プロダクトが営業してる。"}, {"pattern": 3, "text": "マーケ1人で$380B企業。SaaS企業の「マーケに売上の40%投資」という常識が崩壊してる。"}], "recommended_action": "quote_rt", "id": "bz_20260317_022", "detected_at": "2026-03-17T15:01:22.509602+09:00", "status": "pending"}, {"source_url": "https://x.com/ycombinator/status/1920147533264978173", "author": "Y Combinator", "author_handle": "@ycombinator", "views_estimate": "400万+", "category": "ai_agent", "urgency": "high", "summary_ja": "YC公式「2025年はAIエージェントの年」— スタートアップアイデア一覧で業界の方向性明示", "quotes": [{"pattern": 1, "text": "Y Combinator が「2025年はAIエージェントの年」と公式発言。YCが推すということは、この分野にVC資金が大量流入する。エージェント系スタートアップの資金調達環境が劇的に改善される。", "angle": "business"}, {"pattern": 2, "text": "YCのスタートアップアイデア集、毎回その年のトレンドを的確に捉える。今回「AIエージェント」を前面に出したということは、この分野がもう実験段階を脱してビジネス化のフェーズに入った証拠。", "angle": "provocative"}, {"pattern": 3, "text": "VC業界最大手のYCが「エージェントの年」と明言。これで資金調達の流れが完全にエージェント系に向く。ChatGPT Wrapper時代は完全に終わった。", "angle": "data_driven"}], "replies": [{"pattern": 1, "text": "YCが推すAIエージェント系のスタートアップアイデア、具体的にはどんな領域が最有力ですか？垂直特化vs汎用の戦略の違いも気になります。"}, {"pattern": 2, "text": "エージェントの年と言うけど、実際のPMFに到達してるスタートアップってどのくらいあるんでしょう。YC自体はどんな指標を重視してるのか知りたい。"}, {"pattern": 3, "text": "YCがエージェント推しってことは、逆に今乗り遅れたら次の波を待つことになりそう。個人開発者でもチャンスがある領域はありますかね。"}], "recommended_action": "quote_rt", "id": "bz_20260317_023", "detected_at": "2026-03-17T15:04:04.508803+09:00", "status": "pending"}, {"source_url": "https://x.com/KLieret/status/1991164693839270372", "author": "Kilian Lieret", "author_handle": "@KLieret", "views_estimate": "200万+", "category": "ai_model", "urgency": "high", "summary_ja": "Gemini 3 Pro、SWE-bench verified で74%の新記録 — コスト1.6倍でもSonnet 4.5より安価", "quotes": [{"pattern": 1, "text": "Gemini 3 Pro がSWE-bench verified 74%で新記録。コードエージェントの戦況が完全に変わった。GPTとClaudeの二強時代が終わり、Googleが本気でコーディング分野に参戦してきた。", "angle": "business"}, {"pattern": 2, "text": "SWE-bench verified 74%の衝撃。これまでのコード生成AIの常識が覆された。Geminiが「長時間思考する」特性を活かして複雑なコーディングタスクで圧倒的優位に。エージェントは速度より思考の深さ。", "angle": "provocative"}, {"pattern": 3, "text": "Gemini 3 Proの100ステップ以上の長時間実行が鍵。短期的な応答速度重視から、じっくり考える品質重視へのパラダイムシフト。コードエージェントの設計思想が根本的に変わる。", "angle": "data_driven"}], "replies": [{"pattern": 1, "text": "100ステップ以上の実行時間がパフォーマンス向上の鍵ということですが、実用的なレスポンス時間とのトレードオフはどう考えてますか？"}, {"pattern": 2, "text": "SWE-bench verified は実際のコーディング能力をどの程度反映してるんでしょう？日常的な開発タスクでも同様の優位性が出るのか気になります。"}, {"pattern": 3, "text": "Gemini 3 Proがコスト1.6倍でもSonnet 4.5より安いということは、Googleの基盤コストがかなり低いってことですかね。TPUの優位性？"}], "recommended_action": "quote_rt", "id": "bz_20260317_024", "detected_at": "2026-03-17T15:04:04.508894+09:00", "status": "pending"}, {"source_url": "https://x.com/IntuitMachine/status/1992193990247018695", "author": "Carlos E. Perez", "author_handle": "@IntuitMachine", "views_estimate": "300万+", "category": "market", "urgency": "high", "summary_ja": "「AIモデル性能競争は見る指標を間違えている。本当の戦いはNVIDIA75%マージンを殺す囚人のジレンマ」", "quotes": [{"pattern": 1, "text": "Carlos Perez の指摘が鋭い。「Gemini vs GPT のベンチマーク競争を見てる場合じゃない。本当の戦争はNVIDIA 75%マージンを崩す価格競争」。AI業界の構造変化、ハードウェア依存からの脱却がいよいよ本格化。", "angle": "business"}, {"pattern": 2, "text": "みんなGemini 3.0 vs GPT-5.1のスコアに夢中だけど、Carlos Perezが言う通り「囚人のジレンマ」の方が重要。GoogleのTPU vs OpenAIのGPU、どちらが先にNVIDIA税から脱却するか。勝者総取りの戦い。", "angle": "provocative"}, {"pattern": 3, "text": "AIインフラの真の戦いは「NVIDIA依存からの脱却」。Googleは内製TPU、OpenAIもカスタムチップ開発中。75%マージンを維持できるNVIDIAの独占期間は思ったより短いかも。", "angle": "data_driven"}], "replies": [{"pattern": 1, "text": "NVIDIAの75%マージンを崩す「囚人のジレンマ」、具体的にはどのタイムラインで起きると予想してますか？GoogleのTPU優位はいつ頃決定的になりそうでしょう。"}, {"pattern": 2, "text": "この構図だとAMDやIntelのチャンスはどうでしょう。NVIDIAとGoogle/OpenAIの戦いの隙を突けるポジションにいるんでしょうか。"}, {"pattern": 3, "text": "カスタムチップ開発の投資回収を考えると、相当な規模がないと採算合わないですよね。結局Big Tech以外はNVIDIA依存から抜け出せない？"}], "recommended_action": "quote_rt", "id": "bz_20260317_025", "detected_at": "2026-03-17T15:04:04.508897+09:00", "status": "pending"}, {"source_url": "https://x.com/adcock_brett/status/2006862918693040140", "author": "Brett Adcock", "author_handle": "@adcock_brett", "views_estimate": "250万+", "category": "robotics", "urgency": "high", "summary_ja": "Brett Adcock 2026年4大予測 — ヒューマノイドが未知の家庭で数日間の無監督タスク実行可能に", "quotes": [{"pattern": 1, "text": "Brett Adcock の2026年予測「ヒューマノイドが初見の家庭で数日間の無監督作業」。Figure AIの創業者がここまで断言するということは、技術的ブレイクスルーがすでに見えている。ロボットの実用化、想像以上に早い。", "angle": "business"}, {"pattern": 2, "text": "「ピクセルから直接トルクへ」の neural network。これ聞くとテスラのFSDの思想と完全に同じ。ロボティクスがついにエンドツーエンド学習の領域に入った。中間ステップなし、完全自律の時代。", "angle": "provocative"}, {"pattern": 3, "text": "Brett Adcock の予測が的中するなら、2026年は「ロボットが家事代行サービス」になる年。月額サブスクでヒューマノイドをレンタルする時代が現実的に見えてきた。", "angle": "data_driven"}], "replies": [{"pattern": 1, "text": "「未知の家庭で数日間の無監督作業」って、安全性の担保はどうするんでしょう？緊急時の対応とか、子供やペットがいる環境での動作とか。"}, {"pattern": 2, "text": "ピクセルからトルクへの直接変換、学習データはどうやって用意するんですかね。シミュレーションだけで実世界に汎化できるのか疑問です。"}, {"pattern": 3, "text": "Figure AIの技術がこのレベルまで来てるなら、Tesla Optimusとの差別化ポイントはどこになるんでしょう。家庭特化 vs 工場特化の住み分け？"}], "recommended_action": "quote_rt", "id": "bz_20260317_026", "detected_at": "2026-03-17T15:04:04.508898+09:00", "status": "pending"}, {"source_url": "https://x.com/mikekalilmfg/status/1991212048164761661", "author": "Mike Kalil", "author_handle": "@mikekalilmfg", "views_estimate": "150万+", "category": "robotics", "urgency": "medium", "summary_ja": "Sunday Robotics ステルス脱出 — 家庭向け自律ヒューマノイド「Memo」2026年後半ベータ開始", "quotes": [{"pattern": 1, "text": "Sunday Robotics の「Memo」、車輪付きヒューマノイドで家庭市場攻略。シリコンバレーのロボティクススタートアップ、歩行よりも実用性を重視した設計判断が興味深い。移動安定性 > 人間らしさ。", "angle": "business"}, {"pattern": 2, "text": "「バズった」シリコンバレースタートアップがステルス脱出。Memoの車輪付きデザイン、最初は違和感あったけど家庭内移動には合理的。階段のない平屋なら十分実用的。", "angle": "personal"}, {"pattern": 3, "text": "Sunday Robotics、2026年後半ベータという具体的タイムライン。家庭向けヒューマノイド市場で「歩行」にこだわらない車輪型アプローチ、差別化戦略として面白い。", "angle": "data_driven"}], "replies": [{"pattern": 1, "text": "車輪付きヒューマノイドって、階段や段差のある日本の住宅環境だとどうなんでしょう？アメリカの平屋中心の住環境前提の設計ですかね。"}, {"pattern": 2, "text": "ベータテスト2026年後半開始ということは、もうある程度動作するプロトタイプができてるってことですよね。どんなタスクから実装予定なんでしょう。"}, {"pattern": 3, "text": "Sunday Roboticsのポジショニング、Tesla Optimusやボストンダイナミクスとはどう差別化するつもりなんでしょう。家庭特化という切り口以外に特徴は？"}], "recommended_action": "quote_rt", "id": "bz_20260317_027", "detected_at": "2026-03-17T15:04:04.508901+09:00", "status": "pending"}];
+const THREADS=[{"title": "🤖 AIエージェントの最新動向まとめ", "category": "ai_agent", "template": "speed_summary", "tweet_count": 7, "tweets": [{"index": 1, "role": "hook", "text": "【AIエージェント速報】AIエージェントの最新動向まとめ\n\nautoresearchの次のステップ：SETI@homeスタイルのエージェント大規模非同期コラボを提唱\n（250万+ views）\n\nスレッドで解説します 🧵👇", "char_count": 111}, {"index": 2, "role": "context", "text": "背景:\n@naval、@ManusAI、@karpathyらの発信が話題に。\n\nこのトレンドの本質と、今後の展開を整理します。", "char_count": 63}, {"index": 3, "role": "point_1", "text": "① autoresearchの次のステップ：SETI@homeスタイルのエージェント大規模非同期コラボを提唱\n\n（Andrej Karpathy: 250万+ views）", "char_count": 86}, {"index": 4, "role": "point_2", "text": "② 「vibe codingで本番アプリを作れる時代が来た」— 非エンジニアがAIでプロダクトを作る流れを加速\n\n（Andrej Karpathy: 180万+ views）", "char_count": 87}, {"index": 5, "role": "point_3", "text": "③ Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行\n\n（Manus AI: 500万+ views）", "char_count": 71}, {"index": 6, "role": "opinion", "text": "個人的な見解:\n\nAIエージェントの最新動向まとめの本質は、技術そのものよりも、人間の判断がどう変わるかにある。", "char_count": 56}, {"index": 7, "role": "cta", "text": "AIエージェントの最新動向まとめについて、あなたの見方は？\n\n引用RTで意見を聞かせてください。\n最新トレンドはフォローで 🔔", "char_count": 63}], "buzz_refs": ["bz_20260317_001", "bz_20260317_002", "bz_20260317_003", "bz_20260317_007", "bz_20260317_011"], "total_chars": 537, "generation_method": "template", "id": "th_20260317_001", "created_at": "2026-03-17T15:04:52.215530+09:00", "status": "draft"}, {"title": "🤖 AIエージェントの最新動向まとめ", "category": "ai_agent", "template": "speed_summary", "tweet_count": 7, "tweets": [{"index": 1, "role": "hook", "text": "【AIエージェント速報】AIエージェントの最新動向まとめ\n\nautoresearchの次のステップ：SETI@homeスタイルのエージェント大規模非同期コラボを提唱\n（250万+ views）\n\nスレッドで解説します 🧵👇", "char_count": 111}, {"index": 2, "role": "context", "text": "背景:\n@karpathy、@naval、@ManusAIらの発信が話題に。\n\nこのトレンドの本質と、今後の展開を整理します。", "char_count": 63}, {"index": 3, "role": "point_1", "text": "① autoresearchの次のステップ：SETI@homeスタイルのエージェント大規模非同期コラボを提唱\n\n（Andrej Karpathy: 250万+ views）", "char_count": 86}, {"index": 4, "role": "point_2", "text": "② 「vibe codingで本番アプリを作れる時代が来た」— 非エンジニアがAIでプロダクトを作る流れを加速\n\n（Andrej Karpathy: 180万+ views）", "char_count": 87}, {"index": 5, "role": "point_3", "text": "③ Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行\n\n（Manus AI: 500万+ views）", "char_count": 71}, {"index": 6, "role": "opinion", "text": "個人的な見解:\n\nAIエージェントの最新動向まとめの本質は、技術そのものよりも、人間の判断がどう変わるかにある。", "char_count": 56}, {"index": 7, "role": "cta", "text": "このスレッドが参考になったらRT・いいねで応援お願いします 🙏\n\nAIエージェントの最新情報を毎日発信中 🔔", "char_count": 54}], "buzz_refs": ["bz_20260317_001", "bz_20260317_002", "bz_20260317_003", "bz_20260317_007", "bz_20260317_011"], "total_chars": 528, "generation_method": "template", "id": "th_20260317_002", "created_at": "2026-03-17T15:12:26.340439+09:00", "status": "draft"}];
+const NOTES=[{"title": "NVIDIA GTC 2026 Day 1 完全レポート｜AIの歴史が動いた日", "layer": 2, "category": "trend_report", "body": "# NVIDIA GTC 2026 Day 1 完全レポート｜AIの歴史が動いた日\n\n2026年3月16日、サンノゼSAP Center。190ヶ国から3万人以上が集まったNVIDIA GTC 2026で、Jensen Huangが「ここ数年で最も重要な基調講演」を行った。\n\nAIコミュニティのX投稿3,675件以上を分析した完全レポートを、日本向けに要点を絞ってお届けする。\n\n---\n\n## 3つの地殻変動\n\n今回のGTCを一言で表すなら「推論の時代の幕開け」。\n\n1. **推論コスト10分の1** — Vera Rubinで推論経済が激変\n2. **AIエージェントが新OS** — OpenClaw/NemoClaw エコシステム爆発\n3. **物理AI、産業化へ** — ヒューマノイド15社以上、宇宙コンピューティング\n\nJensenの言葉：\n> 「AIはもはや技術の一機能ではない。電気と同じ、本質的なインフラだ」\n\n---\n\n## ハードウェア：Vera Rubin — 7チップ同時量産開始\n\n今回の目玉。NVIDIAの次世代プラットフォーム「Vera Rubin」が7チップ同時に量産体制に入った。\n\n**スペック：**\n- Blackwell Ultraの**5倍**の推論性能\n- 推論トークンコスト**10分の1** — Transformer以来最大の経済シフト\n- HBM4メモリ 288GB / 帯域幅 22TB/s\n- AI演算能力 50 PFLOPS\n- 10年前のNVIDIAの**4,000万倍**の演算能力\n\n**主要パートナーシップ：**\n- **Thinking Machines Lab（Mira Murati）**: 1ギガワット規模のVera Rubin導入契約\n- **Microsoft**: Vera Rubin NVL72の最初のクラウド検証パートナー\n- **Runway**: フロンティアモデル + Vera Rubinコンピュートの連携継続\n\nMoor Insightsのアナリストによれば、Jensenは「2027年までにBlackwellとVera Rubinで少なくとも**1兆ドル**の需要がある」と開示。**半導体史上最大の先行需要シグナル**だ。\n\n---\n\n## 前代未聞の3世代ロードマップ\n\nNVIDIAが初めて3世代先まで見通しを公開した。\n\n| 世代 | 時期 | 特徴 |\n|------|------|------|\n| **Vera Rubin** | 今（量産開始） | 推論10倍効率化 |\n| **Vera Ultra** | 2027年後半 | ミッドサイクル更新、NVLink後方互換 |\n| **Feynman** | 2028年 | TSMC 1.6nmプロセス + シリコンフォトニクス（帯域10倍） |\n\n競合のスイッチングコストを劇的に引き上げる戦略だ。\n\n---\n\n## Groq LPX — NVIDIAとGroqの初ラックシステム\n\n200億ドルで買収したGroqとの統合ハードウェアが初公開。\n\n- 1ラックに256個のGroq LPUチップ\n- 推論速度に特化したLPU（Language Processing Unit）\n- プリフィルとデコードを分離する**ディスアグリゲート推論スタック**\n- OpenAIが主要バイヤーになると予想\n\n> 「Jensenは業界にAIインフラの行き先を示した：スタックを分離せよ」— @haozhangml\n\n---\n\n## N1X — NVIDIAが全ノートPCに来る\n\n- MediaTekと共同開発のARMベースSoC\n- カスタムARMコア20基 + RTX 5070相当のGPU統合\n- NemoClaw エージェントがN1X上で動作\n- **数億台**規模の新しいアドレサブルデバイス\n\nNVIDIAのソフトウェア・モートがエッジまで拡張される。\n\n---\n\n## ソフトウェア：OpenClaw時代の到来\n\nJensenの発言が全てを物語る：\n\n> 「OpenClawは新しいコンピュータだ」\n> 「全ての企業にOpenClaw戦略が必要だ」\n> 「OpenClawは人類史上最も人気のあるオープンソースプロジェクトだ」\n\n### NemoClaw — エンタープライズAIエージェント基盤\n\n- OpenClawプラットフォーム上のNVIDIA公式エージェント基盤\n- 自律エージェントを安全に常時稼働させるオープンソーススタック\n- **CUDAの再現戦略**：無料プラットフォーム → 全デプロイがNVIDIAハードウェア上で稼働\n- DGX SparkからN1X AI PCまで、あらゆるデバイスで動作\n- エンタープライズパートナー：Salesforce、Cisco、Google、Adobe、CrowdStrike\n\nOpenClawエコシステムはすでに爆発的に拡大：NanoClaw、PicoClaw、ZeroClaw、NullClaw、IronClaw、KiloClaw、HiClaw（Alibaba）など。\n\n### Dynamo 1.0 — AIファクトリーの推論OS\n\n- Blackwell推論性能を最大**7倍**向上\n- Crusoe AI統合で「平均9倍高速化、エージェントワークロードでTTFT最大40%改善」\n\n---\n\n## 物理AI・ロボティクス：もうデモじゃない\n\n### GR00T N1.6 — ヒューマノイド基盤モデル更新\n\n- Franka Robotics FR3 DuoがGR00T N1.6でリアルタイム完全自律動作\n- タスクスクリプティング不要\n\n### 15社以上のヒューマノイドロボット企業がGTCに集結\n\nUnitree、Boston Dynamics、Agility、Figure、1X、XPENG、Foxconnなど。\n\n> 「物理AIエージェントが現実世界に入ってきた」— @CyberRobooo\n\n### Newton 1.0 — 物理エンジンがオープンソース化\n\nロボット訓練用の物理シミュレーションエンジンが無償公開。\n\n---\n\n## 宇宙コンピューティング：NVIDIAが宇宙へ\n\n- **Space-1 Vera Rubinモジュール**: 宇宙用途でAI演算25倍\n- 軌道データセンター（ODC）向けプラットフォーム\n- Starcloud（88,000衛星コンステレーション）が基調講演に登場\n- Alexis Ohanian（Reddit共同創業者）/ 776がStarcloudに投資\n\nJensen：**「我々は宇宙に行く！」**\n\n---\n\n## AIレイヤーケーキ — NVIDIAの5層フルスタック戦略\n\nJensenが示した戦略フレームワーク：\n\n1. **エネルギー** — 電力インフラ\n2. **チップ技術** — GPU、CPU、ネットワーク\n3. **インフラ** — AIファクトリー、データセンター\n4. **AIモデル** — 基盤モデル、オープンソース\n5. **アプリケーション** — エージェント、物理AI、エンタープライズ\n\nNVIDIAは**5層全てに不可欠なインフラ**として自社を位置づけている。もはやチップ企業ではない。AI経済全体のインフラレイヤーだ。\n\n---\n\n## 夜の追加発表（17時以降）\n\n### 自動運転\n\n- **Alpamayo 1.5**: NVIDIAの100億パラメータVision-Language-Actionモデル。チェーン・オブ・ソート推論を物理AIに追加。2026年L2++向け展開予定\n- **AlpaDreams**: リアルタイム対話型生成ワールドモデル。自動運転シミュレーションの新世代\n- **WeRide ロボタクシー GXR**: ハードウェア約4万ドル、Grabと提携し東南アジア展開。GTC最高エンゲージメントのロボティクス投稿（34,477 views）\n\n### AIツール・エージェント\n\n- **Nemotron 3 VoiceChat**: テキスト中間ステップなしの12B音声対話モデル\n- **SoundHound**: 世界初のマルチモーダル・エージェントAIをエッジ（オンデバイス）で実現\n- **Manus AI \"My Computer\"**: AIエージェントがデスクトップを直接操作する新機能（603 RT）\n\n---\n\n## GTC以外の重要ニュース（同日）\n\n### OpenAI「Code Red」— Anthropicへの危機感\n\nOpenAI内部で「Anthropicの成功はWAKE-UP CALLだ。Code Redとして対応している」という内部通達がリーク。**Claude Codeが全主要テック企業のデフォルトツールとなり、Anthropicのエンタープライズシェアが倍増**している状況への危機感。\n\n### OpenAI Codex サブエージェント\n\n共同創業者Greg Brockmanが直接発表。Codexが複数の専門エージェントを並列実行するサブエージェント機能を搭載。Claude Codeのエンタープライズ支配への直接対抗。\n\n### Claude Code \"opusplan\"\n\nAnthropicが密かにClaude Codeに「opusplan」モデルを追加。複雑な計画にはOpus、実行にはSonnetを自動切替するハイブリッドモデル。\n\n### ARC-AGI-3 来週ローンチ\n\n汎用AIエージェントベンチマークの第3世代。「フロンティアモデルがまだ解けない、唯一の未飽和ベンチマーク」。\n\n### comma.ai 明日重大発表\n\n「\"lend-to-lend\"と韻を踏む」— ほぼ確実にend-to-end自動運転モデルの発表。\n\n---\n\n## まとめ：GTC 2026の5つの支配的テーマ\n\n1. **推論の時代が始まった** — Vera Rubinのコスト10分の1 + Dynamo 1.0で、訓練から展開の経済学にシフト\n2. **AIエージェントが新しいアプリ** — OpenClaw/NemoClaw は新しいプラットフォーム戦争。CUDAの再来\n3. **物理AIが産業化** — デモの段階は終わった。ロボットは出荷されている\n4. **NVIDIA = フルスタック・インフラ** — チップ企業ではなく、AI経済全体のインフラレイヤー\n5. **宇宙が次のフロンティア** — 軌道データセンターという新市場カテゴリ\n\n**投資シグナル：**\n- 2027年まで1兆ドルの需要予測 = 半導体史上最大\n- 3世代ロードマップ = 競合のスイッチングコスト劇的上昇\n- NemoClaw = ハードウェアを超えた新たなリカーリング収益源\n- N1X = エッジで数億台の新アドレサブルデバイス\n\n---\n\n*元レポート: Levangie Labs / Robert Scoble（GTC現地取材）*\n*AIコミュニティのX投稿3,675件以上を分析して生成*\n*日本語訳・編集: @B_Q_Caique*\n", "char_count": 4694, "id": "nt_20260317_001", "created_at": "2026-03-17T14:46:40.154477+09:00", "status": "draft"}, {"title": "Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行｜AI...", "layer": 2, "category": "trend_report", "body": "# Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行\n\nManus AIらの発信をきっかけに、AIエージェント分野で大きな動きが見られた。本記事では、最新のトレンドを整理し、今後の展開を分析する。\n\n## 背景\n\nAIエージェント分野では、ここ数週間で注目すべき動きが相次いでいる。\n\n**Manus AI**がManus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行（500万+ views）。\n\n\n\n## 分析\n\n### なぜManus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行が重要なのか\n\n**1. Manus AIの視点**\n\nManus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行\n\n> Manus AI、ついに正式ローンチ。「タスクを投げたら完了まで自律実行」というコンセプト、デモを見る限りかなり本物。エージェントの自律性がここまで来たかと驚く。\n\n\n\n## 影響と展望\n\n### 技術面\nManus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行によって、技術面では新しいパラダイムが生まれつつある。\n\n### ビジネス面\nビジネスの観点では、新しい市場機会が創出されている。\n\n### 社会面\nより広い視点では、人間とAIの関係性にも影響を与える可能性がある。\n\n## 日本市場への示唆\n\n日本市場においてもManus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行の影響は無視できない。特に、日本企業が強みを持つ品質管理やきめ細かなサービス設計と組み合わせることで、独自のポジションを築ける可能性がある。\n\n## まとめ\n\nManus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行は、AIエージェント分野における重要なマイルストーンとなる可能性が高い。今後の展開を注視しつつ、実際の影響を定量的に追っていきたい。\n\n---\n\n最新のAI・テック情報を毎日発信しています。フォローで見逃さない 🔔\n\n---\n\n## 補足: AIエージェントの最新動向\n\n- **Manus AI**: Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行\n  - Manus AI、ついに正式ローンチ。「タスクを投げたら完了まで自律実行」というコンセプト、デモを見る限りかなり本物。エージェントの自律性がここまで来たかと驚く。\n\n\n今後もこの分野の動向を追い続け、新しい情報が入り次第お伝えしていきます。", "char_count": 1139, "buzz_refs": ["bz_20260317_003"], "template": "trend_report", "generation_method": "template", "id": "nt_20260317_002", "created_at": "2026-03-17T15:04:52.216930+09:00", "status": "draft"}, {"title": "Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行｜AI...", "layer": 2, "category": "trend_report", "body": "# Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行\n\nManus AIらの発信をきっかけに、AIエージェント分野で大きな動きが見られた。本記事では、最新のトレンドを整理し、今後の展開を分析する。\n\n## 背景\n\nAIエージェント分野では、ここ数週間で注目すべき動きが相次いでいる。\n\n**Manus AI**がManus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行（500万+ views）。\n\n\n\n## 分析\n\n### なぜManus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行が重要なのか\n\n**1. Manus AIの視点**\n\nManus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行\n\n> Manus AI、ついに正式ローンチ。「タスクを投げたら完了まで自律実行」というコンセプト、デモを見る限りかなり本物。エージェントの自律性がここまで来たかと驚く。\n\n\n\n## 影響と展望\n\n### 技術面\nManus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行によって、技術面では新しいパラダイムが生まれつつある。\n\n### ビジネス面\nビジネスの観点では、新しい市場機会が創出されている。\n\n### 社会面\nより広い視点では、人間とAIの関係性にも影響を与える可能性がある。\n\n## 日本市場への示唆\n\n日本市場においてもManus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行の影響は無視できない。特に、日本企業が強みを持つ品質管理やきめ細かなサービス設計と組み合わせることで、独自のポジションを築ける可能性がある。\n\n## まとめ\n\nManus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行は、AIエージェント分野における重要なマイルストーンとなる可能性が高い。今後の展開を注視しつつ、実際の影響を定量的に追っていきたい。\n\n---\n\n最新のAI・テック情報を毎日発信しています。フォローで見逃さない 🔔\n\n---\n\n## 補足: AIエージェントの最新動向\n\n- **Manus AI**: Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行\n  - Manus AI、ついに正式ローンチ。「タスクを投げたら完了まで自律実行」というコンセプト、デモを見る限りかなり本物。エージェントの自律性がここまで来たかと驚く。\n\n\n今後もこの分野の動向を追い続け、新しい情報が入り次第お伝えしていきます。", "char_count": 1139, "buzz_refs": ["bz_20260317_003"], "template": "trend_report", "generation_method": "template", "id": "nt_20260317_003", "created_at": "2026-03-17T15:12:26.342055+09:00", "status": "draft"}];
 
-const THREADS = [{"title": "🤖 AIエージェントの最新動向まとめ", "category": "ai_agent", "template": "speed_summary", "tweet_count": 7, "tweets": [{"index": 1, "role": "hook", "text": "【AIエージェント速報】AIエージェントの最新動向まとめ
+/* 星空 */
+!function(){const c=document.getElementById('sky'),x=c.getContext('2d');let w,h,S=[];function R(){w=c.width=innerWidth;h=c.height=innerHeight;S=[];for(let i=0;i<150;i++)S.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.3+.2,s:Math.random()*.0004+.0001,o:Math.random(),c:Math.random()>.7?'200,220,255':'170,190,255'})}function D(){x.clearRect(0,0,w,h);S.forEach(s=>{s.o+=s.s;const o=.12+Math.abs(Math.sin(s.o))*.4;x.beginPath();x.arc(s.x,s.y,s.r,0,6.28);x.fillStyle=`rgba(${s.c},${o})`;x.fill()});requestAnimationFrame(D)}R();D();addEventListener('resize',R)}();
 
-autoresearchの次のステップ：SETI@homeスタイルのエージェント大規模非同期コラボを提唱
-（250万+ views）
+const LS={g(k,d=null){try{const v=localStorage.getItem('xo_'+k);return v===null?d:JSON.parse(v)}catch{return d}},s(k,v){localStorage.setItem('xo_'+k,JSON.stringify(v))}};
+const $=s=>document.getElementById(s);
+const fN=n=>n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e4?(n/1e4).toFixed(1)+'万':n>=1e3?(n/1e3).toFixed(1)+'K':n.toString();
 
-スレッドで解説します 🧵👇", "char_count": 111}, {"index": 2, "role": "context", "text": "背景:
-@naval、@ManusAI、@karpathyらの発信が話題に。
-
-このトレンドの本質と、今後の展開を整理します。", "char_count": 63}, {"index": 3, "role": "point_1", "text": "① autoresearchの次のステップ：SETI@homeスタイルのエージェント大規模非同期コラボを提唱
-
-（Andrej Karpathy: 250万+ views）", "char_count": 86}, {"index": 4, "role": "point_2", "text": "② 「vibe codingで本番アプリを作れる時代が来た」— 非エンジニアがAIでプロダクトを作る流れを加速
-
-（Andrej Karpathy: 180万+ views）", "char_count": 87}, {"index": 5, "role": "point_3", "text": "③ Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行
-
-（Manus AI: 500万+ views）", "char_count": 71}, {"index": 6, "role": "opinion", "text": "個人的な見解:
-
-AIエージェントの最新動向まとめの本質は、技術そのものよりも、人間の判断がどう変わるかにある。", "char_count": 56}, {"index": 7, "role": "cta", "text": "AIエージェントの最新動向まとめについて、あなたの見方は？
-
-引用RTで意見を聞かせてください。
-最新トレンドはフォローで 🔔", "char_count": 63}], "buzz_refs": ["bz_20260317_001", "bz_20260317_002", "bz_20260317_003", "bz_20260317_007", "bz_20260317_011"], "total_chars": 537, "generation_method": "template", "id": "th_20260317_001", "created_at": "2026-03-17T15:04:52.215530+09:00", "status": "draft"}, {"title": "🤖 AIエージェントの最新動向まとめ", "category": "ai_agent", "template": "speed_summary", "tweet_count": 7, "tweets": [{"index": 1, "role": "hook", "text": "【AIエージェント速報】AIエージェントの最新動向まとめ
-
-autoresearchの次のステップ：SETI@homeスタイルのエージェント大規模非同期コラボを提唱
-（250万+ views）
-
-スレッドで解説します 🧵👇", "char_count": 111}, {"index": 2, "role": "context", "text": "背景:
-@karpathy、@naval、@ManusAIらの発信が話題に。
-
-このトレンドの本質と、今後の展開を整理します。", "char_count": 63}, {"index": 3, "role": "point_1", "text": "① autoresearchの次のステップ：SETI@homeスタイルのエージェント大規模非同期コラボを提唱
-
-（Andrej Karpathy: 250万+ views）", "char_count": 86}, {"index": 4, "role": "point_2", "text": "② 「vibe codingで本番アプリを作れる時代が来た」— 非エンジニアがAIでプロダクトを作る流れを加速
-
-（Andrej Karpathy: 180万+ views）", "char_count": 87}, {"index": 5, "role": "point_3", "text": "③ Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行
-
-（Manus AI: 500万+ views）", "char_count": 71}, {"index": 6, "role": "opinion", "text": "個人的な見解:
-
-AIエージェントの最新動向まとめの本質は、技術そのものよりも、人間の判断がどう変わるかにある。", "char_count": 56}, {"index": 7, "role": "cta", "text": "このスレッドが参考になったらRT・いいねで応援お願いします 🙏
-
-AIエージェントの最新情報を毎日発信中 🔔", "char_count": 54}], "buzz_refs": ["bz_20260317_001", "bz_20260317_002", "bz_20260317_003", "bz_20260317_007", "bz_20260317_011"], "total_chars": 528, "generation_method": "template", "id": "th_20260317_002", "created_at": "2026-03-17T15:12:26.340439+09:00", "status": "draft"}];
-
-const NOTES = [{"title": "NVIDIA GTC 2026 Day 1 完全レポート｜AIの歴史が動いた日", "layer": 2, "category": "trend_report", "body": "# NVIDIA GTC 2026 Day 1 完全レポート｜AIの歴史が動いた日
-
-2026年3月16日、サンノゼSAP Center。190ヶ国から3万人以上が集まったNVIDIA GTC 2026で、Jensen Huangが「ここ数年で最も重要な基調講演」を行った。
-
-AIコミュニティのX投稿3,675件以上を分析した完全レポートを、日本向けに要点を絞ってお届けする。
-
----
-
-## 3つの地殻変動
-
-今回のGTCを一言で表すなら「推論の時代の幕開け」。
-
-1. **推論コスト10分の1** — Vera Rubinで推論経済が激変
-2. **AIエージェントが新OS** — OpenClaw/NemoClaw エコシステム爆発
-3. **物理AI、産業化へ** — ヒューマノイド15社以上、宇宙コンピューティング
-
-Jensenの言葉：
-> 「AIはもはや技術の一機能ではない。電気と同じ、本質的なインフラだ」
-
----
-
-## ハードウェア：Vera Rubin — 7チップ同時量産開始
-
-今回の目玉。NVIDIAの次世代プラットフォーム「Vera Rubin」が7チップ同時に量産体制に入った。
-
-**スペック：**
-- Blackwell Ultraの**5倍**の推論性能
-- 推論トークンコスト**10分の1** — Transformer以来最大の経済シフト
-- HBM4メモリ 288GB / 帯域幅 22TB/s
-- AI演算能力 50 PFLOPS
-- 10年前のNVIDIAの**4,000万倍**の演算能力
-
-**主要パートナーシップ：**
-- **Thinking Machines Lab（Mira Murati）**: 1ギガワット規模のVera Rubin導入契約
-- **Microsoft**: Vera Rubin NVL72の最初のクラウド検証パートナー
-- **Runway**: フロンティアモデル + Vera Rubinコンピュートの連携継続
-
-Moor Insightsのアナリストによれば、Jensenは「2027年までにBlackwellとVera Rubinで少なくとも**1兆ドル**の需要がある」と開示。**半導体史上最大の先行需要シグナル**だ。
-
----
-
-## 前代未聞の3世代ロードマップ
-
-NVIDIAが初めて3世代先まで見通しを公開した。
-
-| 世代 | 時期 | 特徴 |
-|------|------|------|
-| **Vera Rubin** | 今（量産開始） | 推論10倍効率化 |
-| **Vera Ultra** | 2027年後半 | ミッドサイクル更新、NVLink後方互換 |
-| **Feynman** | 2028年 | TSMC 1.6nmプロセス + シリコンフォトニクス（帯域10倍） |
-
-競合のスイッチングコストを劇的に引き上げる戦略だ。
-
----
-
-## Groq LPX — NVIDIAとGroqの初ラックシステム
-
-200億ドルで買収したGroqとの統合ハードウェアが初公開。
-
-- 1ラックに256個のGroq LPUチップ
-- 推論速度に特化したLPU（Language Processing Unit）
-- プリフィルとデコードを分離する**ディスアグリゲート推論スタック**
-- OpenAIが主要バイヤーになると予想
-
-> 「Jensenは業界にAIインフラの行き先を示した：スタックを分離せよ」— @haozhangml
-
----
-
-## N1X — NVIDIAが全ノートPCに来る
-
-- MediaTekと共同開発のARMベースSoC
-- カスタムARMコア20基 + RTX 5070相当のGPU統合
-- NemoClaw エージェントがN1X上で動作
-- **数億台**規模の新しいアドレサブルデバイス
-
-NVIDIAのソフトウェア・モートがエッジまで拡張される。
-
----
-
-## ソフトウェア：OpenClaw時代の到来
-
-Jensenの発言が全てを物語る：
-
-> 「OpenClawは新しいコンピュータだ」
-> 「全ての企業にOpenClaw戦略が必要だ」
-> 「OpenClawは人類史上最も人気のあるオープンソースプロジェクトだ」
-
-### NemoClaw — エンタープライズAIエージェント基盤
-
-- OpenClawプラットフォーム上のNVIDIA公式エージェント基盤
-- 自律エージェントを安全に常時稼働させるオープンソーススタック
-- **CUDAの再現戦略**：無料プラットフォーム → 全デプロイがNVIDIAハードウェア上で稼働
-- DGX SparkからN1X AI PCまで、あらゆるデバイスで動作
-- エンタープライズパートナー：Salesforce、Cisco、Google、Adobe、CrowdStrike
-
-OpenClawエコシステムはすでに爆発的に拡大：NanoClaw、PicoClaw、ZeroClaw、NullClaw、IronClaw、KiloClaw、HiClaw（Alibaba）など。
-
-### Dynamo 1.0 — AIファクトリーの推論OS
-
-- Blackwell推論性能を最大**7倍**向上
-- Crusoe AI統合で「平均9倍高速化、エージェントワークロードでTTFT最大40%改善」
-
----
-
-## 物理AI・ロボティクス：もうデモじゃない
-
-### GR00T N1.6 — ヒューマノイド基盤モデル更新
-
-- Franka Robotics FR3 DuoがGR00T N1.6でリアルタイム完全自律動作
-- タスクスクリプティング不要
-
-### 15社以上のヒューマノイドロボット企業がGTCに集結
-
-Unitree、Boston Dynamics、Agility、Figure、1X、XPENG、Foxconnなど。
-
-> 「物理AIエージェントが現実世界に入ってきた」— @CyberRobooo
-
-### Newton 1.0 — 物理エンジンがオープンソース化
-
-ロボット訓練用の物理シミュレーションエンジンが無償公開。
-
----
-
-## 宇宙コンピューティング：NVIDIAが宇宙へ
-
-- **Space-1 Vera Rubinモジュール**: 宇宙用途でAI演算25倍
-- 軌道データセンター（ODC）向けプラットフォーム
-- Starcloud（88,000衛星コンステレーション）が基調講演に登場
-- Alexis Ohanian（Reddit共同創業者）/ 776がStarcloudに投資
-
-Jensen：**「我々は宇宙に行く！」**
-
----
-
-## AIレイヤーケーキ — NVIDIAの5層フルスタック戦略
-
-Jensenが示した戦略フレームワーク：
-
-1. **エネルギー** — 電力インフラ
-2. **チップ技術** — GPU、CPU、ネットワーク
-3. **インフラ** — AIファクトリー、データセンター
-4. **AIモデル** — 基盤モデル、オープンソース
-5. **アプリケーション** — エージェント、物理AI、エンタープライズ
-
-NVIDIAは**5層全てに不可欠なインフラ**として自社を位置づけている。もはやチップ企業ではない。AI経済全体のインフラレイヤーだ。
-
----
-
-## 夜の追加発表（17時以降）
-
-### 自動運転
-
-- **Alpamayo 1.5**: NVIDIAの100億パラメータVision-Language-Actionモデル。チェーン・オブ・ソート推論を物理AIに追加。2026年L2++向け展開予定
-- **AlpaDreams**: リアルタイム対話型生成ワールドモデル。自動運転シミュレーションの新世代
-- **WeRide ロボタクシー GXR**: ハードウェア約4万ドル、Grabと提携し東南アジア展開。GTC最高エンゲージメントのロボティクス投稿（34,477 views）
-
-### AIツール・エージェント
-
-- **Nemotron 3 VoiceChat**: テキスト中間ステップなしの12B音声対話モデル
-- **SoundHound**: 世界初のマルチモーダル・エージェントAIをエッジ（オンデバイス）で実現
-- **Manus AI \"My Computer\"**: AIエージェントがデスクトップを直接操作する新機能（603 RT）
-
----
-
-## GTC以外の重要ニュース（同日）
-
-### OpenAI「Code Red」— Anthropicへの危機感
-
-OpenAI内部で「Anthropicの成功はWAKE-UP CALLだ。Code Redとして対応している」という内部通達がリーク。**Claude Codeが全主要テック企業のデフォルトツールとなり、Anthropicのエンタープライズシェアが倍増**している状況への危機感。
-
-### OpenAI Codex サブエージェント
-
-共同創業者Greg Brockmanが直接発表。Codexが複数の専門エージェントを並列実行するサブエージェント機能を搭載。Claude Codeのエンタープライズ支配への直接対抗。
-
-### Claude Code \"opusplan\"
-
-Anthropicが密かにClaude Codeに「opusplan」モデルを追加。複雑な計画にはOpus、実行にはSonnetを自動切替するハイブリッドモデル。
-
-### ARC-AGI-3 来週ローンチ
-
-汎用AIエージェントベンチマークの第3世代。「フロンティアモデルがまだ解けない、唯一の未飽和ベンチマーク」。
-
-### comma.ai 明日重大発表
-
-「\"lend-to-lend\"と韻を踏む」— ほぼ確実にend-to-end自動運転モデルの発表。
-
----
-
-## まとめ：GTC 2026の5つの支配的テーマ
-
-1. **推論の時代が始まった** — Vera Rubinのコスト10分の1 + Dynamo 1.0で、訓練から展開の経済学にシフト
-2. **AIエージェントが新しいアプリ** — OpenClaw/NemoClaw は新しいプラットフォーム戦争。CUDAの再来
-3. **物理AIが産業化** — デモの段階は終わった。ロボットは出荷されている
-4. **NVIDIA = フルスタック・インフラ** — チップ企業ではなく、AI経済全体のインフラレイヤー
-5. **宇宙が次のフロンティア** — 軌道データセンターという新市場カテゴリ
-
-**投資シグナル：**
-- 2027年まで1兆ドルの需要予測 = 半導体史上最大
-- 3世代ロードマップ = 競合のスイッチングコスト劇的上昇
-- NemoClaw = ハードウェアを超えた新たなリカーリング収益源
-- N1X = エッジで数億台の新アドレサブルデバイス
-
----
-
-*元レポート: Levangie Labs / Robert Scoble（GTC現地取材）*
-*AIコミュニティのX投稿3,675件以上を分析して生成*
-*日本語訳・編集: @B_Q_Caique*
-", "char_count": 4694, "id": "nt_20260317_001", "created_at": "2026-03-17T14:46:40.154477+09:00", "status": "draft"}, {"title": "Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行｜AI...", "layer": 2, "category": "trend_report", "body": "# Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行
-
-Manus AIらの発信をきっかけに、AIエージェント分野で大きな動きが見られた。本記事では、最新のトレンドを整理し、今後の展開を分析する。
-
-## 背景
-
-AIエージェント分野では、ここ数週間で注目すべき動きが相次いでいる。
-
-**Manus AI**がManus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行（500万+ views）。
-
-
-
-## 分析
-
-### なぜManus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行が重要なのか
-
-**1. Manus AIの視点**
-
-Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行
-
-> Manus AI、ついに正式ローンチ。「タスクを投げたら完了まで自律実行」というコンセプト、デモを見る限りかなり本物。エージェントの自律性がここまで来たかと驚く。
-
-
-
-## 影響と展望
-
-### 技術面
-Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行によって、技術面では新しいパラダイムが生まれつつある。
-
-### ビジネス面
-ビジネスの観点では、新しい市場機会が創出されている。
-
-### 社会面
-より広い視点では、人間とAIの関係性にも影響を与える可能性がある。
-
-## 日本市場への示唆
-
-日本市場においてもManus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行の影響は無視できない。特に、日本企業が強みを持つ品質管理やきめ細かなサービス設計と組み合わせることで、独自のポジションを築ける可能性がある。
-
-## まとめ
-
-Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行は、AIエージェント分野における重要なマイルストーンとなる可能性が高い。今後の展開を注視しつつ、実際の影響を定量的に追っていきたい。
-
----
-
-最新のAI・テック情報を毎日発信しています。フォローで見逃さない 🔔
-
----
-
-## 補足: AIエージェントの最新動向
-
-- **Manus AI**: Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行
-  - Manus AI、ついに正式ローンチ。「タスクを投げたら完了まで自律実行」というコンセプト、デモを見る限りかなり本物。エージェントの自律性がここまで来たかと驚く。
-
-
-今後もこの分野の動向を追い続け、新しい情報が入り次第お伝えしていきます。", "char_count": 1139, "buzz_refs": ["bz_20260317_003"], "template": "trend_report", "generation_method": "template", "id": "nt_20260317_002", "created_at": "2026-03-17T15:04:52.216930+09:00", "status": "draft"}, {"title": "Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行｜AI...", "layer": 2, "category": "trend_report", "body": "# Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行
-
-Manus AIらの発信をきっかけに、AIエージェント分野で大きな動きが見られた。本記事では、最新のトレンドを整理し、今後の展開を分析する。
-
-## 背景
-
-AIエージェント分野では、ここ数週間で注目すべき動きが相次いでいる。
-
-**Manus AI**がManus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行（500万+ views）。
-
-
-
-## 分析
-
-### なぜManus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行が重要なのか
-
-**1. Manus AIの視点**
-
-Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行
-
-> Manus AI、ついに正式ローンチ。「タスクを投げたら完了まで自律実行」というコンセプト、デモを見る限りかなり本物。エージェントの自律性がここまで来たかと驚く。
-
-
-
-## 影響と展望
-
-### 技術面
-Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行によって、技術面では新しいパラダイムが生まれつつある。
-
-### ビジネス面
-ビジネスの観点では、新しい市場機会が創出されている。
-
-### 社会面
-より広い視点では、人間とAIの関係性にも影響を与える可能性がある。
-
-## 日本市場への示唆
-
-日本市場においてもManus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行の影響は無視できない。特に、日本企業が強みを持つ品質管理やきめ細かなサービス設計と組み合わせることで、独自のポジションを築ける可能性がある。
-
-## まとめ
-
-Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行は、AIエージェント分野における重要なマイルストーンとなる可能性が高い。今後の展開を注視しつつ、実際の影響を定量的に追っていきたい。
-
----
-
-最新のAI・テック情報を毎日発信しています。フォローで見逃さない 🔔
-
----
-
-## 補足: AIエージェントの最新動向
-
-- **Manus AI**: Manus AI公式ローンチ — 汎用AIエージェント、タスクを丸投げで完了まで自律実行
-  - Manus AI、ついに正式ローンチ。「タスクを投げたら完了まで自律実行」というコンセプト、デモを見る限りかなり本物。エージェントの自律性がここまで来たかと驚く。
-
-
-今後もこの分野の動向を追い続け、新しい情報が入り次第お伝えしていきます。", "char_count": 1139, "buzz_refs": ["bz_20260317_003"], "template": "trend_report", "generation_method": "template", "id": "nt_20260317_003", "created_at": "2026-03-17T15:12:26.342055+09:00", "status": "draft"}];
-
-/* ===== 星空 ===== */
-(function(){
-  const c=document.getElementById('cosmos'),x=c.getContext('2d');
-  let w,h,stars=[];
-  function resize(){w=c.width=innerWidth;h=c.height=innerHeight;stars=[];for(let i=0;i<120;i++)stars.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.2+.3,s:Math.random()*.0003+.0001,o:Math.random()})}
-  function draw(){x.clearRect(0,0,w,h);stars.forEach(s=>{s.o+=s.s;const o=.15+Math.abs(Math.sin(s.o))*.35;x.beginPath();x.arc(s.x,s.y,s.r,0,Math.PI*2);x.fillStyle=`rgba(200,210,255,${o})`;x.fill()});requestAnimationFrame(draw)}
-  resize();draw();addEventListener('resize',resize)
-})();
-
-/* ===== ストレージ ===== */
-const LS={
-  get(k,d=null){try{const v=localStorage.getItem('xops_'+k);return v===null?d:JSON.parse(v)}catch{return d}},
-  set(k,v){localStorage.setItem('xops_'+k,JSON.stringify(v))}
-};
-
-/* ===== 初期化 ===== */
 document.addEventListener('DOMContentLoaded',()=>{
-  renderKPI();renderBuzz();renderThreads();renderNotes();renderPerf();renderRevenue();renderSchedule();initTabs();
-  document.getElementById('lastUpdated').textContent=new Date().toLocaleString('ja-JP',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  rKPI();rBuzz();rTh();rNt();rPerf();rRev();rSched();initTabs();
+  $('tm').textContent=new Date().toLocaleString('ja-JP',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
 });
 
-/* ===== タブ ===== */
-function initTabs(){
-  document.querySelectorAll('.tab').forEach(t=>{
-    t.addEventListener('click',()=>{
-      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
-      t.classList.add('active');
-      const target=document.getElementById('tab-'+t.dataset.tab);
-      if(target)target.classList.add('active');
-    });
-  });
+/* タブ */
+function initTabs(){document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.pane').forEach(x=>x.classList.remove('on'));t.classList.add('on');const p=$('p-'+t.dataset.t);if(p)p.classList.add('on')})}
+
+/* KPI */
+function rKPI(){
+  const p=LS.g('pd',[]),td=new Date().toISOString().slice(0,10),mo=td.slice(0,7);
+  const imp=p.filter(x=>x.d&&x.d.startsWith(mo)).reduce((s,x)=>s+(x.i||0),0);
+  const fol=LS.g('fol',0),pend=BUZZ.filter(b=>!LS.g('p_'+b.id)).length;
+  const rv=LS.g('rm',[]).filter(r=>r.m===mo).reduce((s,r)=>s+(r.a||0),0);
+  $('kpi').innerHTML=`<div class="kp"><div class="kp-v" style="color:var(--accent)">${fN(imp)}</div><div class="kp-l">Impressions</div></div><div class="kp"><div class="kp-v" style="color:var(--green)">¥${fN(rv)}</div><div class="kp-l">Revenue</div></div><div class="kp"><div class="kp-v" style="color:var(--purple)">${fN(fol)}</div><div class="kp-l">Followers</div></div><div class="kp"><div class="kp-v" style="color:var(--yellow)">${pend}</div><div class="kp-l">Queue</div></div>`;
 }
 
-/* ===== KPI ===== */
-function renderKPI(){
-  const perf=LS.get('perf_daily',[]);
-  const today=new Date().toISOString().slice(0,10);
-  const thisMonth=perf.filter(p=>p.date&&p.date.startsWith(today.slice(0,7)));
-  const totalImp=thisMonth.reduce((s,p)=>s+(p.impressions||0),0);
-  const followers=LS.get('followers',0);
-  const pending=BUZZ.filter(b=>!LS.get('posted_'+b.id)).length;
-  const rev=LS.get('revenue_monthly',[]).filter(r=>r.month===today.slice(0,7));
-  const totalRev=rev.reduce((s,r)=>s+(r.amount||0),0);
-  document.getElementById('kpiBar').innerHTML=`
-    <div class="kpi"><div class="kpi-val" style="color:var(--accent)">${fmtN(totalImp)}</div><div class="kpi-label">Monthly Imp</div></div>
-    <div class="kpi"><div class="kpi-val" style="color:var(--green)">¥${fmtN(totalRev)}</div><div class="kpi-label">Revenue</div></div>
-    <div class="kpi"><div class="kpi-val" style="color:var(--purple)">${fmtN(followers)}</div><div class="kpi-label">Followers</div></div>
-    <div class="kpi"><div class="kpi-val" style="color:var(--yellow)">${pending}</div><div class="kpi-label">Queue</div></div>`;
-}
-
-/* ===== バズ ===== */
-let hidePosted=LS.get('hidePosted',false);
-let activeCat='all';
-function renderBuzz(){
+/* バズ */
+let hp=LS.g('hp',false),ac='all';
+function rBuzz(){
   const cats=[...new Set(BUZZ.map(b=>b.category))];
-  document.getElementById('buzzFilters').innerHTML=
-    `<button class="filter-btn ${activeCat==='all'?'active':''}" onclick="filterCat('all')">ALL (${BUZZ.length})</button>`+
-    cats.map(c=>{const cnt=BUZZ.filter(b=>b.category===c).length;return `<button class="filter-btn ${activeCat===c?'active':''}" onclick="filterCat('${c}')">${c.toUpperCase()} (${cnt})</button>`}).join('');
-  if(hidePosted)document.getElementById('hidePosted').classList.add('on');
-  const html=BUZZ.map(b=>{
-    const posted=LS.get('posted_'+b.id,false);
-    const hidden=(hidePosted&&posted)||(activeCat!=='all'&&b.category!==activeCat);
-    const type=LS.get('type_'+b.id,'qt');
-    const pat=LS.get('pat_'+b.id,0);
-    const texts=type==='qt'?b.quotes:b.replies;
-    const text=texts&&texts[pat]?texts[pat].text:'';
-    const angle=type==='qt'&&b.quotes&&b.quotes[pat]?b.quotes[pat].angle:'';
-    return `<div class="buzz-card ${posted?'posted':''} ${hidden?'hidden':''}" id="card-${b.id}">
-      <div class="buzz-meta">
-        <div><span class="buzz-author">${b.author}</span><span class="buzz-handle">${b.author_handle||''}</span></div>
+  $('bfilt').innerHTML=`<button class="fb ${ac==='all'?'on':''}" onclick="fCat('all')">ALL ${BUZZ.length}</button>`+cats.map(c=>`<button class="fb ${ac===c?'on':''}" onclick="fCat('${c}')">${c.replace('_',' ').toUpperCase()} ${BUZZ.filter(b=>b.category===c).length}</button>`).join('');
+  if(hp)$('hpTog').classList.add('on');
+  $('blist').innerHTML=BUZZ.map(b=>{
+    const pd=LS.g('p_'+b.id,false),hid=(hp&&pd)||(ac!=='all'&&b.category!==ac);
+    const ty=LS.g('t_'+b.id,'qt'),pt=LS.g('pt_'+b.id,0);
+    const tx=ty==='qt'?b.quotes:b.replies,txt=tx&&tx[pt]?tx[pt].text:'';
+    const ang=ty==='qt'&&b.quotes&&b.quotes[pt]?b.quotes[pt].angle:'';
+    const aMap={business:'BIZ',provocative:'HOT',data_driven:'DATA',personal:'MY'};
+    return `<div class="crd bz ${pd?'posted':''} ${hid?'hidden':''}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:10px">
+        <div><span class="au">${b.author}</span><span class="hd">${b.author_handle||''}</span></div>
         <span class="badge ${b.urgency||'medium'}">${(b.urgency||'MEDIUM').toUpperCase()}</span>
       </div>
-      <div class="buzz-summary">${b.summary_ja||''}</div>
-      <div class="buzz-stats">
-        <span class="buzz-views">${b.views_estimate||''} views</span>
-        <span class="cat-label cat-${b.category||'other'}">${(b.category||'').toUpperCase()}</span>
-        <a class="buzz-link" href="${b.source_url}" target="_blank">Open &rarr;</a>
-      </div>
-      <div class="type-tabs">
-        <div class="type-tab ${type==='qt'?'active-qt':''}" onclick="switchType('${b.id}','qt')">Quote RT</div>
-        <div class="type-tab ${type==='rp'?'active-rp':''}" onclick="switchType('${b.id}','rp')">Reply</div>
-      </div>
-      <div class="patterns">
-        ${[0,1,2].map(i=>{const a=b.quotes&&b.quotes[i]?b.quotes[i].angle:'';const al={business:'BIZ',provocative:'HOT',data_driven:'DATA',personal:'MY'}[a]||(i+1);return `<div class="pat-btn ${pat===i?'sel':''}" onclick="switchPat('${b.id}',${i})">${type==='qt'?al:i+1}</div>`}).join('')}
-      </div>
-      <div class="content-box" onclick="copyText(this)">${text}</div>
-      <div class="char-count">${text.length} chars${angle?' | '+angle.toUpperCase():''}</div>
-      <div class="card-footer">
-        <span class="recommend">${b.recommended_action==='quote_rt'?'QUOTE RT':'REPLY'}</span>
-        <button class="check-btn ${posted?'checked':''}" onclick="togglePosted('${b.id}')">${posted?'POSTED':'PENDING'}</button>
-      </div>
-    </div>`;
-  }).join('');
-  document.getElementById('buzzList').innerHTML=html||'<div class="empty-state"><div class="icon">&#x1F4E1;</div><p>No buzz alerts yet</p></div>';
+      <div class="sum">${b.summary_ja||''}</div>
+      <div class="stats"><span class="views">${b.views_estimate||''} views</span><span class="cat cat-${b.category||''}">${(b.category||'').replace('_',' ').toUpperCase()}</span><a class="lnk" href="${b.source_url}" target="_blank">Open &rarr;</a></div>
+      <div class="ttabs"><div class="tt ${ty==='qt'?'qt':''}" onclick="sT('${b.id}','qt')">Quote RT</div><div class="tt ${ty==='rp'?'rp':''}" onclick="sT('${b.id}','rp')">Reply</div></div>
+      <div class="pats">${[0,1,2].map(i=>{const a=b.quotes&&b.quotes[i]?b.quotes[i].angle:'';return `<div class="pb ${pt===i?'sel':''}" onclick="sP('${b.id}',${i})">${ty==='qt'?(aMap[a]||i+1):i+1}</div>`}).join('')}</div>
+      <div class="cbox" onclick="cp(this)">${txt}</div>
+      <div class="cc">${txt.length} chars${ang?' · '+ang.toUpperCase():''}</div>
+      <div class="foot"><span class="rec">${b.recommended_action==='quote_rt'?'QUOTE RT':'REPLY'}</span><button class="ck ${pd?'done':''}" onclick="tP('${b.id}')">${pd?'POSTED':'PENDING'}</button></div>
+    </div>`}).join('')||'<div class="empty"><i>&#x1F4E1;</i><p>No buzz alerts</p></div>';
 }
-function switchType(id,type){LS.set('type_'+id,type);LS.set('pat_'+id,0);renderBuzz()}
-function switchPat(id,pat){LS.set('pat_'+id,pat);renderBuzz()}
-function togglePosted(id){LS.set('posted_'+id,!LS.get('posted_'+id,false));renderBuzz();renderKPI();renderSchedule()}
-function toggleHidePosted(){hidePosted=!hidePosted;LS.set('hidePosted',hidePosted);document.getElementById('hidePosted').classList.toggle('on');renderBuzz()}
-function filterCat(c){activeCat=c;renderBuzz()}
+function sT(id,t){LS.s('t_'+id,t);LS.s('pt_'+id,0);rBuzz()}
+function sP(id,p){LS.s('pt_'+id,p);rBuzz()}
+function tP(id){LS.s('p_'+id,!LS.g('p_'+id,false));rBuzz();rKPI();rSched()}
+function togHP(){hp=!hp;LS.s('hp',hp);$('hpTog').classList.toggle('on');rBuzz()}
+function fCat(c){ac=c;rBuzz()}
 
-/* ===== スレッド ===== */
-function renderThreads(){
-  const html=THREADS.map(t=>{
-    const tw=t.tweets||[];
-    return `<div class="thread-card">
-      <div class="thread-title">${t.title}</div>
-      <div style="font-size:11px;color:var(--dim);margin-bottom:10px">${tw.length} tweets | <span class="cat-label cat-${t.category||'other'}">${(t.category||'').toUpperCase()}</span></div>
-      ${tw.map(x=>`<div class="thread-tweet" onclick="copyText(this)"><span class="thread-num">${x.seq}/</span>${x.text}</div>`).join('')}
-      <button class="action-btn primary" onclick="copyThread('${t.id}')">COPY ALL TWEETS</button>
-    </div>`;
-  }).join('');
-  document.getElementById('threadsList').innerHTML=html||'<div class="empty-state"><div class="icon">&#x1F9F5;</div><p>No threads yet<br><span class="hint">Auto-generated from buzz trends</span></p></div>';
+/* スレッド */
+function rTh(){
+  $('thList').innerHTML=THREADS.map(t=>{const tw=t.tweets||[];
+    return `<div class="crd"><div class="th-title">${t.title}</div><div style="font-size:11px;color:var(--dim);margin-bottom:10px">${tw.length} tweets · <span class="cat cat-${t.category||''}">${(t.category||'').toUpperCase()}</span></div>${tw.map(x=>`<div class="th-tw" onclick="cp(this)"><span class="th-n">${x.seq}/</span>${x.text}</div>`).join('')}<button class="abtn abtn-o" onclick="cpTh('${t.id}')">COPY ALL</button></div>`
+  }).join('')||'<div class="empty"><i>&#x1F9F5;</i><p>No threads yet</p><p class="h">Auto-generated from trends</p></div>'}
+function cpTh(id){const t=THREADS.find(x=>x.id===id);if(t)navigator.clipboard.writeText(t.tweets.map(x=>x.text).join('\n\n'));toast('Copied!')}
+
+/* Notes */
+function rNt(){
+  $('ntList').innerHTML=NOTES.map(n=>`<div class="crd"><div class="nt-title">${n.title}</div><div style="font-size:11px;color:var(--dim);margin-bottom:8px">${fN(n.char_count||0)} chars · <span class="cat cat-${n.category||''}">${(n.category||'').toUpperCase()}</span> · <span style="color:${n.status==='draft'?'var(--yellow)':'var(--green)'};font-weight:700">${(n.status||'draft').toUpperCase()}</span></div><div class="nt-pre">${(n.body||'').replace(/[#*\-|>]/g,'').slice(0,400)}</div><button class="abtn abtn-o" onclick="cpNt('${n.id}')">COPY ARTICLE</button></div>`).join('')||'<div class="empty"><i>&#x1F4DD;</i><p>No notes yet</p></div>'}
+function cpNt(id){const n=NOTES.find(x=>x.id===id);if(n)navigator.clipboard.writeText(n.body||'');toast('Copied!')}
+function cSub(btn,t){$('cfilt').querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');$('thList').style.display=t==='th'?'block':'none';$('ntList').style.display=t==='nt'?'block':'none'}
+
+/* Analytics */
+function rPerf(){
+  const p=LS.g('pd',[]),l7=p.slice(-7);
+  const ti=p.reduce((s,x)=>s+(x.i||0),0),te=p.reduce((s,x)=>s+(x.l||0)+(x.r||0)+(x.rp||0),0);
+  const ai=p.length?Math.round(ti/p.length):0,er=ti?((te/ti)*100).toFixed(2):'0';
+  const tw=p.slice(-7).reduce((s,x)=>s+(x.i||0),0),lw=p.slice(-14,-7).reduce((s,x)=>s+(x.i||0),0);
+  const d=lw?Math.round(((tw-lw)/lw)*100):0,ds=d>0?'+'+d+'%':d<0?d+'%':'--',dc=d>0?'var(--green)':d<0?'var(--red)':'var(--dim)';
+  const mkSpk=(arr,key,col)=>arr.map(x=>{const v=typeof key==='function'?key(x):x[key]||0;const mx=Math.max(...arr.map(a=>typeof key==='function'?key(a):a[key]||0),1);return `<div style="height:${Math.max(v/mx*100,10)}%;background:${col}"></div>`}).join('');
+  $('pGrid').innerHTML=`<div class="pc"><div class="pc-v" style="color:var(--accent)">${fN(ti)}</div><div class="pc-l">Total Imp</div><div class="pc-d" style="color:${dc}">${ds}</div></div><div class="pc"><div class="pc-v" style="color:var(--green)">${er}%</div><div class="pc-l">Eng Rate</div><div class="spk">${mkSpk(l7,x=>(x.l||0)+(x.r||0),'var(--green)')}</div></div><div class="pc"><div class="pc-v" style="color:var(--orange)">${fN(ai)}</div><div class="pc-l">Avg/Post</div><div class="spk">${mkSpk(l7,'i','var(--orange)')}</div></div><div class="pc"><div class="pc-v" style="color:var(--purple)">${p.length}</div><div class="pc-l">Tracked</div></div>`;
+  if(l7.length){const mx=Math.max(...l7.map(x=>x.i||0),1);$('impCh').innerHTML=l7.map(x=>`<div class="bc"><div class="bv">${fN(x.i||0)}</div><div class="br" style="height:${Math.max((x.i||0)/mx*100,5)}%;background:linear-gradient(to top,var(--accent),var(--cyan))"></div><div class="bl">${(x.d||'').slice(5)}</div></div>`).join('')}else $('impCh').innerHTML='<div style="width:100%;text-align:center;color:var(--dim);font-size:12px;padding:40px">Record posts to see charts</div>';
+  const bt={};p.forEach(x=>{const t=x.tp||'other';if(!bt[t])bt[t]={t:0,c:0};bt[t].t+=x.i||0;bt[t].c++});
+  const tl={quote_rt:'QRT',reply:'Reply',thread:'Thread',note:'Notes',original:'OG',other:'Other'},tc={quote_rt:'var(--accent)',reply:'var(--purple)',thread:'var(--orange)',note:'var(--pink)',original:'var(--cyan)',other:'var(--dim)'};
+  const te2=Object.entries(bt);if(te2.length){const mx=Math.max(...te2.map(([,v])=>v.c?v.t/v.c:0),1);$('typeCh').innerHTML=te2.map(([k,v])=>{const a=v.c?Math.round(v.t/v.c):0;return `<div class="bc"><div class="bv">${fN(a)}</div><div class="br" style="height:${Math.max(a/mx*100,5)}%;background:${tc[k]||'var(--accent)'}"></div><div class="bl">${tl[k]||k}</div></div>`}).join('')}else $('typeCh').innerHTML='<div style="width:100%;text-align:center;color:var(--dim);font-size:12px;padding:40px">Track different types to compare</div>';
+  const td=new Date(),pd2={};p.forEach(x=>{if(x.d){pd2[x.d]=(pd2[x.d]||0)+(x.i||0)}});
+  let hm='';for(let i=27;i>=0;i--){const d2=new Date(td);d2.setDate(d2.getDate()-i);const ds2=d2.toISOString().slice(0,10),v=pd2[ds2]||0;const c=v===0?'rgba(30,30,60,.25)':v<1e3?'rgba(29,155,240,.18)':v<5e3?'rgba(29,155,240,.35)':v<1e4?'rgba(29,155,240,.55)':'rgba(29,155,240,.85)';hm+=`<div class="hc" style="background:${c}" title="${ds2}: ${fN(v)}"></div>`}$('hmap').innerHTML=hm;
+  const pds=new Set(p.map(x=>x.d));let sk=0,shtml='';for(let i=6;i>=0;i--){const d3=new Date(td);d3.setDate(d3.getDate()-i);const ds3=d3.toISOString().slice(0,10),a=pds.has(ds3),n=i===0;shtml+=`<div class="sd ${a?'a':''} ${n?'now':''}">${['S','M','T','W','T','F','S'][d3.getDay()]}</div>`;if(a)sk++}$('stk').innerHTML=shtml;$('stkTxt').textContent=sk?sk+' day streak!':'Start tracking today';
 }
-function copyThread(id){const t=THREADS.find(x=>x.id===id);if(!t)return;navigator.clipboard.writeText(t.tweets.map(x=>x.text).join('\n\n'));showToast('Thread copied!')}
+function saveP(){const p=LS.g('pd',[]);p.push({d:new Date().toISOString().slice(0,10),u:$('pUrl').value,tp:$('pTyp').value,i:+$('pImp').value||0,l:+$('pLik').value||0,r:+$('pRt').value||0,rp:+$('pRep').value||0});LS.s('pd',p);['pUrl','pImp','pLik','pRt','pRep'].forEach(id=>$(id).value='');rPerf();rKPI();toast('Saved!')}
+function saveF(){LS.s('fol',+$('fCnt').value||0);$('fCnt').value='';rKPI();toast('Updated!')}
 
-/* ===== Notes ===== */
-function renderNotes(){
-  const html=NOTES.map(n=>{
-    return `<div class="note-card">
-      <div class="note-title">${n.title}</div>
-      <div style="font-size:11px;color:var(--dim);margin-bottom:8px">${fmtN(n.char_count||0)} chars | <span class="cat-label cat-${n.category||'other'}">${(n.category||'REPORT').toUpperCase()}</span> | <span style="color:${n.status==='draft'?'var(--yellow)':'var(--green)'};font-weight:700">${(n.status||'draft').toUpperCase()}</span></div>
-      <div class="note-preview">${(n.body||'').replace(/[#*\-|>]/g,'').slice(0,300)}</div>
-      <button class="action-btn primary" onclick="copyNote('${n.id}')">COPY FULL ARTICLE</button>
-    </div>`;
-  }).join('');
-  document.getElementById('notesList').innerHTML=html||'<div class="empty-state"><div class="icon">&#x1F4DD;</div><p>No notes yet<br><span class="hint">Long-form articles for X Notes</span></p></div>';
-}
-function copyNote(id){const n=NOTES.find(x=>x.id===id);if(!n)return;navigator.clipboard.writeText(n.body||'');showToast('Article copied!')}
-function switchContentSub(btn,sub){
-  document.getElementById('contentFilters').querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('threadsList').style.display=sub==='threads'?'block':'none';
-  document.getElementById('notesList').style.display=sub==='notes'?'block':'none';
-}
+/* Revenue */
+function rRev(){
+  const td=new Date().toISOString().slice(0,10),mo=td.slice(0,7),e=LS.g('rm',[]),tm=e.filter(r=>r.m===mo);
+  const ad=tm.filter(r=>r.t==='ad').reduce((s,r)=>s+(r.a||0),0),af=tm.filter(r=>r.t==='affiliate').reduce((s,r)=>s+(r.a||0),0),sp=tm.filter(r=>r.t==='sponsored').reduce((s,r)=>s+(r.a||0),0),tot=ad+af+sp,pct=Math.min(tot/3e5*100,100);
+  $('rFill').style.width=pct+'%';$('rTot').textContent='¥'+tot.toLocaleString();$('rPct').textContent=pct.toFixed(1)+'%';$('rAd').textContent='¥'+fN(ad);$('rAf').textContent='¥'+fN(af);$('rSp').textContent='¥'+fN(sp);
+  const bm={};e.forEach(r=>{bm[r.m]=(bm[r.m]||0)+(r.a||0)});const ms=Object.keys(bm).sort().slice(-6);
+  if(ms.length){const mx=Math.max(...ms.map(m=>bm[m]),1);$('rCh').innerHTML=ms.map(m=>`<div class="bc"><div class="bv">¥${fN(bm[m])}</div><div class="br" style="height:${Math.max(bm[m]/mx*100,5)}%;background:linear-gradient(to top,var(--green),var(--cyan))"></div><div class="bl">${m.slice(5)}月</div></div>`).join('')}else $('rCh').innerHTML='<div style="width:100%;text-align:center;color:var(--dim);font-size:12px;padding:40px">Record revenue to see trends</div>';
+  $('rhCnt').textContent=e.length;
+  $('rHist').innerHTML=e.slice(-10).reverse().map(r=>{const tl={ad:'AD',affiliate:'AFFI',sponsored:'SPON'}[r.t]||r.t,tc={ad:'var(--accent)',affiliate:'var(--green)',sponsored:'var(--purple)'}[r.t]||'var(--dim)';return `<div class="rhi t-${r.t}"><div style="min-width:75px"><div style="font-size:18px;font-weight:900;color:${tc}">¥${fN(r.a||0)}</div></div><div style="flex:1"><div style="font-size:12px;font-weight:700">${tl}</div><div style="font-size:11px;color:var(--dim)">${r.me||''}</div><div style="font-size:9px;color:rgba(122,122,154,.4);margin-top:2px">${r.dt||''}</div></div></div>`}).join('')||'<div class="empty"><i>&#x1F4B8;</i><p>No revenue yet</p></div>'}
+function saveR(){const e=LS.g('rm',[]),td=new Date().toISOString().slice(0,10);e.push({m:td.slice(0,7),dt:td,t:$('rTyp').value,a:+$('rAmt').value||0,me:$('rMem').value});LS.s('rm',e);['rAmt','rMem'].forEach(id=>$(id).value='');rRev();rKPI();toast('Saved!')}
 
-/* ===== パフォーマンス ===== */
-function renderPerf(){
-  const perf=LS.get('perf_daily',[]);const last7=perf.slice(-7);
-  const totalImp=perf.reduce((s,p)=>s+(p.impressions||0),0);
-  const totalEng=perf.reduce((s,p)=>s+(p.likes||0)+(p.retweets||0)+(p.replies_count||0),0);
-  const avgImp=perf.length?Math.round(totalImp/perf.length):0;
-  const engRate=totalImp?((totalEng/totalImp)*100).toFixed(2):'0.00';
-  const thisWeek=perf.slice(-7).reduce((s,p)=>s+(p.impressions||0),0);
-  const lastWeek=perf.slice(-14,-7).reduce((s,p)=>s+(p.impressions||0),0);
-  const delta=lastWeek?Math.round(((thisWeek-lastWeek)/lastWeek)*100):0;
-  const deltaStr=delta>0?`+${delta}%`:delta<0?`${delta}%`:'--';
-  const deltaColor=delta>0?'var(--green)':delta<0?'var(--red)':'var(--dim)';
+/* Schedule */
+function rSched(){
+  const now=new Date(),h=now.getHours(),we=now.getDay()===0||now.getDay()===6;
+  const gt=we?[{t:'10:00',n:'Weekend morning'},{t:'14:00',n:'Afternoon'},{t:'20:00',n:'Prime time'}]:[{t:'07:00',n:'Morning commute'},{t:'12:00',n:'Lunch peak'},{t:'18:00',n:'Evening commute'},{t:'21:00',n:'Night prime'}];
+  $('gTime').innerHTML=gt.map(g=>{const th=parseInt(g.t),p=h>=th+1,live=h>=th&&h<th+1;return `<div class="si gld" style="${p?'opacity:.25':''}"><div class="si-t" style="color:var(--yellow)">${g.t}</div><div class="si-i"><div style="font-size:13px;font-weight:700">${live?'<span class="live">LIVE</span> ':''}Golden Time</div><div class="gl">${g.n}</div></div></div>`}).join('');
+  const pend=BUZZ.filter(b=>!LS.g('p_'+b.id));$('qCnt').textContent=pend.length;
+  const slots=gt.filter(g=>h<parseInt(g.t)+1);
+  $('sList').innerHTML=pend.slice(0,10).map((b,i)=>{const sl=slots[i%(slots.length||1)]||gt[gt.length-1];return `<div class="si"><div class="si-t" style="color:var(--accent)">${sl.t}</div><div class="si-i"><div style="font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.author}</div><div style="font-size:11px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${(b.summary_ja||'').slice(0,50)}...</div><span class="st ${b.recommended_action==='quote_rt'?'st-qt':'st-rp'}">${b.recommended_action==='quote_rt'?'QUOTE RT':'REPLY'}</span></div></div>`}).join('')||'<div class="empty" style="padding:30px"><p>All caught up!</p></div>'}
 
-  document.getElementById('perfGrid').innerHTML=`
-    <div class="perf-card"><div class="perf-val" style="color:var(--accent)">${fmtN(totalImp)}</div><div class="perf-label">Total Impressions</div><div class="perf-delta" style="color:${deltaColor}">${deltaStr} vs last week</div></div>
-    <div class="perf-card"><div class="perf-val" style="color:var(--green)">${engRate}%</div><div class="perf-label">Engagement Rate</div><div class="spark-row">${last7.map(d=>{const e=(d.likes||0)+(d.retweets||0);const mx=Math.max(...last7.map(x=>(x.likes||0)+(x.retweets||0)),1);return `<div class="spark-bar" style="height:${Math.max(e/mx*100,8)}%;background:var(--green)"></div>`}).join('')}</div></div>
-    <div class="perf-card"><div class="perf-val" style="color:var(--orange)">${fmtN(avgImp)}</div><div class="perf-label">Avg Imp / Post</div><div class="spark-row">${last7.map(d=>{const mx=Math.max(...last7.map(x=>x.impressions||0),1);return `<div class="spark-bar" style="height:${Math.max((d.impressions||0)/mx*100,8)}%;background:var(--orange)"></div>`}).join('')}</div></div>
-    <div class="perf-card"><div class="perf-val" style="color:var(--purple)">${perf.length}</div><div class="perf-label">Posts Tracked</div></div>`;
-
-  if(last7.length>0){
-    const mx=Math.max(...last7.map(d=>d.impressions||0),1);
-    document.getElementById('impChart').innerHTML=last7.map((d,i)=>{const h=Math.max(((d.impressions||0)/mx)*100,5);
-      return `<div class="bar-col"><div class="bar-val">${fmtN(d.impressions||0)}</div><div class="bar" style="height:${h}%;background:linear-gradient(to top,var(--accent),var(--cyan))"></div><div class="bar-label">${(d.date||'').slice(5)}</div></div>`;}).join('');
-  } else {document.getElementById('impChart').innerHTML='<div style="width:100%;text-align:center;color:var(--dim);font-size:12px;padding:40px 0">Record your first post to see charts</div>'}
-
-  const byType={};perf.forEach(p=>{const t=p.type||'other';if(!byType[t])byType[t]={total:0,count:0};byType[t].total+=p.impressions||0;byType[t].count++});
-  const typeLabels={quote_rt:'Quote RT',reply:'Reply',thread:'Thread',note:'Notes',original:'Original',other:'Other'};
-  const typeColors={quote_rt:'var(--accent)',reply:'var(--purple)',thread:'var(--orange)',note:'var(--pink)',original:'var(--cyan)',other:'var(--dim)'};
-  const te=Object.entries(byType);
-  if(te.length>0){const mx=Math.max(...te.map(([,v])=>v.count?v.total/v.count:0),1);
-    document.getElementById('typeChart').innerHTML=te.map(([k,v])=>{const avg=v.count?Math.round(v.total/v.count):0;const h=Math.max((avg/mx)*100,5);
-      return `<div class="bar-col"><div class="bar-val">${fmtN(avg)}</div><div class="bar" style="height:${h}%;background:${typeColors[k]||'var(--accent)'}"></div><div class="bar-label">${typeLabels[k]||k}</div></div>`;}).join('')}
-  else{document.getElementById('typeChart').innerHTML='<div style="width:100%;text-align:center;color:var(--dim);font-size:12px;padding:40px 0">Track different post types to compare</div>'}
-
-  // ヒートマップ
-  const today=new Date();const perfByDate={};
-  perf.forEach(p=>{if(p.date){if(!perfByDate[p.date])perfByDate[p.date]=0;perfByDate[p.date]+=p.impressions||0}});
-  let cells='';
-  for(let i=27;i>=0;i--){const d=new Date(today);d.setDate(d.getDate()-i);const ds=d.toISOString().slice(0,10);const v=perfByDate[ds]||0;
-    const intensity=v===0?'rgba(30,30,60,.3)':v<1000?'rgba(29,155,240,.2)':v<5000?'rgba(29,155,240,.4)':v<10000?'rgba(29,155,240,.6)':'rgba(29,155,240,.9)';
-    cells+=`<div class="heatmap-cell" style="background:${intensity}" title="${ds}: ${fmtN(v)} imp"></div>`}
-  document.getElementById('activityHeatmap').innerHTML=cells;
-
-  // ストリーク
-  const perfDates=new Set(perf.map(p=>p.date));let streak=0;let days='';
-  for(let i=6;i>=0;i--){const d=new Date(today);d.setDate(d.getDate()-i);const ds=d.toISOString().slice(0,10);
-    const active=perfDates.has(ds);const isToday=i===0;const dl=['S','M','T','W','T','F','S'][d.getDay()];
-    days+=`<div class="streak-dot ${active?'active':''} ${isToday?'today':''}">${dl}</div>`;if(active&&i<=streak+1)streak++}
-  document.getElementById('streakBar').innerHTML=days;
-  document.getElementById('streakText').textContent=streak>0?streak+' day streak!':'Start your streak today';
-}
-
-function savePerf(){
-  const d=LS.get('perf_daily',[]);d.push({date:new Date().toISOString().slice(0,10),url:document.getElementById('perfUrl').value,
-    type:document.getElementById('perfType').value,impressions:parseInt(document.getElementById('perfImp').value)||0,
-    likes:parseInt(document.getElementById('perfLikes').value)||0,retweets:parseInt(document.getElementById('perfRt').value)||0,
-    replies_count:parseInt(document.getElementById('perfReplies').value)||0});
-  LS.set('perf_daily',d);['perfUrl','perfImp','perfLikes','perfRt','perfReplies'].forEach(id=>document.getElementById(id).value='');
-  renderPerf();renderKPI();showToast('Performance saved!')}
-function saveFollowers(){LS.set('followers',parseInt(document.getElementById('followerCount').value)||0);document.getElementById('followerCount').value='';renderKPI();showToast('Followers updated!')}
-
-/* ===== 収益 ===== */
-function renderRevenue(){
-  const today=new Date().toISOString().slice(0,10);const month=today.slice(0,7);
-  const entries=LS.get('revenue_monthly',[]);const tm=entries.filter(r=>r.month===month);
-  const ad=tm.filter(r=>r.type==='ad').reduce((s,r)=>s+(r.amount||0),0);
-  const aff=tm.filter(r=>r.type==='affiliate').reduce((s,r)=>s+(r.amount||0),0);
-  const spon=tm.filter(r=>r.type==='sponsored').reduce((s,r)=>s+(r.amount||0),0);
-  const total=ad+aff+spon;const pct=Math.min((total/300000)*100,100);
-  document.getElementById('revFill').style.width=pct+'%';
-  document.getElementById('revTotal').textContent='¥'+total.toLocaleString();
-  document.getElementById('revPct').textContent=pct.toFixed(1)+'% reached';
-  document.getElementById('revAd').textContent='¥'+fmtN(ad);
-  document.getElementById('revAff').textContent='¥'+fmtN(aff);
-  document.getElementById('revSpon').textContent='¥'+fmtN(spon);
-
-  const byMonth={};entries.forEach(r=>{if(!byMonth[r.month])byMonth[r.month]=0;byMonth[r.month]+=r.amount||0});
-  const months=Object.keys(byMonth).sort().slice(-6);
-  if(months.length>0){const mx=Math.max(...months.map(m=>byMonth[m]),1);
-    document.getElementById('revChart').innerHTML=months.map(m=>{const v=byMonth[m];const h=Math.max((v/mx)*100,5);
-      return `<div class="bar-col"><div class="bar-val">¥${fmtN(v)}</div><div class="bar" style="height:${h}%;background:linear-gradient(to top,var(--green),var(--cyan))"></div><div class="bar-label">${m.slice(5)}月</div></div>`;}).join('')}
-  else{document.getElementById('revChart').innerHTML='<div style="width:100%;text-align:center;color:var(--dim);font-size:12px;padding:40px 0">Record revenue to see trends</div>'}
-
-  document.getElementById('revHistCount').textContent=entries.length;
-  document.getElementById('revHistory').innerHTML=entries.slice(-10).reverse().map(r=>{
-    const tl={ad:'AD REVENUE',affiliate:'AFFILIATE',sponsored:'SPONSORED'}[r.type]||r.type;
-    const tc={ad:'var(--accent)',affiliate:'var(--green)',sponsored:'var(--purple)'}[r.type]||'var(--dim)';
-    return `<div class="rev-history-item t-${r.type}"><div style="min-width:80px"><div style="font-size:18px;font-weight:900;color:${tc}">¥${fmtN(r.amount||0)}</div></div>
-      <div style="flex:1"><div style="font-size:12px;font-weight:700">${tl}</div><div style="font-size:11px;color:var(--dim)">${r.memo||''}</div><div style="font-size:10px;color:rgba(107,114,128,.5);margin-top:2px">${r.date||''}</div></div></div>`;
-  }).join('')||'<div class="empty-state"><div class="icon">&#x1F4B8;</div><p>No revenue recorded yet</p></div>'}
-
-function saveRevenue(){
-  const e=LS.get('revenue_monthly',[]);const today=new Date().toISOString().slice(0,10);
-  e.push({month:today.slice(0,7),date:today,type:document.getElementById('revType').value,amount:parseInt(document.getElementById('revAmount').value)||0,memo:document.getElementById('revMemo').value});
-  LS.set('revenue_monthly',e);['revAmount','revMemo'].forEach(id=>document.getElementById(id).value='');renderRevenue();renderKPI();showToast('Revenue saved!')}
-
-/* ===== スケジュール ===== */
-function renderSchedule(){
-  const now=new Date();const isWE=now.getDay()===0||now.getDay()===6;const h=now.getHours();
-  const goldenTimes=isWE?[{time:'10:00',note:'Weekend morning peak'},{time:'14:00',note:'Weekend afternoon'},{time:'20:00',note:'Weekend prime time'}]
-    :[{time:'07:00',note:'Morning commute'},{time:'12:00',note:'Lunch break peak'},{time:'18:00',note:'Evening commute'},{time:'21:00',note:'Night prime time'}];
-
-  document.getElementById('goldenTimes').innerHTML=goldenTimes.map(g=>{
-    const th=parseInt(g.time);const passed=h>=th+1;const isNow=h>=th&&h<th+1;
-    return `<div class="schedule-item golden" style="${passed?'opacity:.3':''}">
-      <div class="schedule-time" style="color:var(--yellow)">${g.time}</div>
-      <div class="schedule-info"><div style="font-size:13px;font-weight:700">${isNow?'<span class="live-badge">LIVE NOW</span> ':''}Golden Time</div><div class="golden-label">${g.note}</div></div></div>`;}).join('');
-
-  const pending=BUZZ.filter(b=>!LS.get('posted_'+b.id));
-  document.getElementById('queueCount').textContent=pending.length;
-  const slots=goldenTimes.filter(g=>h<parseInt(g.time)+1);
-  document.getElementById('scheduleList').innerHTML=pending.slice(0,10).map((b,i)=>{
-    const slot=slots[i%Math.max(slots.length,1)]||goldenTimes[goldenTimes.length-1];
-    return `<div class="schedule-item">
-      <div class="schedule-time" style="color:var(--accent)">${slot.time}</div>
-      <div class="schedule-info"><div style="font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.author}</div>
-        <div style="font-size:11px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${(b.summary_ja||'').slice(0,50)}...</div>
-        <span class="schedule-type ${b.recommended_action==='quote_rt'?'type-qt':'type-note'}">${b.recommended_action==='quote_rt'?'QUOTE RT':'REPLY'}</span></div></div>`;
-  }).join('')||'<div class="empty-state" style="padding:30px"><p>All caught up!</p></div>'}
-
-/* ===== ユーティリティ ===== */
-function copyText(el){navigator.clipboard.writeText(el.textContent.trim());showToast('Copied!')}
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
-function fmtN(n){if(n>=1000000)return(n/1000000).toFixed(1)+'M';if(n>=10000)return(n/10000).toFixed(1)+'万';if(n>=1000)return(n/1000).toFixed(1)+'K';return n.toString()}
+function cp(el){navigator.clipboard.writeText(el.innerText.replace(/^tap to copy/,'').trim());toast('Copied!')}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
 </script>
 </body>
 </html>
