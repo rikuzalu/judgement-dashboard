@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GTC 2026 記事 - コピー用</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:16px;max-width:720px;margin:0 auto}
+h1{font-size:20px;color:#76b900;margin:24px 0 8px;border-bottom:1px solid #333;padding-bottom:8px}
+h2{font-size:16px;color:#76b900;margin:20px 0 6px}
+.copy-all{position:sticky;top:0;z-index:10;background:#76b900;color:#000;border:none;padding:14px 24px;border-radius:10px;font-size:16px;font-weight:700;width:100%;cursor:pointer;margin-bottom:16px}
+.copy-all:active{background:#5a9000}
+.copied{background:#22c55e!important}
+#article{background:#111;border:1px solid #333;border-radius:12px;padding:20px;font-size:14px;line-height:1.8;white-space:pre-wrap;word-wrap:break-word}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#76b900;color:#000;padding:12px 28px;border-radius:99px;font-weight:700;font-size:15px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}
+.toast.show{opacity:1}
+.char-count{text-align:right;color:#888;font-size:12px;margin-top:8px}
+</style>
+</head>
+<body>
+
+<button class="copy-all" onclick="copyAll()">全文をコピー</button>
+
+<div id="article">NVIDIA GTC 2026 Day 1 完全レポート｜AIの歴史が動いた日
+
+2026年3月16日、サンノゼSAP Center。190ヶ国から3万人以上が集まったNVIDIA GTC 2026で、Jensen Huangが「ここ数年で最も重要な基調講演」を行った。
+
+AIコミュニティのX投稿3,675件以上を分析した完全レポートを、日本向けに要点を絞ってお届けする。
+
+━━━━━━━━━━━━━━━
+
+3つの地殻変動
+
+今回のGTCを一言で表すなら「推論の時代の幕開け」。
+
+1. 推論コスト10分の1 — Vera Rubinで推論経済が激変
+2. AIエージェントが新OS — OpenClaw/NemoClaw エコシステム爆発
+3. 物理AI、産業化へ — ヒューマノイド15社以上、宇宙コンピューティング
+
+Jensenの言葉：
+「AIはもはや技術の一機能ではない。電気と同じ、本質的なインフラだ」
+
+━━━━━━━━━━━━━━━
+
+ハードウェア：Vera Rubin — 7チップ同時量産開始
+
+今回の目玉。NVIDIAの次世代プラットフォーム「Vera Rubin」が7チップ同時に量産体制に入った。
+
+スペック：
+・Blackwell Ultraの5倍の推論性能
+・推論トークンコスト10分の1 — Transformer以来最大の経済シフト
+・HBM4メモリ 288GB / 帯域幅 22TB/s
+・AI演算能力 50 PFLOPS
+・10年前のNVIDIAの4,000万倍の演算能力
+
+主要パートナーシップ：
+・Thinking Machines Lab（Mira Murati）: 1ギガワット規模のVera Rubin導入契約
+・Microsoft: Vera Rubin NVL72の最初のクラウド検証パートナー
+・Runway: フロンティアモデル + Vera Rubinコンピュートの連携継続
+
+Moor Insightsのアナリストによれば、Jensenは「2027年までにBlackwellとVera Rubinで少なくとも1兆ドルの需要がある」と開示。半導体史上最大の先行需要シグナルだ。
+
+━━━━━━━━━━━━━━━
+
+前代未聞の3世代ロードマップ
+
+NVIDIAが初めて3世代先まで見通しを公開した。
+
+・Vera Rubin（今） → 推論10倍効率化
+・Vera Ultra（2027年後半） → ミッドサイクル更新、NVLink後方互換
+・Feynman（2028年） → TSMC 1.6nmプロセス + シリコンフォトニクス（帯域10倍）
+
+競合のスイッチングコストを劇的に引き上げる戦略だ。
+
+━━━━━━━━━━━━━━━
+
+Groq LPX — NVIDIAとGroqの初ラックシステム
+
+200億ドルで買収したGroqとの統合ハードウェアが初公開。
+
+・1ラックに256個のGroq LPUチップ
+・推論速度に特化したLPU（Language Processing Unit）
+・プリフィルとデコードを分離するディスアグリゲート推論スタック
+・OpenAIが主要バイヤーになると予想
+
+「Jensenは業界にAIインフラの行き先を示した：スタックを分離せよ」— @haozhangml
+
+━━━━━━━━━━━━━━━
+
+N1X — NVIDIAが全ノートPCに来る
+
+・MediaTekと共同開発のARMベースSoC
+・カスタムARMコア20基 + RTX 5070相当のGPU統合
+・NemoClaw エージェントがN1X上で動作
+・数億台規模の新しいアドレサブルデバイス
+
+NVIDIAのソフトウェア・モートがエッジまで拡張される。
+
+━━━━━━━━━━━━━━━
+
+ソフトウェア：OpenClaw時代の到来
+
+Jensenの発言が全てを物語る：
+
+「OpenClawは新しいコンピュータだ」
+「全ての企業にOpenClaw戦略が必要だ」
+「OpenClawは人類史上最も人気のあるオープンソースプロジェクトだ」
+
+▼ NemoClaw — エンタープライズAIエージェント基盤
+
+・OpenClawプラットフォーム上のNVIDIA公式エージェント基盤
+・自律エージェントを安全に常時稼働させるオープンソーススタック
+・CUDAの再現戦略：無料プラットフォーム → 全デプロイがNVIDIAハードウェア上で稼働
+・DGX SparkからN1X AI PCまで、あらゆるデバイスで動作
+・エンタープライズパートナー：Salesforce、Cisco、Google、Adobe、CrowdStrike
+
+OpenClawエコシステムはすでに爆発的に拡大：NanoClaw、PicoClaw、ZeroClaw、NullClaw、IronClaw、KiloClaw、HiClaw（Alibaba）など。
+
+▼ Dynamo 1.0 — AIファクトリーの推論OS
+
+・Blackwell推論性能を最大7倍向上
+・Crusoe AI統合で「平均9倍高速化、エージェントワークロードでTTFT最大40%改善」
+
+━━━━━━━━━━━━━━━
+
+物理AI・ロボティクス：もうデモじゃない
+
+▼ GR00T N1.6 — ヒューマノイド基盤モデル更新
+・Franka Robotics FR3 DuoがGR00T N1.6でリアルタイム完全自律動作
+・タスクスクリプティング不要
+
+▼ 15社以上のヒューマノイドロボット企業がGTCに集結
+Unitree、Boston Dynamics、Agility、Figure、1X、XPENG、Foxconnなど。
+
+「物理AIエージェントが現実世界に入ってきた」— @CyberRobooo
+
+▼ Newton 1.0 — 物理エンジンがオープンソース化
+ロボット訓練用の物理シミュレーションエンジンが無償公開。
+
+━━━━━━━━━━━━━━━
+
+宇宙コンピューティング：NVIDIAが宇宙へ
+
+・Space-1 Vera Rubinモジュール: 宇宙用途でAI演算25倍
+・軌道データセンター（ODC）向けプラットフォーム
+・Starcloud（88,000衛星コンステレーション）が基調講演に登場
+・Alexis Ohanian（Reddit共同創業者）/ 776がStarcloudに投資
+
+Jensen：「我々は宇宙に行く！」
+
+━━━━━━━━━━━━━━━
+
+AIレイヤーケーキ — NVIDIAの5層フルスタック戦略
+
+Jensenが示した戦略フレームワーク：
+
+1. エネルギー — 電力インフラ
+2. チップ技術 — GPU、CPU、ネットワーク
+3. インフラ — AIファクトリー、データセンター
+4. AIモデル — 基盤モデル、オープンソース
+5. アプリケーション — エージェント、物理AI、エンタープライズ
+
+NVIDIAは5層全てに不可欠なインフラとして自社を位置づけている。もはやチップ企業ではない。AI経済全体のインフラレイヤーだ。
+
+━━━━━━━━━━━━━━━
+
+夜の追加発表（17時以降）
+
+▼ 自動運転
+・Alpamayo 1.5: NVIDIAの100億パラメータVision-Language-Actionモデル。チェーン・オブ・ソート推論を物理AIに追加
+・AlpaDreams: リアルタイム対話型生成ワールドモデル。自動運転シミュレーションの新世代
+・WeRide ロボタクシー GXR: ハードウェア約4万ドル、Grabと提携し東南アジア展開
+
+▼ AIツール・エージェント
+・Nemotron 3 VoiceChat: テキスト中間ステップなしの12B音声対話モデル
+・SoundHound: 世界初のマルチモーダル・エージェントAIをエッジで実現
+・Manus AI "My Computer": AIエージェントがデスクトップを直接操作する新機能
+
+━━━━━━━━━━━━━━━
+
+GTC以外の重要ニュース（同日）
+
+▼ OpenAI「Code Red」— Anthropicへの危機感
+OpenAI内部で「Anthropicの成功はWAKE-UP CALLだ。Code Redとして対応している」という内部通達がリーク。Claude Codeが全主要テック企業のデフォルトツールとなり、Anthropicのエンタープライズシェアが倍増している状況への危機感。
+
+▼ OpenAI Codex サブエージェント
+共同創業者Greg Brockmanが直接発表。Codexが複数の専門エージェントを並列実行するサブエージェント機能を搭載。Claude Codeのエンタープライズ支配への直接対抗。
+
+▼ Claude Code "opusplan"
+Anthropicが密かにClaude Codeに「opusplan」モデルを追加。複雑な計画にはOpus、実行にはSonnetを自動切替するハイブリッドモデル。
+
+▼ ARC-AGI-3 来週ローンチ
+汎用AIエージェントベンチマークの第3世代。「フロンティアモデルがまだ解けない、唯一の未飽和ベンチマーク」。
+
+▼ comma.ai 明日重大発表
+「"lend-to-lend"と韻を踏む」— ほぼ確実にend-to-end自動運転モデルの発表。
+
+━━━━━━━━━━━━━━━
+
+まとめ：GTC 2026の5つの支配的テーマ
+
+1. 推論の時代が始まった — Vera Rubinのコスト10分の1 + Dynamo 1.0で、訓練から展開の経済学にシフト
+
+2. AIエージェントが新しいアプリ — OpenClaw/NemoClaw は新しいプラットフォーム戦争。CUDAの再来
+
+3. 物理AIが産業化 — デモの段階は終わった。ロボットは出荷されている
+
+4. NVIDIA = フルスタック・インフラ — チップ企業ではなく、AI経済全体のインフラレイヤー
+
+5. 宇宙が次のフロンティア — 軌道データセンターという新市場カテゴリ
+
+投資シグナル：
+・2027年まで1兆ドルの需要予測 = 半導体史上最大
+・3世代ロードマップ = 競合のスイッチングコスト劇的上昇
+・NemoClaw = ハードウェアを超えた新たなリカーリング収益源
+・N1X = エッジで数億台の新アドレサブルデバイス
+
+━━━━━━━━━━━━━━━
+
+元レポート: Levangie Labs / Robert Scoble（GTC現地取材）
+AIコミュニティのX投稿3,675件以上を分析して生成
+日本語訳・編集: @B_Q_Caique</div>
+
+<div class="char-count" id="charCount"></div>
+
+<div class="toast" id="toast">コピーしました！</div>
+
+<script>
+const article = document.getElementById('article');
+document.getElementById('charCount').textContent = `文字数: ${article.textContent.length}`;
+
+function copyAll() {
+  const btn = document.querySelector('.copy-all');
+  navigator.clipboard.writeText(article.textContent).then(() => {
+    btn.textContent = 'コピー完了！';
+    btn.classList.add('copied');
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => { t.classList.remove('show'); btn.textContent = '全文をコピー'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>
