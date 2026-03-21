@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VAX — List Your Agent</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#08080f;--s1:#10101a;--s2:#161625;--bd:#222240;
+  --ac:#6366f1;--ac2:#818cf8;--ac3:#a78bfa;
+  --g:#10b981;--y:#f59e0b;--r:#ef4444;--b:#3b82f6;
+  --t1:#ededed;--t2:#9ca3af;--t3:#6b7280;
+}
+body{font-family:'Inter','SF Pro',-apple-system,sans-serif;background:var(--bg);color:var(--t1);overflow-x:hidden;line-height:1.6}
+a{color:var(--ac2);text-decoration:none}a:hover{color:var(--ac3)}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(8,8,15,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--bd);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:18px;font-weight:900;letter-spacing:-.5px;display:flex;align-items:center;gap:8px}
+.logo-i{width:32px;height:32px;background:var(--ac);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff}
+.logo span{color:var(--ac2)}
+.nav-links{display:flex;gap:24px;font-size:13px;font-weight:500}
+.nav-links a{color:var(--t2);transition:color .2s}.nav-links a:hover{color:var(--ac2)}.nav-links a.active{color:var(--ac2)}
+
+section{max-width:900px;margin:0 auto;padding:80px 24px}
+.section-label{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--ac2);font-weight:700;margin-bottom:12px}
+.section-title{font-size:32px;font-weight:900;margin-bottom:16px;letter-spacing:-.5px}
+.section-sub{color:var(--t2);font-size:16px;max-width:640px;margin-bottom:48px}
+
+/* Hero */
+.hero{text-align:center;padding:100px 24px 80px;max-width:900px;margin:0 auto;position:relative}
+.hero::before{content:'';position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(99,102,241,.1) 0%,transparent 70%);pointer-events:none}
+.hero-tag{display:inline-block;background:var(--s1);border:1px solid var(--bd);border-radius:100px;padding:6px 16px;font-size:12px;color:var(--ac2);margin-bottom:24px;font-weight:600}
+.hero h1{font-size:48px;font-weight:900;letter-spacing:-1.5px;line-height:1.1;margin-bottom:20px}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--g),#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:17px;color:var(--t2);max-width:540px;margin:0 auto 36px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:12px;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:all .2s}
+.btn-primary{background:var(--ac);color:#fff}.btn-primary:hover{background:var(--ac2);color:#fff;transform:translateY(-1px)}
+.btn-secondary{background:var(--s1);color:var(--t1);border:1px solid var(--bd)}.btn-secondary:hover{border-color:var(--ac);color:#fff}
+
+/* Audience */
+.audience{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:40px}
+.aud-tag{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px 16px;font-size:13px;color:var(--t2)}
+
+/* Benefits */
+.benefits{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+@media(max-width:600px){.benefits{grid-template-columns:1fr}}
+.benefit{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:24px;transition:border-color .2s}
+.benefit:hover{border-color:var(--ac)}
+.benefit-icon{font-size:24px;margin-bottom:12px}
+.benefit h3{font-size:16px;font-weight:700;margin-bottom:8px}
+.benefit p{font-size:13px;color:var(--t2)}
+
+/* Revenue model */
+.rev-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:600px){.rev-grid{grid-template-columns:1fr}}
+.rev-card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:24px;text-align:center}
+.rev-card:hover{border-color:var(--ac)}
+.rev-val{font-size:32px;font-weight:900;color:var(--ac2);margin-bottom:4px}
+.rev-label{font-size:14px;font-weight:600;margin-bottom:8px}
+.rev-desc{font-size:12px;color:var(--t3)}
+
+/* Scoring */
+.score-table{width:100%;border-collapse:collapse;margin-top:16px}
+.score-table th{text-align:left;padding:12px 16px;font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--bd);background:var(--s2)}
+.score-table td{padding:12px 16px;font-size:14px;border-bottom:1px solid rgba(34,34,64,.4)}
+.score-bar{height:8px;border-radius:4px;background:var(--s2);overflow:hidden;min-width:100px}
+.score-bar div{height:100%;border-radius:4px;background:var(--ac)}
+.score-w{font-family:monospace;color:var(--ac2);font-weight:700}
+.cd{background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:24px;overflow-x:auto}
+
+/* CTA */
+.cta-box{text-align:center;background:linear-gradient(135deg,rgba(16,185,129,.08),rgba(99,102,241,.06));border:1px solid var(--bd);border-radius:24px;padding:64px 32px}
+.cta-box h2{font-size:28px;font-weight:900;margin-bottom:12px}
+.cta-box p{color:var(--t2);margin-bottom:32px;font-size:15px}
+
+/* Email form */
+.email-form{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;max-width:460px;margin:0 auto}
+.email-form input{flex:1;min-width:200px;padding:12px 16px;border-radius:10px;border:1px solid var(--bd);background:var(--s1);color:var(--t1);font-size:14px;outline:none}
+.email-form input:focus{border-color:var(--ac)}
+.email-form button{padding:12px 24px;border-radius:10px;background:var(--g);color:#fff;font-size:14px;font-weight:700;border:none;cursor:pointer}
+.email-form button:hover{background:#0d9668}
+
+footer{border-top:1px solid var(--bd);padding:40px 24px;text-align:center;font-size:12px;color:var(--t3);max-width:900px;margin:0 auto}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><div class="logo-i">V</div>VAX</div>
+  <div class="nav-links">
+    <a href="vax_hp.html">Home</a>
+    <a href="vax_lp.html" class="active">For Sellers</a>
+    <a href="vax_overview.html">Overview</a>
+    <a href="vax_plan.html">Business Plan</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">For Agent Builders</div>
+  <h1>Turn Your AI Agent Into a <em>Revenue Stream</em></h1>
+  <p>You built an agent that delivers results. Now list it on the only marketplace that rewards proven performance with premium pricing.</p>
+  <a href="#early-access" class="btn btn-primary">Get Early Access &rarr;</a>
+
+  <div class="audience">
+    <div class="aud-tag">n8n Builders</div>
+    <div class="aud-tag">LangGraph Devs</div>
+    <div class="aud-tag">AutoGen Teams</div>
+    <div class="aud-tag">Claude Code Developers</div>
+    <div class="aud-tag">Custom Agent Builders</div>
+  </div>
+</div>
+
+<!-- Benefits -->
+<section>
+  <div class="section-label">Why List on VAX</div>
+  <div class="section-title">Benefits for Agent Builders</div>
+  <div class="section-sub">VAX isn't just a marketplace. It's a trust platform that helps you command premium prices.</div>
+  <div class="benefits">
+    <div class="benefit">
+      <div class="benefit-icon">&#128176;</div>
+      <h3>Premium Pricing Power</h3>
+      <p>Verified agents sell for 3-5x more than unverified alternatives. Buyers pay more when ROI is proven.</p>
+    </div>
+    <div class="benefit">
+      <div class="benefit-icon">&#128737;</div>
+      <h3>Trust Badge Authority</h3>
+      <p>The VAX Verified badge signals quality. Use it in your marketing, on your site, everywhere.</p>
+    </div>
+    <div class="benefit">
+      <div class="benefit-icon">&#127758;</div>
+      <h3>Global Distribution</h3>
+      <p>Access English-speaking buyers worldwide who are actively searching for proven AI agents.</p>
+    </div>
+    <div class="benefit">
+      <div class="benefit-icon">&#128179;</div>
+      <h3>Recurring Revenue</h3>
+      <p>Earn from one-time sales, monthly maintenance contracts ($500-$5,000/mo), and ongoing support fees.</p>
+    </div>
+    <div class="benefit">
+      <div class="benefit-icon">&#128200;</div>
+      <h3>Performance Analytics</h3>
+      <p>Detailed dashboard with buyer interest, conversion rates, and competitive positioning data.</p>
+    </div>
+    <div class="benefit">
+      <div class="benefit-icon">&#128101;</div>
+      <h3>Buyer Matching</h3>
+      <p>Our scoring algorithm matches your agent with the right buyers, increasing conversion rates.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Revenue Model -->
+<section>
+  <div class="section-label">Transparent Pricing</div>
+  <div class="section-title">Revenue Model</div>
+  <div class="section-sub">Simple, fair pricing. You keep the majority. We handle distribution, verification, and payments.</div>
+  <div class="rev-grid">
+    <div class="rev-card">
+      <div class="rev-val">12%</div>
+      <div class="rev-label">Take Rate</div>
+      <div class="rev-desc">Per transaction. You keep 88% of every sale. Payments via Stripe Connect.</div>
+    </div>
+    <div class="rev-card">
+      <div class="rev-val">$500</div>
+      <div class="rev-label">Verification Fee</div>
+      <div class="rev-desc">One-time fee for our team to verify your agent's revenue claims and performance.</div>
+    </div>
+    <div class="rev-card">
+      <div class="rev-val">$149<span style="font-size:16px;color:var(--t3)">/mo</span></div>
+      <div class="rev-label">Featured Listing</div>
+      <div class="rev-desc">Optional. Get priority placement, highlighted badge, and 4x more buyer visibility.</div>
+    </div>
+    <div class="rev-card">
+      <div class="rev-val">$500-5K<span style="font-size:16px;color:var(--t3)">/mo</span></div>
+      <div class="rev-label">Managed Operations</div>
+      <div class="rev-desc">Optional. We handle maintenance, monitoring, and support for your deployed agents.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Scoring -->
+<section>
+  <div class="section-label">How Agents Are Ranked</div>
+  <div class="section-title">VAX Trust Score</div>
+  <div class="section-sub">Our scoring system evaluates agents across 6 dimensions. Higher scores get better placement and more buyers.</div>
+  <div class="cd">
+    <table class="score-table">
+      <thead>
+        <tr><th>Dimension</th><th>Weight</th><th>What We Measure</th><th style="min-width:120px">Impact</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Revenue Stability</strong></td>
+          <td class="score-w">30%</td>
+          <td style="color:var(--t2);font-size:13px">Consistent revenue generation over 3+ months</td>
+          <td><div class="score-bar"><div style="width:100%"></div></div></td>
+        </tr>
+        <tr>
+          <td><strong>Reproducibility</strong></td>
+          <td class="score-w">25%</td>
+          <td style="color:var(--t2);font-size:13px">Same results across different deployments/clients</td>
+          <td><div class="score-bar"><div style="width:83%"></div></div></td>
+        </tr>
+        <tr>
+          <td><strong>Automation Rate</strong></td>
+          <td class="score-w">15%</td>
+          <td style="color:var(--t2);font-size:13px">How hands-off the agent operates</td>
+          <td><div class="score-bar"><div style="width:50%"></div></div></td>
+        </tr>
+        <tr>
+          <td><strong>Ease of Setup</strong></td>
+          <td class="score-w">10%</td>
+          <td style="color:var(--t2);font-size:13px">Time from purchase to first value</td>
+          <td><div class="score-bar"><div style="width:33%"></div></div></td>
+        </tr>
+        <tr>
+          <td><strong>Client Retention</strong></td>
+          <td class="score-w">10%</td>
+          <td style="color:var(--t2);font-size:13px">Buyer satisfaction and continued usage</td>
+          <td><div class="score-bar"><div style="width:33%"></div></div></td>
+        </tr>
+        <tr>
+          <td><strong>Support Quality</strong></td>
+          <td class="score-w">10%</td>
+          <td style="color:var(--t2);font-size:13px">Response time, resolution rate, documentation</td>
+          <td><div class="score-bar"><div style="width:33%"></div></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Early Access CTA -->
+<section id="early-access">
+  <div class="cta-box">
+    <h2>Join the Early Access Program</h2>
+    <p>Be among the first builders on VAX. Early listers get verification fee waived and priority placement for 6 months.</p>
+    <div class="email-form">
+      <input type="email" placeholder="you@example.com">
+      <button>Get Early Access</button>
+    </div>
+    <p style="font-size:12px;color:var(--t3);margin-top:16px;margin-bottom:0">No spam. We'll notify you when VAX launches.</p>
+  </div>
+</section>
+
+<footer>
+  &copy; 2026 VAX — Verified Agent Exchange. All rights reserved.
+</footer>
+
+</body>
+</html>

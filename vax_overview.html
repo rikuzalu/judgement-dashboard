@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VAX — Business Overview</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#08080f;--s1:#10101a;--s2:#161625;--bd:#222240;
+  --ac:#6366f1;--ac2:#818cf8;--ac3:#a78bfa;
+  --g:#10b981;--y:#f59e0b;--r:#ef4444;--b:#3b82f6;
+  --t1:#ededed;--t2:#9ca3af;--t3:#6b7280;
+}
+body{font-family:'Inter','SF Pro',-apple-system,sans-serif;background:var(--bg);color:var(--t1);overflow-x:hidden;line-height:1.7}
+a{color:var(--ac2);text-decoration:none}a:hover{color:var(--ac3)}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(8,8,15,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--bd);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:18px;font-weight:900;letter-spacing:-.5px;display:flex;align-items:center;gap:8px}
+.logo-i{width:32px;height:32px;background:var(--ac);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff}
+.nav-links{display:flex;gap:24px;font-size:13px;font-weight:500}
+.nav-links a{color:var(--t2);transition:color .2s}.nav-links a:hover{color:var(--ac2)}.nav-links a.active{color:var(--ac2)}
+
+.wrap{max-width:960px;margin:0 auto;padding:24px}
+section{padding:60px 0;border-bottom:1px solid var(--bd)}
+section:last-of-type{border-bottom:none}
+.section-label{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--ac2);font-weight:700;margin-bottom:12px}
+.section-title{font-size:28px;font-weight:900;margin-bottom:16px;letter-spacing:-.5px}
+.section-sub{color:var(--t2);font-size:15px;max-width:640px;margin-bottom:32px}
+.lead{font-size:18px;color:var(--t2);max-width:700px}
+
+/* Hero header */
+.page-hero{text-align:center;padding:80px 0 40px}
+.page-hero h1{font-size:42px;font-weight:900;letter-spacing:-1.5px;margin-bottom:16px}
+.page-hero h1 em{font-style:normal;color:var(--ac2)}
+.page-hero p{font-size:17px;color:var(--t2);max-width:600px;margin:0 auto}
+
+/* Cards */
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:24px;margin-bottom:16px}
+.card h3{font-size:16px;font-weight:700;margin-bottom:8px}
+.card p{font-size:14px;color:var(--t2)}
+.cards-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.cards-2{grid-template-columns:1fr}}
+.cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:700px){.cards-3{grid-template-columns:1fr}}
+
+/* Problem / Solution */
+.ps-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:700px){.ps-grid{grid-template-columns:1fr}}
+.ps-card{border-radius:14px;padding:28px;border:1px solid var(--bd)}
+.ps-card.problem{background:rgba(239,68,68,.04);border-color:rgba(239,68,68,.2)}
+.ps-card.solution{background:rgba(16,185,129,.04);border-color:rgba(16,185,129,.2)}
+.ps-card h3{font-size:18px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.ps-card ul{list-style:none;padding:0}
+.ps-card li{padding:8px 0;font-size:14px;color:var(--t2);border-bottom:1px solid rgba(34,34,64,.3);display:flex;align-items:flex-start;gap:8px}
+.ps-card li:last-child{border-bottom:none}
+.ps-card li span{flex-shrink:0}
+
+/* Table */
+.tw{background:var(--s1);border:1px solid var(--bd);border-radius:16px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:12px 16px;font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--bd);background:var(--s2)}
+td{padding:12px 16px;font-size:13px;border-bottom:1px solid rgba(34,34,64,.4)}
+tr:hover td{background:rgba(99,102,241,.03)}
+.mono{font-family:'SF Mono',monospace;font-size:12px}
+.tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600}
+.tag-g{background:rgba(16,185,129,.15);color:var(--g)}
+.tag-b{background:rgba(59,130,246,.15);color:var(--b)}
+.tag-y{background:rgba(245,158,11,.15);color:var(--y)}
+.tag-ac{background:rgba(99,102,241,.15);color:var(--ac2)}
+
+/* Revenue bars */
+.rev-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(34,34,64,.3)}
+.rev-item:last-child{border-bottom:none}
+.rev-name{width:160px;font-size:14px;font-weight:600}
+.rev-bar-wrap{flex:1;height:10px;background:var(--s2);border-radius:5px;overflow:hidden}
+.rev-bar{height:100%;border-radius:5px}
+.rev-val{width:100px;text-align:right;font-family:monospace;font-size:13px;color:var(--ac2)}
+
+/* Competitive */
+.comp-item{display:flex;align-items:center;gap:16px;padding:16px 0;border-bottom:1px solid rgba(34,34,64,.3)}
+.comp-item:last-child{border-bottom:none}
+.comp-name{width:140px;font-weight:700;font-size:14px}
+.comp-desc{flex:1;font-size:13px;color:var(--t2)}
+.comp-gap{font-size:12px;color:var(--r);font-weight:600}
+
+/* Tech */
+.tech-grid{display:flex;flex-wrap:wrap;gap:10px}
+.tech-tag{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600}
+
+footer{border-top:1px solid var(--bd);padding:40px 0;text-align:center;font-size:12px;color:var(--t3)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><div class="logo-i">V</div>VAX</div>
+  <div class="nav-links">
+    <a href="vax_hp.html">Home</a>
+    <a href="vax_lp.html">For Sellers</a>
+    <a href="vax_overview.html" class="active">Overview</a>
+    <a href="vax_plan.html">Business Plan</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<div class="page-hero">
+  <h1><em>VAX</em> Business Overview</h1>
+  <p>Verified Agent Exchange — the global trading platform for AI agents with proven ROI. Here's why this market exists and how we capture it.</p>
+</div>
+
+<!-- Market Opportunity -->
+<section>
+  <div class="section-label">Market Opportunity</div>
+  <div class="section-title">The AI Agent Economy is Exploding</div>
+  <div class="section-sub">AI agents are moving from experiments to production. But there's no trusted marketplace to buy and sell them.</div>
+  <div class="cards-3">
+    <div class="card">
+      <h3 style="color:var(--ac2)">$47B+</h3>
+      <p>Projected AI agent market by 2028. Growing at 45% CAGR as businesses adopt autonomous workflows.</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--g)">78%</h3>
+      <p>Of enterprises plan to deploy AI agents by 2027. Demand far exceeds supply of proven, reliable agents.</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--y)">0</h3>
+      <p>Trusted, verified marketplaces exist today. Current options have no quality control or revenue verification.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Problem / Solution -->
+<section>
+  <div class="section-label">Core Thesis</div>
+  <div class="section-title">Problem &amp; Solution</div>
+  <div class="ps-grid">
+    <div class="ps-card problem">
+      <h3><span style="color:var(--r)">&#10006;</span> The Problem</h3>
+      <ul>
+        <li><span style="color:var(--r)">&#9679;</span> No way to verify if an AI agent actually delivers ROI</li>
+        <li><span style="color:var(--r)">&#9679;</span> Buyers burned by agents that work in demos but fail in production</li>
+        <li><span style="color:var(--r)">&#9679;</span> Builders have no distribution channel for their agents</li>
+        <li><span style="color:var(--r)">&#9679;</span> No standard scoring or comparison framework</li>
+        <li><span style="color:var(--r)">&#9679;</span> Trust gap between agent capabilities and buyer expectations</li>
+      </ul>
+    </div>
+    <div class="ps-card solution">
+      <h3><span style="color:var(--g)">&#10004;</span> VAX Solution</h3>
+      <ul>
+        <li><span style="color:var(--g)">&#9679;</span> Mandatory revenue verification for every listed agent</li>
+        <li><span style="color:var(--g)">&#9679;</span> Reproducibility scoring across multiple deployments</li>
+        <li><span style="color:var(--g)">&#9679;</span> Global marketplace with built-in distribution</li>
+        <li><span style="color:var(--g)">&#9679;</span> Standardized 6-dimension trust scoring system</li>
+        <li><span style="color:var(--g)">&#9679;</span> End-to-end trust layer from listing to ongoing performance</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Business Model -->
+<section>
+  <div class="section-label">Business Model</div>
+  <div class="section-title">Revenue Streams</div>
+  <div class="section-sub">Diversified revenue across transaction fees, verification services, premium listings, and managed operations.</div>
+  <div class="card">
+    <div class="rev-item">
+      <div class="rev-name">Take Rate (12%)</div>
+      <div class="rev-bar-wrap"><div class="rev-bar" style="width:50%;background:var(--ac)"></div></div>
+      <div class="rev-val">Primary</div>
+    </div>
+    <div class="rev-item">
+      <div class="rev-name">Verification Fee</div>
+      <div class="rev-bar-wrap"><div class="rev-bar" style="width:30%;background:var(--g)"></div></div>
+      <div class="rev-val">$500/agent</div>
+    </div>
+    <div class="rev-item">
+      <div class="rev-name">Featured Listing</div>
+      <div class="rev-bar-wrap"><div class="rev-bar" style="width:20%;background:var(--y)"></div></div>
+      <div class="rev-val">$149/mo</div>
+    </div>
+    <div class="rev-item">
+      <div class="rev-name">Managed Ops</div>
+      <div class="rev-bar-wrap"><div class="rev-bar" style="width:40%;background:var(--b)"></div></div>
+      <div class="rev-val">$500-5K/mo</div>
+    </div>
+  </div>
+</section>
+
+<!-- KPI Targets -->
+<section>
+  <div class="section-label">12-Month Targets</div>
+  <div class="section-title">KPI Projections</div>
+  <div class="section-sub">Three scenarios based on different go-to-market velocity and agent acquisition rates.</div>
+  <div class="tw">
+    <table>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th><span class="tag tag-y">Conservative</span></th>
+          <th><span class="tag tag-b">Standard</span></th>
+          <th><span class="tag tag-g">Aggressive</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Listed Agents</strong></td>
+          <td class="mono">150</td>
+          <td class="mono">500</td>
+          <td class="mono">1,000</td>
+        </tr>
+        <tr>
+          <td><strong>GMV</strong></td>
+          <td class="mono">$180K</td>
+          <td class="mono">$1.8M</td>
+          <td class="mono">$6M</td>
+        </tr>
+        <tr>
+          <td><strong>Revenue</strong></td>
+          <td class="mono">$21.6K</td>
+          <td class="mono">$216K</td>
+          <td class="mono">$720K</td>
+        </tr>
+        <tr>
+          <td><strong>Avg Agent Price</strong></td>
+          <td class="mono">$1,200</td>
+          <td class="mono">$3,600</td>
+          <td class="mono">$6,000</td>
+        </tr>
+        <tr>
+          <td><strong>Verification Revenue</strong></td>
+          <td class="mono">$75K</td>
+          <td class="mono">$250K</td>
+          <td class="mono">$500K</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Competitive Landscape -->
+<section>
+  <div class="section-label">Competition</div>
+  <div class="section-title">Competitive Landscape</div>
+  <div class="section-sub">No direct competitor offers verified revenue proof and standardized scoring.</div>
+  <div class="card">
+    <div class="comp-item">
+      <div class="comp-name">General Marketplaces</div>
+      <div class="comp-desc">Fiverr, Upwork — human services, no agent-specific infrastructure or verification</div>
+      <div class="comp-gap">No verification</div>
+    </div>
+    <div class="comp-item">
+      <div class="comp-name">GPT Store</div>
+      <div class="comp-desc">Consumer chatbots, no revenue verification, no enterprise focus</div>
+      <div class="comp-gap">No ROI proof</div>
+    </div>
+    <div class="comp-item">
+      <div class="comp-name">Agent Directories</div>
+      <div class="comp-desc">Lists of agents with no quality control, reviews, or performance data</div>
+      <div class="comp-gap">No scoring</div>
+    </div>
+    <div class="comp-item">
+      <div class="comp-name">Custom Dev Shops</div>
+      <div class="comp-desc">Build-to-order agents, expensive, no standardization or marketplace dynamics</div>
+      <div class="comp-gap">No scale</div>
+    </div>
+    <div class="comp-item" style="border-bottom:none">
+      <div class="comp-name" style="color:var(--ac2)">VAX</div>
+      <div class="comp-desc" style="color:var(--t1)">Verified revenue, standardized scoring, global marketplace, trust layer, managed ops</div>
+      <div style="width:100px;text-align:right"><span class="tag tag-g">Full stack</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Tech Stack -->
+<section>
+  <div class="section-label">Technology</div>
+  <div class="section-title">Tech Stack</div>
+  <div class="section-sub">Modern, scalable infrastructure built for speed and reliability.</div>
+  <div class="tech-grid">
+    <div class="tech-tag" style="border-color:var(--ac)">Next.js</div>
+    <div class="tech-tag" style="border-color:var(--g)">Supabase</div>
+    <div class="tech-tag" style="border-color:var(--b)">Prisma</div>
+    <div class="tech-tag" style="border-color:var(--y)">Stripe Connect</div>
+    <div class="tech-tag" style="border-color:var(--ac3)">Cloudflare R2</div>
+    <div class="tech-tag" style="border-color:var(--r)">Vercel</div>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  &copy; 2026 VAX — Verified Agent Exchange. All rights reserved.
+</footer>
+
+</body>
+</html>

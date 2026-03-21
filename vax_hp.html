@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VAX — Verified Agent Exchange</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#08080f;--s1:#10101a;--s2:#161625;--bd:#222240;
+  --ac:#6366f1;--ac2:#818cf8;--ac3:#a78bfa;
+  --g:#10b981;--y:#f59e0b;--r:#ef4444;--b:#3b82f6;
+  --t1:#ededed;--t2:#9ca3af;--t3:#6b7280;
+}
+body{font-family:'Inter','SF Pro',-apple-system,sans-serif;background:var(--bg);color:var(--t1);overflow-x:hidden;line-height:1.6}
+a{color:var(--ac2);text-decoration:none}a:hover{color:var(--ac3)}
+
+/* Nav */
+nav{position:sticky;top:0;z-index:100;background:rgba(8,8,15,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--bd);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:18px;font-weight:900;letter-spacing:-.5px;display:flex;align-items:center;gap:8px}
+.logo-i{width:32px;height:32px;background:var(--ac);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff}
+.logo span{color:var(--ac2)}
+.nav-links{display:flex;gap:24px;font-size:13px;font-weight:500}
+.nav-links a{color:var(--t2);transition:color .2s}
+.nav-links a:hover{color:var(--ac2)}
+.nav-links a.active{color:var(--ac2)}
+
+/* Sections */
+section{max-width:1100px;margin:0 auto;padding:80px 24px}
+.section-label{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--ac2);font-weight:700;margin-bottom:12px}
+.section-title{font-size:32px;font-weight:900;margin-bottom:16px;letter-spacing:-.5px}
+.section-sub{color:var(--t2);font-size:16px;max-width:640px;margin-bottom:48px}
+
+/* Hero */
+.hero{text-align:center;padding:120px 24px 100px;max-width:1100px;margin:0 auto;position:relative}
+.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(99,102,241,.08) 0%,transparent 70%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--s1);border:1px solid var(--bd);border-radius:100px;padding:6px 16px 6px 8px;font-size:12px;color:var(--t2);margin-bottom:32px}
+.hero-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--g);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero h1{font-size:56px;font-weight:900;letter-spacing:-2px;line-height:1.1;margin-bottom:24px}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--ac),var(--ac3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:18px;color:var(--t2);max-width:560px;margin:0 auto 40px}
+.hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:12px;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:all .2s}
+.btn-primary{background:var(--ac);color:#fff}.btn-primary:hover{background:var(--ac2);color:#fff;transform:translateY(-1px)}
+.btn-secondary{background:var(--s1);color:var(--t1);border:1px solid var(--bd)}.btn-secondary:hover{border-color:var(--ac);color:#fff}
+
+/* Stats bar */
+.stats-bar{display:flex;justify-content:center;gap:48px;margin-top:64px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-v{font-size:28px;font-weight:900;color:var(--ac2)}
+.stat-l{font-size:12px;color:var(--t3);margin-top:4px}
+
+/* Cards grid */
+.cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media(max-width:768px){.cards-3{grid-template-columns:1fr}}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:28px;transition:border-color .2s,transform .2s}
+.card:hover{border-color:var(--ac);transform:translateY(-2px)}
+.card-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px}
+.card h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.card p{font-size:14px;color:var(--t2);line-height:1.6}
+.card-count{font-size:12px;color:var(--t3);margin-top:12px}
+
+/* Differentiators */
+.diff-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+@media(max-width:900px){.diff-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.diff-grid{grid-template-columns:1fr}}
+.diff{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:24px;text-align:center;transition:border-color .2s}
+.diff:hover{border-color:var(--ac)}
+.diff-icon{font-size:28px;margin-bottom:12px}
+.diff h4{font-size:14px;font-weight:700;margin-bottom:6px}
+.diff p{font-size:12px;color:var(--t3)}
+
+/* How it works */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;position:relative}
+@media(max-width:768px){.steps{grid-template-columns:1fr}}
+.step{text-align:center;position:relative}
+.step-num{width:48px;height:48px;border-radius:50%;background:var(--ac);color:#fff;font-size:20px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+.step h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.step p{font-size:14px;color:var(--t2)}
+.step-arrow{display:none}
+@media(min-width:769px){
+  .step-arrow{display:block;position:absolute;top:24px;right:-20px;color:var(--bd);font-size:24px}
+}
+
+/* CTA */
+.cta-section{text-align:center;background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(167,139,250,.05));border:1px solid var(--bd);border-radius:24px;max-width:800px;margin:0 auto;padding:64px 32px}
+.cta-section h2{font-size:32px;font-weight:900;margin-bottom:12px;letter-spacing:-.5px}
+.cta-section p{color:var(--t2);margin-bottom:32px;font-size:16px}
+
+/* Footer */
+footer{border-top:1px solid var(--bd);padding:40px 24px;text-align:center;font-size:12px;color:var(--t3);max-width:1100px;margin:0 auto}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><div class="logo-i">V</div>VAX</div>
+  <div class="nav-links">
+    <a href="vax_hp.html" class="active">Home</a>
+    <a href="vax_lp.html">For Sellers</a>
+    <a href="vax_overview.html">Overview</a>
+    <a href="vax_plan.html">Business Plan</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-badge"><span class="dot"></span> Global AI Agent Marketplace</div>
+  <h1><em>Proven ROI</em><br>Agents Only</h1>
+  <p>The first marketplace where every AI agent is verified for revenue generation, ROI, and reproducibility. Deploy with confidence.</p>
+  <div class="hero-btns">
+    <a href="vax_lp.html" class="btn btn-primary">List Your Agent &rarr;</a>
+    <a href="#categories" class="btn btn-secondary">Browse Marketplace</a>
+  </div>
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-v">12%</div><div class="stat-l">Take Rate</div></div>
+    <div class="stat"><div class="stat-v">100%</div><div class="stat-l">Revenue Verified</div></div>
+    <div class="stat"><div class="stat-v">85+</div><div class="stat-l">Avg Trust Score</div></div>
+    <div class="stat"><div class="stat-v">3 min</div><div class="stat-l">Deploy Time</div></div>
+  </div>
+</div>
+
+<!-- Categories -->
+<section id="categories">
+  <div class="section-label">Categories</div>
+  <div class="section-title">AI Agents That Drive Revenue</div>
+  <div class="section-sub">Every agent on VAX has been verified to deliver measurable business outcomes. Browse by category.</div>
+  <div class="cards-3">
+    <div class="card">
+      <div class="card-icon" style="background:rgba(99,102,241,.15);color:var(--ac2)">&#128176;</div>
+      <h3>Sales Agents</h3>
+      <p>Automated outreach, lead qualification, follow-up sequences, and deal closing. Proven revenue generation with verified conversion rates.</p>
+      <div class="card-count">Outreach &middot; Lead Gen &middot; Closing</div>
+    </div>
+    <div class="card">
+      <div class="card-icon" style="background:rgba(16,185,129,.15);color:var(--g)">&#9997;</div>
+      <h3>Content Agents</h3>
+      <p>SEO content, social media automation, email campaigns, and copywriting. Verified engagement metrics and traffic growth proof.</p>
+      <div class="card-count">SEO &middot; Social &middot; Email &middot; Copy</div>
+    </div>
+    <div class="card">
+      <div class="card-icon" style="background:rgba(245,158,11,.15);color:var(--y)">&#128202;</div>
+      <h3>Data Agents</h3>
+      <p>Market research, competitor analysis, data enrichment, and reporting. Verified accuracy rates and time-to-insight benchmarks.</p>
+      <div class="card-count">Research &middot; Analysis &middot; Enrichment</div>
+    </div>
+  </div>
+</section>
+
+<!-- Differentiators -->
+<section>
+  <div class="section-label">Why VAX</div>
+  <div class="section-title">The Trust Layer for AI Agents</div>
+  <div class="section-sub">Five pillars that separate VAX from every other agent marketplace.</div>
+  <div class="diff-grid">
+    <div class="diff">
+      <div class="diff-icon">&#9989;</div>
+      <h4>Verified Revenue</h4>
+      <p>Every agent must prove actual revenue generated for clients</p>
+    </div>
+    <div class="diff">
+      <div class="diff-icon">&#128200;</div>
+      <h4>Verified ROI</h4>
+      <p>Independently verified return on investment calculations</p>
+    </div>
+    <div class="diff">
+      <div class="diff-icon">&#128257;</div>
+      <h4>Reproducibility Score</h4>
+      <p>Consistent results across deployments, not just one-off wins</p>
+    </div>
+    <div class="diff">
+      <div class="diff-icon">&#128640;</div>
+      <h4>Deployment Confidence</h4>
+      <p>Setup ease, automation rate, and time-to-value metrics</p>
+    </div>
+    <div class="diff">
+      <div class="diff-icon">&#128737;</div>
+      <h4>Trust Layer</h4>
+      <p>End-to-end verification from listing to ongoing performance</p>
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section>
+  <div class="section-label">How It Works</div>
+  <div class="section-title">From Listing to Deployment in 3 Steps</div>
+  <div class="section-sub">A streamlined process that ensures quality for buyers and fair compensation for builders.</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>List</h3>
+      <p>Submit your agent with revenue proof, documentation, and performance metrics. Takes under 15 minutes.</p>
+      <span class="step-arrow">&rarr;</span>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Verify</h3>
+      <p>Our review team validates revenue claims, tests reproducibility, and assigns a trust score. $500 verification fee.</p>
+      <span class="step-arrow">&rarr;</span>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Deploy</h3>
+      <p>Verified agents go live on the marketplace. Buyers deploy with confidence backed by proven data.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section>
+  <div class="cta-section">
+    <h2>Ready to Join the Verified Agent Economy?</h2>
+    <p>Whether you build agents or need them, VAX ensures every transaction is backed by proof.</p>
+    <div class="hero-btns">
+      <a href="vax_lp.html" class="btn btn-primary">List Your Agent &rarr;</a>
+      <a href="vax_overview.html" class="btn btn-secondary">Learn More</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  &copy; 2026 VAX — Verified Agent Exchange. All rights reserved. &nbsp;&middot;&nbsp; Proven ROI Agents Only.
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="refresh" content="60">
+<title>VAX — Bot v2 Dashboard</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#08080f;--s1:#10101a;--s2:#161625;--bd:#222240;
+  --ac:#6366f1;--ac2:#818cf8;--ac3:#a78bfa;
+  --g:#10b981;--y:#f59e0b;--r:#ef4444;--b:#3b82f6;
+  --t1:#ededed;--t2:#9ca3af;--t3:#6b7280;
+}
+body{font-family:'Inter','SF Pro',-apple-system,sans-serif;background:var(--bg);color:var(--t1);overflow-x:hidden}
+
+/* Header */
+.hdr{position:sticky;top:0;z-index:100;background:rgba(8,8,15,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--bd);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:18px;font-weight:900;letter-spacing:-.5px;display:flex;align-items:center;gap:8px}
+.logo-i{width:28px;height:28px;background:var(--ac);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.logo span{color:var(--ac2)}
+.hdr-r{font-size:12px;color:var(--t3);font-family:monospace;display:flex;align-items:center;gap:12px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--g);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* Tabs */
+.tabs{display:flex;gap:2px;background:var(--s1);border-bottom:1px solid var(--bd);padding:0 24px;overflow-x:auto}
+.tab{padding:12px 20px;font-size:13px;font-weight:600;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.tab:hover{color:var(--t2)}.tab.active{color:var(--ac2);border-bottom-color:var(--ac)}
+
+/* Layout */
+.wrap{max-width:1400px;margin:0 auto;padding:24px}
+.panel{display:none}.panel.active{display:block}
+
+/* KPI */
+.kg{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px}
+.kpi{background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:20px}
+.kpi:hover{border-color:var(--ac)}
+.kpi-l{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.kpi-v{font-size:28px;font-weight:900}.kpi-s{font-size:11px;color:var(--t3);margin-top:4px}
+
+/* Ring */
+.ring-wrap{display:flex;align-items:center;gap:8px}
+.ring{width:48px;height:48px}
+.ring-bg{fill:none;stroke:var(--bd);stroke-width:4}
+.ring-fg{fill:none;stroke-width:4;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%}
+
+/* Grid 2col */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+@media(max-width:800px){.g2{grid-template-columns:1fr}}
+
+/* Card */
+.cd{background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:20px;margin-bottom:24px}
+.cd-t{font-size:16px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+
+/* Feed */
+.fi{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(34,34,64,.3);font-size:13px}
+.ft{width:40px;color:var(--t3);font-family:monospace;font-size:11px}
+.fid{width:40px;color:var(--t3);font-family:monospace;font-size:11px}
+.fs{width:20px}.fx{flex:1;color:var(--t2)}
+.f-done .fx{color:var(--g)}.f-fail .fx{color:var(--r)}.f-exec .fx{color:var(--y)}
+
+/* Heatmap */
+.hm{display:flex;gap:2px;margin:8px 0}
+.hc{flex:1;height:40px;background:rgba(99,102,241,calc(var(--p)/100*.5 + .05));border-radius:4px;display:flex;align-items:flex-end;justify-content:center;position:relative}
+.hl{font-size:9px;color:var(--t3);padding:2px}
+
+/* Day chart */
+.dc{display:flex;gap:8px;height:120px;align-items:flex-end}
+.db{flex:1;display:flex;flex-direction:column;align-items:center;height:100%}
+.db-bars{flex:1;width:100%;display:flex;gap:2px;align-items:flex-end}
+.db-c{flex:1;background:var(--ac);border-radius:4px 4px 0 0;min-height:2px}
+.db-d{flex:1;background:var(--g);border-radius:4px 4px 0 0;min-height:2px}
+.db-l{font-size:10px;color:var(--t3);margin-top:4px}
+
+/* Priority */
+.pri{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px}
+.pri-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.pri-l{width:60px;color:var(--t3);font-size:11px}
+.pri-bar{flex:1;height:6px;background:var(--s2);border-radius:3px;overflow:hidden}
+.pri-bar div{height:100%;border-radius:3px}
+.pri-v{width:30px;text-align:right;font-family:monospace;font-size:11px}
+
+/* Table */
+.tw{background:var(--s1);border:1px solid var(--bd);border-radius:16px;overflow:hidden;margin-bottom:24px}
+.tw-h{padding:16px 20px;border-bottom:1px solid var(--bd);font-size:16px;font-weight:700}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:10px 16px;font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--bd);background:var(--s2)}
+td{padding:12px 16px;font-size:13px;border-bottom:1px solid rgba(34,34,64,.5)}
+tr:hover td{background:rgba(99,102,241,.03)}
+.mono{font-family:'SF Mono',monospace;font-size:12px}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="logo"><div class="logo-i">V</div>VAX <span>Bot v2</span></div>
+  <div class="hdr-r"><div class="dot"></div>2026-03-21 13:03:19</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="sw(0)">OVERVIEW</div>
+  <div class="tab" onclick="sw(1)">TASKS</div>
+  <div class="tab" onclick="sw(2)">APPROVALS</div>
+  <div class="tab" onclick="sw(3)">SCHEDULES</div>
+</div>
+
+<!-- OVERVIEW -->
+<div class="wrap">
+<div class="panel active" id="p0">
+
+<div class="kg">
+  <div class="kpi"><div class="kpi-l">TOTAL TASKS</div><div class="kpi-v">1</div><div class="kpi-s">1日稼働</div></div>
+  <div class="kpi"><div class="kpi-l">COMPLETED</div><div class="kpi-v" style="color:var(--g)">0</div><div class="kpi-s">0.0/日</div></div>
+  <div class="kpi"><div class="kpi-l">IN PROGRESS</div><div class="kpi-v" style="color:var(--y)">0</div></div>
+  <div class="kpi"><div class="kpi-l">PENDING</div><div class="kpi-v">1</div></div>
+  <div class="kpi"><div class="kpi-l">FAILED</div><div class="kpi-v" style="color:var(--r)">0</div></div>
+  <div class="kpi">
+    <div class="kpi-l">SUCCESS RATE</div>
+    <div class="ring-wrap">
+      <svg class="ring" viewBox="0 0 100 100">
+        <circle class="ring-bg" cx="50" cy="50" r="45"/>
+        <circle class="ring-fg" cx="50" cy="50" r="45" stroke="var(--g)" stroke-dasharray="283" stroke-dashoffset="283.0"/>
+      </svg>
+      <div class="kpi-v">0.0%</div>
+    </div>
+  </div>
+  <div class="kpi"><div class="kpi-l">AVG DURATION</div><div class="kpi-v">0s</div><div class="kpi-s">中央値 0s</div></div>
+  <div class="kpi"><div class="kpi-l">LAST 24H</div><div class="kpi-v" style="color:var(--b)">0</div></div>
+</div>
+
+<div class="g2">
+  <div class="cd"><div class="cd-t">📊 7日間推移</div><div class="dc"><div class="db"><div class="db-bars"><div class="db-c" style="height:0%"></div><div class="db-d" style="height:0%"></div></div><div class="db-l">03/15</div></div><div class="db"><div class="db-bars"><div class="db-c" style="height:0%"></div><div class="db-d" style="height:0%"></div></div><div class="db-l">03/16</div></div><div class="db"><div class="db-bars"><div class="db-c" style="height:0%"></div><div class="db-d" style="height:0%"></div></div><div class="db-l">03/17</div></div><div class="db"><div class="db-bars"><div class="db-c" style="height:0%"></div><div class="db-d" style="height:0%"></div></div><div class="db-l">03/18</div></div><div class="db"><div class="db-bars"><div class="db-c" style="height:0%"></div><div class="db-d" style="height:0%"></div></div><div class="db-l">03/19</div></div><div class="db"><div class="db-bars"><div class="db-c" style="height:0%"></div><div class="db-d" style="height:0%"></div></div><div class="db-l">03/20</div></div><div class="db"><div class="db-bars"><div class="db-c" style="height:100%"></div><div class="db-d" style="height:0%"></div></div><div class="db-l">03/21</div></div></div><div style="font-size:10px;color:var(--t3);margin-top:8px">🟣 作成 🟢 完了</div></div>
+  <div class="cd"><div class="cd-t">🕐 時間帯ヒートマップ</div><div class="hm"><div class="hc" style="--p:0" title="0:00 — 0件"><span class="hl">0</span></div><div class="hc" style="--p:0" title="1:00 — 0件"><span class="hl">1</span></div><div class="hc" style="--p:0" title="2:00 — 0件"><span class="hl">2</span></div><div class="hc" style="--p:0" title="3:00 — 0件"><span class="hl">3</span></div><div class="hc" style="--p:100" title="4:00 — 1件"><span class="hl">4</span></div><div class="hc" style="--p:0" title="5:00 — 0件"><span class="hl">5</span></div><div class="hc" style="--p:0" title="6:00 — 0件"><span class="hl">6</span></div><div class="hc" style="--p:0" title="7:00 — 0件"><span class="hl">7</span></div><div class="hc" style="--p:0" title="8:00 — 0件"><span class="hl">8</span></div><div class="hc" style="--p:0" title="9:00 — 0件"><span class="hl">9</span></div><div class="hc" style="--p:0" title="10:00 — 0件"><span class="hl">10</span></div><div class="hc" style="--p:0" title="11:00 — 0件"><span class="hl">11</span></div><div class="hc" style="--p:0" title="12:00 — 0件"><span class="hl">12</span></div><div class="hc" style="--p:0" title="13:00 — 0件"><span class="hl">13</span></div><div class="hc" style="--p:0" title="14:00 — 0件"><span class="hl">14</span></div><div class="hc" style="--p:0" title="15:00 — 0件"><span class="hl">15</span></div><div class="hc" style="--p:0" title="16:00 — 0件"><span class="hl">16</span></div><div class="hc" style="--p:0" title="17:00 — 0件"><span class="hl">17</span></div><div class="hc" style="--p:0" title="18:00 — 0件"><span class="hl">18</span></div><div class="hc" style="--p:0" title="19:00 — 0件"><span class="hl">19</span></div><div class="hc" style="--p:0" title="20:00 — 0件"><span class="hl">20</span></div><div class="hc" style="--p:0" title="21:00 — 0件"><span class="hl">21</span></div><div class="hc" style="--p:0" title="22:00 — 0件"><span class="hl">22</span></div><div class="hc" style="--p:0" title="23:00 — 0件"><span class="hl">23</span></div></div></div>
+</div>
+
+<div class="g2">
+  <div class="cd"><div class="cd-t">⚡ アクティビティ</div><div class="fi" style="justify-content:center;color:var(--t3)">NO ACTIVITY YET</div></div>
+  <div class="cd"><div class="cd-t">📌 優先度分布</div><div class="pri"><span class="pri-dot" style="background:#ef4444"></span><span class="pri-l">CRITICAL</span><div class="pri-bar"><div style="width:0%;background:#ef4444"></div></div><span class="pri-v">0</span></div><div class="pri"><span class="pri-dot" style="background:#f59e0b"></span><span class="pri-l">HIGH</span><div class="pri-bar"><div style="width:0%;background:#f59e0b"></div></div><span class="pri-v">0</span></div><div class="pri"><span class="pri-dot" style="background:#6366f1"></span><span class="pri-l">MEDIUM</span><div class="pri-bar"><div style="width:100%;background:#6366f1"></div></div><span class="pri-v">1</span></div><div class="pri"><span class="pri-dot" style="background:#10b981"></span><span class="pri-l">LOW</span><div class="pri-bar"><div style="width:0%;background:#10b981"></div></div><span class="pri-v">0</span></div></div>
+</div>
+
+</div>
+
+<!-- TASKS -->
+<div class="panel" id="p1">
+<div class="tw"><div class="tw-h">⏳ 待機中タスク (1件)</div>
+<table><tr><th>ID</th><th>優先度</th><th>内容</th><th>作成日時</th></tr>
+<tr><td class="mono">#1</td><td><span style="color:#6366f1">🟡 MEDIUM</span></td><td>Auth.jsセットアップして</td><td class="mono">2026-03-21 04:00</td></tr>
+</table></div>
+</div>
+
+<!-- APPROVALS -->
+<div class="panel" id="p2">
+<div class="tw"><div class="tw-h">✅ 承認履歴</div>
+<table><tr><th>ID</th><th>ステータス</th><th>タイトル</th><th>作成日時</th></tr>
+<tr><td colspan="4" style="text-align:center;color:var(--t3)">承認リクエストなし</td></tr>
+</table></div>
+</div>
+
+<!-- SCHEDULES -->
+<div class="panel" id="p3">
+<div class="tw"><div class="tw-h">⏰ アクティブスケジュール</div>
+<table><tr><th>ID</th><th>繰り返し</th><th>内容</th><th>次回実行</th></tr>
+<tr><td colspan="4" style="text-align:center;color:var(--t3)">スケジュールなし</td></tr>
+</table></div>
+</div>
+
+</div>
+
+<script>
+function sw(n){
+  document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('active',i===n));
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n));
+}
+</script>
+</body>
+</html>
