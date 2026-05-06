@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>テレアポの匠 ｜ サービス概要 - 紅JAPAN株式会社</title>
+<meta name="description" content="営業プロフェッショナル20名以上が在籍する「テレアポの匠」のサービス概要資料。1日最大5件のアポ獲得を可能にする伴走支援型テレアポサービス。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#fafaf7;
+  --bg-card:#ffffff;
+  --ink:#1a1a1a;
+  --ink-2:#3a3a3a;
+  --ink-3:#6b6b6b;
+  --accent:#b8252f;
+  --accent-2:#8b1a23;
+  --accent-soft:#f5e8e9;
+  --gold:#c9a96e;
+  --line:#e8e4dc;
+  --line-2:#d4cfc4;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  font-family:'Noto Sans JP','Inter',sans-serif;
+  background:var(--bg);color:var(--ink);
+  line-height:1.8;letter-spacing:0.02em;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ===== ヘッダー ===== */
+header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(250,250,247,0.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.header-inner{
+  max-width:1100px;margin:0 auto;
+  padding:1rem 1.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.brand{display:flex;align-items:center;gap:0.75rem}
+.brand-mark{
+  width:36px;height:36px;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:900;font-size:1.1rem;
+  border-radius:2px;
+}
+.brand-name{font-weight:700;font-size:1rem;letter-spacing:0.05em}
+.brand-tag{font-size:0.7rem;color:var(--ink-3);letter-spacing:0.1em}
+.nav-links{display:flex;gap:1.5rem}
+.nav-links a{
+  color:var(--ink-2);text-decoration:none;
+  font-size:0.85rem;font-weight:500;
+  transition:color 0.2s;
+}
+.nav-links a:hover{color:var(--accent)}
+@media(max-width:720px){.nav-links{display:none}}
+
+/* ===== ヒーロー ===== */
+.hero{
+  max-width:1100px;margin:0 auto;
+  padding:5rem 1.5rem 4rem;
+  text-align:center;
+  position:relative;
+}
+.hero-eyebrow{
+  display:inline-block;
+  font-size:0.75rem;letter-spacing:0.3em;
+  color:var(--accent);font-weight:600;
+  padding:0.4rem 1rem;
+  border:1px solid var(--accent);
+  border-radius:2px;
+  margin-bottom:1.5rem;
+}
+.hero h1{
+  font-size:clamp(2rem,5vw,3.5rem);
+  font-weight:900;letter-spacing:0.05em;
+  line-height:1.3;margin-bottom:1.25rem;
+}
+.hero h1 .accent{color:var(--accent)}
+.hero-sub{
+  font-size:1.05rem;color:var(--ink-2);
+  max-width:680px;margin:0 auto;font-weight:400;
+}
+.hero-meta{
+  margin-top:2.5rem;
+  display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;
+  font-size:0.85rem;color:var(--ink-3);
+}
+.hero-meta strong{color:var(--ink);font-size:1.5rem;display:block;font-weight:700}
+
+/* ===== セクション ===== */
+section{padding:4rem 1.5rem;max-width:1100px;margin:0 auto}
+.section-head{margin-bottom:2.5rem;border-left:4px solid var(--accent);padding-left:1rem}
+.section-num{
+  font-size:0.75rem;color:var(--accent);font-weight:600;
+  letter-spacing:0.2em;display:block;margin-bottom:0.25rem;
+}
+.section-title{
+  font-size:1.75rem;font-weight:700;letter-spacing:0.04em;
+}
+.section-lead{
+  font-size:0.95rem;color:var(--ink-2);
+  margin-top:0.75rem;max-width:780px;
+}
+
+/* ===== サービスの強み ===== */
+.feature-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;
+}
+@media(max-width:780px){.feature-grid{grid-template-columns:1fr}}
+.feature-card{
+  background:var(--bg-card);
+  border:1px solid var(--line);
+  padding:2rem 1.5rem;
+  position:relative;
+  transition:transform 0.3s,box-shadow 0.3s;
+}
+.feature-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 10px 30px rgba(184,37,47,0.08);
+}
+.feature-num{
+  font-family:'Inter',sans-serif;
+  font-size:2.5rem;font-weight:200;
+  color:var(--accent);line-height:1;
+  margin-bottom:1rem;letter-spacing:-0.02em;
+}
+.feature-title{
+  font-size:1.05rem;font-weight:700;
+  margin-bottom:0.75rem;letter-spacing:0.03em;
+}
+.feature-desc{
+  font-size:0.88rem;color:var(--ink-2);line-height:1.7;
+}
+
+/* ===== プロセス ===== */
+.process{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+  border:1px solid var(--line);background:var(--bg-card);
+}
+@media(max-width:780px){.process{grid-template-columns:1fr 1fr}}
+@media(max-width:500px){.process{grid-template-columns:1fr}}
+.process-step{
+  padding:1.75rem 1.25rem;
+  border-right:1px solid var(--line);
+  position:relative;
+}
+.process-step:last-child{border-right:none}
+@media(max-width:780px){
+  .process-step:nth-child(2){border-right:none}
+  .process-step:nth-child(1),.process-step:nth-child(2){border-bottom:1px solid var(--line)}
+}
+.step-tag{
+  font-size:0.7rem;color:var(--accent);font-weight:600;
+  letter-spacing:0.2em;margin-bottom:0.5rem;
+}
+.step-title{
+  font-size:1rem;font-weight:700;
+  margin-bottom:0.5rem;
+}
+.step-desc{font-size:0.8rem;color:var(--ink-2);line-height:1.7}
+
+/* ===== プラン表 ===== */
+.plan-table{
+  width:100%;background:var(--bg-card);
+  border:1px solid var(--line);
+  border-collapse:collapse;
+}
+.plan-table th,.plan-table td{
+  padding:1rem 1.25rem;
+  text-align:left;
+  border-bottom:1px solid var(--line);
+  font-size:0.9rem;
+}
+.plan-table th{
+  background:#f5f1eb;
+  font-weight:700;letter-spacing:0.05em;
+  font-size:0.8rem;color:var(--ink-2);
+}
+.plan-table td:first-child{font-weight:600}
+.plan-table tr:last-child td{border-bottom:none}
+.plan-note{
+  font-size:0.78rem;color:var(--ink-3);
+  margin-top:0.75rem;
+}
+
+/* ===== 運用体制 ===== */
+.team-block{
+  background:var(--bg-card);
+  border:1px solid var(--line);
+  padding:2rem;
+  margin-bottom:1.5rem;
+}
+.team-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;
+  margin-top:1.5rem;
+}
+@media(max-width:780px){.team-grid{grid-template-columns:1fr}}
+.member-card{
+  padding:1.25rem;
+  border-left:3px solid var(--accent);
+  background:#faf7f3;
+}
+.member-role{
+  font-size:0.7rem;color:var(--accent);font-weight:600;
+  letter-spacing:0.15em;margin-bottom:0.5rem;
+}
+.member-name{
+  font-size:1rem;font-weight:700;margin-bottom:0.25rem;
+}
+.member-name-en{
+  font-size:0.75rem;color:var(--ink-3);
+  margin-bottom:0.75rem;font-family:'Inter',sans-serif;
+}
+.member-bio{
+  font-size:0.82rem;color:var(--ink-2);line-height:1.7;
+}
+
+/* ===== 運用詳細3カラム ===== */
+.ops-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;
+}
+@media(max-width:780px){.ops-grid{grid-template-columns:1fr}}
+.ops-card{
+  background:var(--bg-card);
+  border-top:3px solid var(--accent);
+  border-right:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  border-left:1px solid var(--line);
+  padding:1.5rem;
+}
+.ops-title{
+  font-size:0.95rem;font-weight:700;
+  margin-bottom:0.75rem;
+}
+.ops-desc{font-size:0.82rem;color:var(--ink-2);line-height:1.7}
+.ops-list{
+  margin-top:0.75rem;font-size:0.8rem;
+  color:var(--ink-2);
+  list-style:none;
+}
+.ops-list li{
+  padding:0.25rem 0;
+  border-bottom:1px dashed var(--line);
+}
+.ops-list li:last-child{border-bottom:none}
+
+/* ===== 実績 ===== */
+.results-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;
+}
+@media(max-width:780px){.results-grid{grid-template-columns:1fr}}
+.result-card{
+  background:linear-gradient(135deg,#1a1a1a,#2d2d2d);
+  color:#fff;padding:2rem 1.5rem;
+  position:relative;overflow:hidden;
+}
+.result-card::before{
+  content:'';position:absolute;top:0;right:0;
+  width:80px;height:80px;
+  background:radial-gradient(circle,rgba(201,169,110,0.2),transparent 70%);
+}
+.result-category{
+  font-size:0.7rem;color:var(--gold);font-weight:600;
+  letter-spacing:0.2em;margin-bottom:0.75rem;
+}
+.result-number{
+  font-family:'Inter',sans-serif;
+  font-size:2.25rem;font-weight:800;
+  letter-spacing:-0.02em;line-height:1;
+  margin-bottom:0.5rem;
+}
+.result-number .unit{
+  font-size:1rem;font-weight:400;
+  color:#ccc;margin-left:0.25rem;
+}
+.result-period{
+  font-size:0.8rem;color:#bbb;
+}
+
+/* ===== メッセージ ===== */
+.message-block{
+  background:var(--bg-card);
+  border:1px solid var(--line);
+  padding:3rem 2rem;
+  text-align:center;
+}
+.message-quote{
+  font-size:1.15rem;font-weight:500;
+  color:var(--ink);line-height:1.9;
+  max-width:780px;margin:0 auto 2rem;
+}
+.message-body{
+  font-size:0.92rem;color:var(--ink-2);
+  line-height:1.9;max-width:720px;margin:0 auto;
+}
+.message-sign{
+  margin-top:2rem;
+  font-size:0.85rem;color:var(--ink-3);
+  letter-spacing:0.1em;
+}
+.message-sign strong{
+  display:block;color:var(--ink);
+  font-size:1rem;font-weight:700;
+  margin-top:0.25rem;
+}
+
+/* ===== 会社概要 ===== */
+.company-table{
+  width:100%;
+  background:var(--bg-card);
+  border:1px solid var(--line);
+}
+.company-table tr{border-bottom:1px solid var(--line)}
+.company-table tr:last-child{border-bottom:none}
+.company-table th,.company-table td{
+  padding:1rem 1.5rem;text-align:left;
+  font-size:0.9rem;vertical-align:top;
+}
+.company-table th{
+  background:#f5f1eb;width:200px;
+  font-weight:600;color:var(--ink-2);
+  letter-spacing:0.05em;
+}
+@media(max-width:580px){
+  .company-table th{width:120px;font-size:0.8rem}
+  .company-table td{font-size:0.85rem}
+}
+
+/* ===== CTA ===== */
+.cta{
+  margin-top:3rem;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  color:#fff;padding:3rem 2rem;text-align:center;
+}
+.cta h3{
+  font-size:1.5rem;font-weight:700;
+  margin-bottom:0.75rem;letter-spacing:0.05em;
+}
+.cta p{font-size:0.95rem;opacity:0.95;margin-bottom:1.5rem}
+.cta-button{
+  display:inline-block;
+  background:#fff;color:var(--accent);
+  padding:0.9rem 2.5rem;
+  font-weight:700;letter-spacing:0.1em;
+  text-decoration:none;font-size:0.9rem;
+  transition:transform 0.2s;
+}
+.cta-button:hover{transform:translateY(-2px)}
+
+/* ===== フッター ===== */
+footer{
+  background:#1a1a1a;color:#888;
+  padding:2rem 1.5rem;text-align:center;
+  font-size:0.8rem;letter-spacing:0.05em;margin-top:4rem;
+}
+footer .confidential{
+  color:#555;font-size:0.7rem;margin-top:0.5rem;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-mark">紅</div>
+      <div>
+        <div class="brand-name">テレアポの匠</div>
+        <div class="brand-tag">BENI JAPAN INC.</div>
+      </div>
+    </div>
+    <nav class="nav-links">
+      <a href="#features">特徴</a>
+      <a href="#process">プロセス</a>
+      <a href="#plan">プラン</a>
+      <a href="#team">運用体制</a>
+      <a href="#results">支援実績</a>
+      <a href="#company">会社概要</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="hero">
+  <span class="hero-eyebrow">SERVICE OVERVIEW</span>
+  <h1>商談機会の安定供給で、<br><span class="accent">事業成長を加速</span>させる。</h1>
+  <p class="hero-sub">
+    営業プロフェッショナル20名以上が在籍する「テレアポの匠」は、<br>
+    アポイント獲得の先にあるクライアントの売上最大化を目的とした、伴走支援型テレアポサービスです。
+  </p>
+  <div class="hero-meta">
+    <div><strong>20+</strong>営業プロ在籍</div>
+    <div><strong>1日最大5件</strong>アポイント獲得</div>
+    <div><strong>2〜4%</strong>標準アポ率</div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="section-head">
+    <span class="section-num">01 ／ FEATURES</span>
+    <h2 class="section-title">サービスの3つの特徴</h2>
+    <p class="section-lead">
+      単なる代行ではなく、貴社の営業チームの一員として並走するパートナーであり続けます。成果報酬型という仕組みにより、常にクライアントと同じ方向を見据え、成果にこだわります。
+    </p>
+  </div>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="feature-num">01</div>
+      <h3 class="feature-title">プロ営業人材によるアプローチ</h3>
+      <p class="feature-desc">
+        フリーランスの現場で出会った精鋭のプロ営業20名以上が在籍。多種多様な業界へのアプローチ実績を持つメンバーが、貴社プロジェクトに最適なチームを編成します。
+      </p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">02</div>
+      <h3 class="feature-title">市場検証にも有効な訴求軸の見極め</h3>
+      <p class="feature-desc">
+        新規サービスの初期フェーズにおける市場反応の検証や、ターゲット属性・訴求軸の見極めに有効。「どの業種・立場に刺さるか」を明確にし、営業戦略・資料改善にも活用できます。
+      </p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">03</div>
+      <h3 class="feature-title">伴走支援型のPDCA運用</h3>
+      <p class="feature-desc">
+        商談結果の振り返りを定例MTGで実施し、新規リスト・訴求軸の提案を継続的に行います。高速でPDCAを回し、成果報酬型の仕組みでクライアントの売上最大化に貢献します。
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <div class="section-head">
+    <span class="section-num">02 ／ PROCESS</span>
+    <h2 class="section-title">業務プロセス</h2>
+    <p class="section-lead">
+      営業プロフェッショナルチームによる伴走支援型のテレアポを、4つのステップで実施します。
+    </p>
+  </div>
+  <div class="process">
+    <div class="process-step">
+      <div class="step-tag">STEP 01</div>
+      <h3 class="step-title">戦略策定</h3>
+      <p class="step-desc">訴求軸とターゲット選定を行い、貴社独自のアプローチリストを作成します。</p>
+    </div>
+    <div class="process-step">
+      <div class="step-tag">STEP 02</div>
+      <h3 class="step-title">アプローチ</h3>
+      <p class="step-desc">戦略に沿って、最適なリストと営業アプローチを行います。</p>
+    </div>
+    <div class="process-step">
+      <div class="step-tag">STEP 03</div>
+      <h3 class="step-title">定例MTG</h3>
+      <p class="step-desc">商談結果の振り返りを実施し、どの切り口が刺さるのか効果検証を図ります。</p>
+    </div>
+    <div class="process-step">
+      <div class="step-tag">STEP 04</div>
+      <h3 class="step-title">改善アクション</h3>
+      <p class="step-desc">新規リスト、訴求軸の提案を行い、高速でPDCAを回す形で支援します。</p>
+    </div>
+  </div>
+</section>
+
+<section id="plan">
+  <div class="section-head">
+    <span class="section-num">03 ／ PLAN</span>
+    <h2 class="section-title">料金プラン</h2>
+    <p class="section-lead">
+      1次商談実施ベースの成果報酬型料金体系。アプローチ規模はご相談に応じて柔軟に設計します。
+    </p>
+  </div>
+  <table class="plan-table">
+    <thead>
+      <tr>
+        <th>プラン</th>
+        <th>アポ単価</th>
+        <th>コール数</th>
+        <th>想定リード数</th>
+        <th>備考</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>電話営業</td>
+        <td>2万円〜</td>
+        <td>ご相談</td>
+        <td>10〜100件</td>
+        <td>1次商談実施ベース</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="plan-note">※ 商材・ターゲット業界・リスト条件により詳細は個別ご相談となります。</p>
+</section>
+
+<section id="team">
+  <div class="section-head">
+    <span class="section-num">04 ／ TEAM</span>
+    <h2 class="section-title">運用体制</h2>
+    <p class="section-lead">
+      プロジェクトオーナーとプロジェクトメンバーによる専任チーム制で、貴社案件に最適化したチームを編成します。
+    </p>
+  </div>
+  <div class="team-block">
+    <h3 style="font-size:1.1rem;font-weight:700;letter-spacing:0.05em;margin-bottom:0.5rem">営業プロフェッショナルチームの結成</h3>
+    <p style="font-size:0.88rem;color:var(--ink-2)">
+      弊社にはプロフェッショナルな営業パーソンが20名以上在籍しております。各プロジェクトでは、商材特性に合わせた経験を持つメンバーを中心にチーム組成を行います。
+    </p>
+    <div class="team-grid">
+      <div class="member-card">
+        <div class="member-role">PROJECT OWNER</div>
+        <div class="member-name">渡邉 紅鷹</div>
+        <div class="member-name-en">Watanabe Koyo</div>
+        <p class="member-bio">
+          ネオキャリアを卒業後、営業代行業界で3年間活躍。ディレクター兼アポインターとして、月に80アポイント以上を安定的に供給。2025年2月から「テレアポの匠」の提供を開始。
+        </p>
+      </div>
+      <div class="member-card">
+        <div class="member-role">PROJECT MEMBER</div>
+        <div class="member-name">西川 達也</div>
+        <div class="member-name-en">Nishikawa Tatsuya</div>
+        <p class="member-bio">
+          液晶デバイスメーカーと大手総合化学メーカーで営業・人事などを約20年経験。素材から製品の一貫した視点を持ち、柔軟な思考力と高い適応力を持ち合わせる。
+        </p>
+      </div>
+      <div class="member-card">
+        <div class="member-role">PROJECT MEMBER</div>
+        <div class="member-name">木村 凌</div>
+        <div class="member-name-en">Kimura Ryo</div>
+        <p class="member-bio">
+          JHR株式会社をはじめ人材業界で5年以上従事。キャリアアドバイザーとしてのtoC営業から、BPO事業の責任者を経験。営業現場の実務力と事業推進力を兼ね備える。
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-size:1.1rem;font-weight:700;letter-spacing:0.05em;margin:2rem 0 1rem">クライアント専用にカスタマイズした運用</h3>
+  <div class="ops-grid">
+    <div class="ops-card">
+      <h4 class="ops-title">営業リスト管理</h4>
+      <p class="ops-desc">
+        業界・エリア・リスト抽出方法ごとにアポイント取得率を分析。スプレッドシートでタイムリーに営業活動を確認できます。
+      </p>
+    </div>
+    <div class="ops-card">
+      <h4 class="ops-title">トークスクリプト</h4>
+      <p class="ops-desc">
+        過去に実績が出たトークを元に、再現性の高いトークスクリプトを作成。クライアントが今後活用できるようカスタマイズします。
+      </p>
+    </div>
+    <div class="ops-card">
+      <h4 class="ops-title">アポイント報告</h4>
+      <p class="ops-desc">
+        指定のチャットツールやメールで、下記項目を含む統一フォーマットにて即時報告いたします。
+      </p>
+      <ul class="ops-list">
+        <li>① 日程／② 企業名／③ 担当者名</li>
+        <li>④ 役職／⑤ 住所／⑥ 電話／⑦ URL</li>
+        <li>⑧ 商談方法／⑨ ヒアリング内容</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="results">
+  <div class="section-head">
+    <span class="section-num">05 ／ RESULTS</span>
+    <h2 class="section-title">支援実績</h2>
+    <p class="section-lead">
+      RPO・ATS・新卒向けDR商材など、人材・採用領域を中心に多数の実績があります。
+    </p>
+  </div>
+  <div class="results-grid">
+    <div class="result-card">
+      <div class="result-category">RPO 商材</div>
+      <div class="result-number">月100<span class="unit">アポ</span></div>
+      <div class="result-period">3ヶ月にかけて獲得</div>
+    </div>
+    <div class="result-card">
+      <div class="result-category">ATS 商材</div>
+      <div class="result-number">月80<span class="unit">アポ</span></div>
+      <div class="result-period">半年にかけて獲得</div>
+    </div>
+    <div class="result-card">
+      <div class="result-category">新卒向け DR 商材</div>
+      <div class="result-number">月30<span class="unit">アポ</span></div>
+      <div class="result-period">半年にかけて獲得</div>
+    </div>
+  </div>
+</section>
+
+<section id="message">
+  <div class="section-head">
+    <span class="section-num">06 ／ MESSAGE</span>
+    <h2 class="section-title">代表メッセージ</h2>
+  </div>
+  <div class="message-block">
+    <p class="message-quote">
+      「テレアポの匠」は、営業フリーランスの現場で出会った、精鋭の営業チームです。
+    </p>
+    <p class="message-body">
+      私たちは「アポイント獲得」ではなく、その先にあるクライアントの売上最大化を目的としています。商談機会を安定的に供給することで、貴社の事業成長を加速させ、成果報酬型という仕組みにより、常にクライアントと同じ方向を見据え、成果にこだわります。単なる代行ではなく、貴社の営業チームの一員として並走するパートナーであり続けます。
+    </p>
+    <div class="message-sign">
+      代表
+      <strong>渡邉 紅鷹</strong>
+    </div>
+  </div>
+</section>
+
+<section id="company">
+  <div class="section-head">
+    <span class="section-num">07 ／ COMPANY</span>
+    <h2 class="section-title">会社概要</h2>
+  </div>
+  <table class="company-table">
+    <tr><th>会社名</th><td>紅JAPAN株式会社</td></tr>
+    <tr><th>代表取締役</th><td>渡邉 紅鷹</td></tr>
+    <tr><th>所在地</th><td>東京都新宿区西新宿 3-3-13<br>西新宿水間ビル 2F</td></tr>
+    <tr><th>事業内容</th><td>営業支援事業<br>不動産仲介事業</td></tr>
+    <tr><th>従業員数</th><td>40名（業務委託含む）</td></tr>
+    <tr><th>主要取引先</th><td>株式会社ジェイック<br>株式会社カラフル<br>株式会社ジンザイベース</td></tr>
+  </table>
+
+  <div class="cta">
+    <h3>営業課題のご相談はお気軽に。</h3>
+    <p>貴社の商材・ターゲットに合わせた最適な運用設計をご提案いたします。</p>
+    <a href="#" class="cta-button">お問い合わせ →</a>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div>© 紅JAPAN株式会社 ｜ テレアポの匠</div>
+  <div class="confidential">Service Overview Document</div>
+</footer>
+
+</body>
+</html>
